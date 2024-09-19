@@ -6,7 +6,7 @@ app.whenReady().then(() => {
 		height: 600,
 	});
 	
-	win.loadFile('index.html');
+	win.loadFile('./src/views/main/index.html');
 });
 
 app.on('window-all-closed', () => {
