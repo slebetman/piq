@@ -1,9 +1,14 @@
 const { app, BrowserWindow } = require('electron');
-const configService = require('./src/services/config');
 const path = require('path');
 
+const services = [
+	'config'
+];
+
 app.whenReady().then(() => {
-	configService.init();
+	for (const service of services) {
+		require(path.join(__dirname, 'src/services', service)).init();
+	}
 
 	const win = new BrowserWindow({
 		width: 800,
