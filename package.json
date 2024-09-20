@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^32.1.0"
+  },
+  "dependencies": {
+    "xdg-portable": "^10.6.0"
   }
 }
