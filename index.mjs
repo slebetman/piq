@@ -9,7 +9,7 @@ async function main () {
 	await app.whenReady();
 
 	for (const service of services) {
-		(await import(
+		await (await import(
 			path.join(import.meta.dirname, 'src/services', service)
 		)).init();
 	}
