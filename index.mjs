@@ -2,7 +2,8 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 
 const services = [
-	'config.mjs'
+	'config.mjs',
+	'open-dialog.mjs',
 ];
 
 async function main () {
