@@ -5,7 +5,7 @@ let eCache = {};
  * 
  * @param {string} type 
  * @param {Record<string,any>} prop 
- * @param {Array<HTMLElement|string>} children 
+ * @param {HTMLElement[]|string} children 
  * @returns HTML element
  */
 export function make (type, prop, children) {
@@ -39,7 +39,32 @@ export function make (type, prop, children) {
     return e;
 }
 
+/**
+ * @param {Record<string,any>} prop 
+ * @param {HTMLElement[]|string} children 
+ * @returns Div element
+ */
 make.div = (prop, children) => make('div', prop, children);
+
+/**
+ * @param {Record<string,any>} prop 
+ * @param {HTMLElement[]|string} children 
+ * @returns Span element
+ */
+make.span = (prop, children) => make('span', prop, children);
+
+/**
+ * @param {Record<string,any>} prop 
+ * @param {HTMLElement[]|string} children 
+ * @returns Button element
+ */
+make.button = (prop, children) => make('button', prop, children);
+
+/**
+ * @param {Record<string,any>} prop 
+ * @returns Img element
+ */
+make.img = (prop) => make('img', prop);
 
 /**
  * Adds child element to parent replacing any old content

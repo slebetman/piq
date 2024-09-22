@@ -1,21 +1,18 @@
+import { emptyPage } from '../components/empty-page.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 
 async function main () {
-	const btn = make('button',{
-		onclick: () => {
-			api.openDir();
-		}
-	},'Open Folder');
+	function handleOpenPage (path) {
+		render(document.body, emptyPage({
+			onOpen: handleOpenPage,
+			currentPath: path,
+		}));
+	}
 
-	const page = make('div',{
-		style: {
-			display: 'flex',
-			width: '100vw',
-			height: '100vh',
-			alignItems: 'center',
-			justifyContent: 'center',
-		}
-	},[btn])
+	const page = emptyPage({
+		onOpen: handleOpenPage
+	});
+
 
 	render(document.body, page);
 }
