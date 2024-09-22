@@ -1,7 +1,13 @@
-const out = document.querySelector('#out');
+import { make } from '../lib/dom-utils.mjs'
 
 async function main () {
-	out.textContent = JSON.stringify(await api.getConfig(), null, 4);
+	const config = await api.getConfig();
+
+	const content = JSON.stringify(config, null, 4);
+
+	const out = make('pre', {}, content);
+
+	document.body.appendChild(out);
 }
 
 main();
