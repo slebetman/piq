@@ -18,7 +18,7 @@ async function main () {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			preload: path.join(import.meta.dirname, 'src/views/main/preload.js'),
+			preload: path.join(import.meta.dirname, 'src/preload/main.js'),
 		}
 	});
 	
