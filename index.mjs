@@ -22,6 +22,9 @@ async function main () {
 			preload: path.join(import.meta.dirname, 'src/preload/main.js'),
 		}
 	});
+
+	win.setMenuBarVisibility(false);
+	// win.autoHideMenuBar = true;
 	
 	win.loadFile(path.join(import.meta.dirname, 'src/views/main/index.html'));
 }
