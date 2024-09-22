@@ -1,5 +1,13 @@
 let eCache = {};
 
+/**
+ * Creates HTML element
+ * 
+ * @param {string} type 
+ * @param {Record<string,any>} prop 
+ * @param {Array<HTMLElement|string>} children 
+ * @returns HTML element
+ */
 export function make (type, prop, children) {
     let e = document.createElement(type);
 
@@ -33,6 +41,26 @@ export function make (type, prop, children) {
 
 make.div = (prop, children) => make('div', prop, children);
 
+/**
+ * Adds child element to parent replacing any old content
+ * 
+ * @param {HTMLElement} parent 
+ * @param {HTMLElement} child 
+ */
+export function render (parent, child) {
+    for (const e of Array.from(parent.childNodes)) {
+        parent.removeChild(e);
+    }
+
+    parent.appendChild(child);
+}
+
+/**
+ * Get HTML element
+ * 
+ * @param {string} id 
+ * @returns HTML element
+ */
 export function get (id) {
 	if (!eCache[id]) {
 		eCache[id] = document.getElementById(id);
