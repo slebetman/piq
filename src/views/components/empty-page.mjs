@@ -27,8 +27,8 @@ export function emptyPage (props) {
 		make.button({
 			onclick: async () => {
 				const result = await api.openDir();
-				if (!result.canceled) {
-					props?.onOpen?.(result.filePaths[0]);
+				if (result) {
+					props?.onOpen?.(result);
 				}
 			}
 		},'Open Folder')

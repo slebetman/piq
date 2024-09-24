@@ -2,15 +2,15 @@ import { emptyPage } from '../components/empty-page.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
-	function handleOpenPage (path) {
+	function handleOpenDir (path) {
 		render(document.body, emptyPage({
-			onOpen: handleOpenPage,
-			currentPath: path,
+			onOpen: handleOpenDir,
+			currentPath: path.map(x => x.name).join(', '),
 		}));
 	}
 
 	const page = emptyPage({
-		onOpen: handleOpenPage
+		onOpen: handleOpenDir
 	});
 
 

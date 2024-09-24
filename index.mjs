@@ -4,6 +4,7 @@ import path from 'path';
 const services = [
 	'config.mjs',
 	'open-dialog.mjs',
+	'file-listing.mjs',
 ];
 
 async function main () {
