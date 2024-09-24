@@ -9,34 +9,34 @@ let eCache = {};
  * @returns HTML element
  */
 export function make (type, prop, children) {
-    let e = document.createElement(type);
+	let e = document.createElement(type);
 
-    if (prop) {
-        for (let p in prop) {
-            if (p === 'style') {
-                let propStyle = prop[p];
-                for (let s in propStyle) {
-                    e.style[s] = propStyle[s];
-                }
-            }
-            else {
-                e[p] = prop[p];
-            }
-        }
-    }
+	if (prop) {
+		for (let p in prop) {
+			if (p === 'style') {
+				let propStyle = prop[p];
+				for (let s in propStyle) {
+					e.style[s] = propStyle[s];
+				}
+			}
+			else {
+				e[p] = prop[p];
+			}
+		}
+	}
 
-    if (children) {
-        if (typeof children === 'string') {
-            e.innerHTML = children;
-        }
-        else {
-            for (let c of children) {
-                e.appendChild(c);
-            }
-        }
-    }
+	if (children) {
+		if (typeof children === 'string') {
+			e.innerHTML = children;
+		}
+		else {
+			for (let c of children) {
+				e.appendChild(c);
+			}
+		}
+	}
 
-    return e;
+	return e;
 }
 
 /**
@@ -73,11 +73,11 @@ make.img = (prop) => make('img', prop);
  * @param {HTMLElement} child 
  */
 export function render (parent, child) {
-    for (const e of Array.from(parent.childNodes)) {
-        parent.removeChild(e);
-    }
+	for (const e of Array.from(parent.childNodes)) {
+		parent.removeChild(e);
+	}
 
-    parent.appendChild(child);
+	parent.appendChild(child);
 }
 
 /**
