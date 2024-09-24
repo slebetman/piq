@@ -1,5 +1,5 @@
 import { emptyPage } from '../components/empty-page.mjs';
-import { make, render } from '../lib/dom-utils.mjs'
+import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
 	function handleOpenPage (path) {
