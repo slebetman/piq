@@ -14,7 +14,8 @@ import { fileContainer } from "./file-container.mjs";
  * @property {Dirent[]} [files] - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
- * * @property {Function} [onChdir]
+ * @property {Function} [onChdir]
+ * @property {boolean} [showAll] - Show non-image files
  */
 
 /**
@@ -26,17 +27,7 @@ export function fileListContainer (props) {
 
 	if (props.files?.length) {
 		const regularFiles = [];
-		const directories = [fileContainer({
-			size: props.size,
-			file:{
-				name: '..',
-				parentPath: props.currentPath,
-				isDirectory: true,
-			},
-			onOpen: () => {
-				props.onChdir?.(`${props.currentPath}/..`);
-			}
-		})];
+		const directories = [];
 
 		for (const f of props.files) {
 			if (! f.name.startsWith('.')) {
@@ -52,11 +43,14 @@ export function fileListContainer (props) {
 						else {
 							props.onOpen?.(fullPath);
 						}
-					}
+					},
+					showAll: props.showAll,
 				});
 
-				if (f.isDirectory) directories.push(container);
-				else regularFiles.push(container);
+				if (container) {
+					if (f.isDirectory) directories.push(container);
+					else regularFiles.push(container);
+				}
 			}
 		}
 

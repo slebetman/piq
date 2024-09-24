@@ -41,7 +41,8 @@ export function fileList (props) {
 		},
 		[
 			topBar({
-				currentPath: props.currentPath
+				currentPath: props.currentPath,
+				onChdir: props.onChdir
 			}),
 			fileListContainer(props)
 		]

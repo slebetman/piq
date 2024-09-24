@@ -5,6 +5,7 @@ import { make } from "../../lib/dom-utils.mjs";
  * @property {number} size - Size of file icons in px
  * @property {Dirent[]} [files] - File list
  * @property {Function} [onOpen]
+ * @property {boolean} [showAll] - Show non-image files
  */
 
 function safePath (txt) {
@@ -15,7 +16,7 @@ function safePath (txt) {
 
 /**
  * @param {FileContainerProps} props 
- * @returns Div
+ * @returns Div or null
  */
 export function fileContainer (props) {
 	const containerStyle = {
@@ -48,7 +49,7 @@ export function fileContainer (props) {
 	},props.file.name)
 
 	if (props.file.isDirectory) {
-		icon.src = '../components/lib/folder-solid.svg';
+		icon.src = '../components/icons/folder-solid.svg';
 		icon.style.maxHeight = '80%';
 		icon.style.filter = 'invert(0.5)';
 
@@ -65,13 +66,16 @@ export function fileContainer (props) {
 			style: containerStyle
 		},[ icon ])
 	}
-	else {
-		icon.src = '../components/lib/file-solid.svg';
+	else if (props.showAll) {
+		icon.src = '../components/icons/file-solid.svg';
 		icon.style.maxHeight = '80%';
 		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
 			style: containerStyle
 		},[ icon, fileName ])
+	}
+	else {
+		return null;
 	}
 }
