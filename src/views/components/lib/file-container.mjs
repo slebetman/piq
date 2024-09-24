@@ -7,6 +7,12 @@ import { make } from "../../lib/dom-utils.mjs";
  * @property {Function} [onOpen]
  */
 
+function safePath (txt) {
+	return txt.split('/')
+		.map(x => encodeURIComponent(x))
+		.join('/');
+}
+
 /**
  * @param {FileContainerProps} props 
  * @returns Div
@@ -19,6 +25,7 @@ export function fileContainer (props) {
 		width: `${props.size ?? 80}px`,
 		height: `${props.size ?? 80}px`,
 		overflow: 'hidden',
+		color: '#ccc',
 	};
 
 	const icon = make.img({
@@ -37,13 +44,13 @@ export function fileContainer (props) {
 			textOverflow: 'ellipsis',
 			overflow: 'hidden',
 			whiteSpace: 'nowrap',
-			color: '#ccc',
 		}
 	},props.file.name)
 
 	if (props.file.isDirectory) {
-		icon.src = '../components/lib/folder.svg';
+		icon.src = '../components/lib/folder-solid.svg';
 		icon.style.maxHeight = '80%';
+		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
 			style: containerStyle,
@@ -51,15 +58,17 @@ export function fileContainer (props) {
 		},[ icon, fileName ])
 	}
 	else if (props.file.name.match(/jpe?g|png|webp/gi)) {
-		icon.src = `${props.file.parentPath}/${props.file.name}`;
+		icon.src = safePath(`${props.file.parentPath}/${props.file.name}`);
+		icon.style.scale = 1.2;
 
 		return make.div({
 			style: containerStyle
 		},[ icon ])
 	}
 	else {
-		icon.src = '../components/lib/file.svg';
+		icon.src = '../components/lib/file-solid.svg';
 		icon.style.maxHeight = '80%';
+		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
 			style: containerStyle

@@ -27,6 +27,11 @@ export function topBar (props) {
 			style: {
 				fontSize: '10px',
 				pointerEvents: 'none',
+				maxWidth: '300px',
+				textOverflow: 'ellipsis',
+				overflow: 'hidden',
+				whiteSpace: 'nowrap',
+				direction: 'rtl',
 			}
 		}, props.currentPath),
 	])
