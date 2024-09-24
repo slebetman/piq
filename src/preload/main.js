@@ -13,5 +13,8 @@ contextBridge.exposeInMainWorld('api', {
 		}
 
 		return null;
+	},
+	listDir: async (path) => {
+		return await ipcRenderer.invoke('dir-list', path);
 	}
 })
