@@ -67,14 +67,12 @@ export function fileListContainer (props) {
 		{
 			id: 'files-container',
 			style: {
-				display: 'flex',
-				flexDirection: 'row',
-				flexFlow: 'wrap',
+				display: 'grid',
+				gridTemplateColumns: `repeat(auto-fill, ${props.size ?? 80}px)`,
+				gridGap: 0,
 				width: '100%',
 				height: 'calc(100vh - 18px)',
-				justifyContent: 'center',
-				alignItems: 'flex-start',
-				alignContent: 'flex-start',
+				justifyContent: 'space-around',
 				overflowX: 'hidden',
 				overflowY: 'auto',
 			}
