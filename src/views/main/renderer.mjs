@@ -4,6 +4,8 @@ import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
 	function handleOpenDir ({files, path: currentPath}) {
+		sessionStorage.setItem('currentPath', currentPath);
+
 		render(document.body, fileList({
 			files,
 			currentPath,
@@ -15,12 +17,19 @@ async function main () {
 		}))
 	}
 
-	const page = emptyPage({
-		onOpen: handleOpenDir
-	});
+	const lastPath = sessionStorage.getItem('currentPath');
 
+	if (lastPath) {
+		const files = await api.listDir(lastPath)		;
+		handleOpenDir({files, path: lastPath});
+	}
+	else {
+		const page = emptyPage({
+			onOpen: handleOpenDir
+		});
 
-	render(document.body, page);
+		render(document.body, page);
+	}
 }
 
 main();
