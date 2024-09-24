@@ -50,7 +50,7 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen
 		},[ icon, fileName ])
 	}
-	else if (props.file.name.match(/jpe?g|png/gi)) {
+	else if (props.file.name.match(/jpe?g|png|webp/gi)) {
 		icon.src = `${props.file.parentPath}/${props.file.name}`;
 
 		return make.div({
