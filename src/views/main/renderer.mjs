@@ -3,13 +3,14 @@ import { fileList } from '../components/file-list.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
-	function handleOpenDir (files) {
+	function handleOpenDir ({files, path: currentPath}) {
 		render(document.body, fileList({
 			files,
+			currentPath,
 			size: 150,
 			onChdir: async (path) => {
 				const newFiles = await api.listDir(path);
-				handleOpenDir(newFiles);
+				handleOpenDir({files: newFiles, path: newFiles[0].parentPath});
 			}
 		}))
 	}

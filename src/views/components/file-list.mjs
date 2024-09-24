@@ -1,5 +1,6 @@
 import { make } from "../lib/dom-utils.mjs";
-import { fileContainer } from "./lib/file-container.mjs";
+import { fileListContainer } from "./lib/file-list-container.mjs";
+import { topBar } from "./lib/top-bar.mjs";
 
 /**
  * @typedef {Object} Dirent
@@ -12,6 +13,7 @@ import { fileContainer } from "./lib/file-container.mjs";
  * @typedef {Object} FileListProps
  * @property {number} size - Size of file icons in px
  * @property {Dirent[]} [files] - File list
+ * @property {string} [currentPath]
  * @property {Function} [onOpen]
  * * @property {Function} [onChdir]
  */
@@ -22,47 +24,6 @@ import { fileContainer } from "./lib/file-container.mjs";
  */
 
 export function fileList (props) {
-	const children = [];
-
-	if (props.files?.length) {
-		const regularFiles = [];
-		const directories = [fileContainer({
-			size: props.size,
-			file:{
-				name: '..',
-				parentPath: props.files[0].parentPath,
-				isDirectory: true,
-			},
-			onOpen: () => {
-				props.onChdir?.(`${props.files[0].parentPath}/..`);
-			}
-		})];
-
-		for (const f of props.files) {
-			if (! f.name.startsWith('.')) {
-				const container = fileContainer({
-					file: f,
-					size: props.size,
-					onOpen: () => {
-						const fullPath = `${f.parentPath}/${f.name}`;
-
-						if (f.isDirectory) {
-							props.onChdir?.(fullPath);
-						}
-						else {
-							props.onOpen?.(fullPath);
-						}
-					}
-				});
-
-				if (f.isDirectory) directories.push(container);
-				else regularFiles.push(container);
-			}
-		}
-
-		children.push(...directories, ...regularFiles);
-	}
-
 	return make.div(
 		{
 			id: 'files',
@@ -75,9 +36,14 @@ export function fileList (props) {
 				justifyContent: 'center',
 				alignItems: 'flex-start',
 				alignContent: 'flex-start',
-				overflowX: 'hidden',
+				overflow: 'hidden',
 			}
 		},
-		children
+		[
+			topBar({
+				currentPath: props.currentPath
+			}),
+			fileListContainer(props)
+		]
 	);
 }

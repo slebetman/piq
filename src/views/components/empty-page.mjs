@@ -3,7 +3,6 @@ import { make } from "../lib/dom-utils.mjs";
 /**
  * @typedef {Object} EmptyPageProps
  * @property {Function} [onOpen]
- * @property {string} [currentPath]
  */
 
 /**
@@ -23,7 +22,6 @@ export function emptyPage (props) {
 			gap: '5px',
 		}
 	},[
-		props.currentPath ? make.span({},props.currentPath) : null,
 		make.button({
 			onclick: async () => {
 				const result = await api.openDir();
@@ -32,5 +30,5 @@ export function emptyPage (props) {
 				}
 			}
 		},'Open Folder')
-	].filter(x => x))
+	])
 }
