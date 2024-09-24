@@ -58,7 +58,7 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen
 		},[ icon, fileName ])
 	}
-	else if (props.file.name.match(/jpe?g|png|webp/gi)) {
+	else if (props.file.name.match(/jpe?g|png|webp|svg|gif/gi)) {
 		icon.src = safePath(`${props.file.parentPath}/${props.file.name}`);
 		icon.style.scale = 1.2;
 

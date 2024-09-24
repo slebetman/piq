@@ -18,5 +18,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	listDir: async (path) => {
 		return await ipcRenderer.invoke('dir-list', path);
+	},
+	normalizePath: async (path) => {
+		return await ipcRenderer.invoke('path-normalize', path);
 	}
 })

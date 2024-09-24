@@ -16,4 +16,8 @@ export async function init () {
 			parentPath: x.parentPath,
 		}))
 	});
+
+	ipcMain.handle('path-normalize', async (e, dirPath) => {
+		return path.normalize(dirPath);
+	})
 }

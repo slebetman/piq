@@ -11,8 +11,9 @@ async function main () {
 			currentPath,
 			size: 150,
 			onChdir: async (path) => {
+				const normalPath = await api.normalizePath(path);
 				const newFiles = await api.listDir(path);
-				handleOpenDir({files: newFiles, path: newFiles[0].parentPath});
+				handleOpenDir({ files: newFiles, path: normalPath });
 			}
 		}))
 	}
