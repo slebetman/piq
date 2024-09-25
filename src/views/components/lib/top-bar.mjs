@@ -1,12 +1,15 @@
-import { make } from "../../lib/dom-utils.mjs";
+import { cssVar, make } from "../../lib/dom-utils.mjs";
 
 export const BAR_HEIGHT = '24px';
+let size = 150;
+
+cssVar('--thumbnail-size', `${size}px`);
+cssVar('--bar-height', BAR_HEIGHT);
 
 /**
  * @typedef {Object} TopBarProps
  * @property {string} currentPath
  * @property {number} [imgCount]
- * @property {number} [size]
  * @property {Function} [onSizeChange]
  * @property {Function} [onChdir]
  */
@@ -58,7 +61,11 @@ export function topBar (props) {
 			min: 50,
 			max: 520,
 			step: 10,
-			value: props.size,
+			value: size,
+			oninput: (e) => {
+				size = e.currentTarget.value;
+				cssVar('--thumbnail-size', `${size}px`);
+			}
 		})
 	])
 }

@@ -1,10 +1,6 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
-import { BAR_HEIGHT } from '../components/lib/top-bar.mjs';
-import { cssVar, render } from '../lib/dom-utils.mjs'
-
-cssVar('--thumbnail-size', '150px');
-cssVar('--bar-height', BAR_HEIGHT);
+import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
 	function handleOpenDir ({files, path: currentPath}) {
