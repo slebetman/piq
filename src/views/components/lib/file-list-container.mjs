@@ -1,5 +1,6 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { fileContainer } from "./file-container.mjs";
+import { BAR_HEIGHT } from "./top-bar.mjs";
 
 /**
  * @typedef {Object} Dirent
@@ -62,11 +63,11 @@ export function fileListContainer (props) {
 			id: 'files-container',
 			style: {
 				display: 'grid',
-				gridTemplateColumns: `repeat(auto-fill, ${props.size ?? 80}px)`,
-				gridTemplateRows: `${props.size ?? 80}px ${props.size ?? 80}px`,
+				gridTemplateColumns: `repeat(auto-fill, ${props.size ?? DEFAULT_SIZE}px)`,
+				gridTemplateRows: `${props.size ?? DEFAULT_SIZE}px ${props.size ?? DEFAULT_SIZE}px`,
 				gridGap: 0,
 				width: '100%',
-				height: 'calc(100vh - 18px)',
+				height: `calc(100vh - ${BAR_HEIGHT})`,
 				justifyContent: 'space-around',
 				overflowX: 'hidden',
 				overflowY: 'auto',

@@ -1,5 +1,7 @@
 import { make } from "../../lib/dom-utils.mjs";
 
+export const DEFAULT_SIZE = 80;
+
 /**
  * @typedef {Object} FileContainerProps
  * @property {number} size - Size of file icons in px
@@ -23,8 +25,8 @@ export function fileContainer (props) {
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-		width: `${props.size ?? 80}px`,
-		height: `${props.size ?? 80}px`,
+		width: `${props.size ?? DEFAULT_SIZE}px`,
+		height: `${props.size ?? DEFAULT_SIZE}px`,
 		overflow: 'hidden',
 		color: '#ccc',
 	};
@@ -41,7 +43,7 @@ export function fileContainer (props) {
 	const fileName = make.div({
 		style: {
 			fontSize: '10px',
-			maxWidth: `${props.size ?? 80}px`,
+			maxWidth: `${props.size ?? DEFAULT_SIZE}px`,
 			textOverflow: 'ellipsis',
 			overflow: 'hidden',
 			whiteSpace: 'nowrap',

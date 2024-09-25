@@ -1,6 +1,6 @@
 import { make } from "../../lib/dom-utils.mjs";
 
-const BAR_HEIGHT = '24px';
+export const BAR_HEIGHT = '24px';
 
 /**
  * @typedef {Object} TopBarProps
