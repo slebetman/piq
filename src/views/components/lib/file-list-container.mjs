@@ -63,6 +63,7 @@ export function fileListContainer (props) {
 			style: {
 				display: 'grid',
 				gridTemplateColumns: `repeat(auto-fill, ${props.size ?? 80}px)`,
+				gridTemplateRows: `${props.size ?? 80}px ${props.size ?? 80}px`,
 				gridGap: 0,
 				width: '100%',
 				height: 'calc(100vh - 18px)',
