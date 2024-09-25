@@ -45,6 +45,7 @@ export function fileList (props) {
 				currentPath: props.currentPath,
 				onChdir: props.onChdir,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
+				size: props.size,
 			}),
 			fileListContainer(props)
 		]

@@ -52,5 +52,13 @@ export function topBar (props) {
 				pointerEvents: 'none',
 			}
 		}, props.imgCount ? `(${props.imgCount} images)` : ''),
+		make('input',{
+			id: 'size-slider',
+			type: 'range',
+			min: 50,
+			max: 520,
+			step: 10,
+			value: props.size,
+		})
 	])
 }
