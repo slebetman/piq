@@ -22,16 +22,6 @@ function safePath (txt) {
  * @returns Div or null
  */
 export function fileContainer (props) {
-	const containerStyle = {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		width: `${props.size ?? DEFAULT_SIZE}px`,
-		height: `${props.size ?? DEFAULT_SIZE}px`,
-		overflow: 'hidden',
-		color: '#ccc',
-	};
-
 	const icon = make.img({
 		title: props.file.name,
 		style: {
@@ -57,7 +47,7 @@ export function fileContainer (props) {
 		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
-			style: containerStyle,
+			className: 'thumbnail',
 			ondblclick: props.onOpen
 		},[ icon, fileName ])
 	}
@@ -66,7 +56,7 @@ export function fileContainer (props) {
 		icon.style.scale = 1.2;
 
 		return make.div({
-			style: containerStyle
+			className: 'thumbnail',
 		},[ icon ])
 	}
 	else if (props.showAll) {
@@ -75,7 +65,7 @@ export function fileContainer (props) {
 		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
-			style: containerStyle
+			className: 'thumbnail',
 		},[ icon, fileName ])
 	}
 	else {

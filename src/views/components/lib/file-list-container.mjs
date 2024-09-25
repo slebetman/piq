@@ -61,17 +61,6 @@ export function fileListContainer (props) {
 	return make.div(
 		{
 			id: 'files-container',
-			style: {
-				display: 'grid',
-				gridTemplateColumns: `repeat(auto-fill, ${props.size ?? DEFAULT_SIZE}px)`,
-				gridTemplateRows: `${props.size ?? DEFAULT_SIZE}px ${props.size ?? DEFAULT_SIZE}px`,
-				gridGap: 0,
-				width: '100%',
-				height: `calc(100vh - ${BAR_HEIGHT})`,
-				justifyContent: 'space-around',
-				overflowX: 'hidden',
-				overflowY: 'auto',
-			}
 		},
 		children
 	);

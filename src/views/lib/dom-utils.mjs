@@ -92,3 +92,19 @@ export function get (id) {
 	}
 	return eCache[id];
 }
+
+/**
+ * Gets and sets CSS variables
+ * 
+ * @param {string} name 
+ * @param {string} value 
+ * @returns string
+ */
+export function cssVar (name, value) {
+	if (value) {
+		return document.documentElement.style.setProperty(name, value);
+	}
+	else {
+		return document.documentElement.style.getPropertyValue(name);
+	}
+}
