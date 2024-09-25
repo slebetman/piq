@@ -31,7 +31,7 @@ export function make (type, prop, children) {
 		}
 		else {
 			for (let c of children) {
-				e.appendChild(c);
+				if (c) e.appendChild(c);
 			}
 		}
 	}

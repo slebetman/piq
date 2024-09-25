@@ -5,6 +5,7 @@ export const BAR_HEIGHT = '24px';
 /**
  * @typedef {Object} TopBarProps
  * @property {string} currentPath
+ * @property {number} [imgCount]
  * @property {number} [size]
  * @property {Function} [onSizeChange]
  * @property {Function} [onChdir]
@@ -45,5 +46,11 @@ export function topBar (props) {
 				direction: 'rtl',
 			}
 		}, props.currentPath),
+		make.span({
+			style: {
+				fontSize: '10px',
+				pointerEvents: 'none',
+			}
+		}, props.imgCount ? `(${props.imgCount} images)` : ''),
 	])
 }

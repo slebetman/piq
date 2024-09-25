@@ -1,4 +1,5 @@
 import { make } from "../../lib/dom-utils.mjs";
+import { isImage } from "../../lib/image-files.mjs";
 
 export const DEFAULT_SIZE = 80;
 
@@ -60,7 +61,7 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen
 		},[ icon, fileName ])
 	}
-	else if (props.file.name.match(/jpe?g|png|webp|svg|gif/gi)) {
+	else if (isImage(props.file.name)) {
 		icon.src = safePath(`${props.file.parentPath}/${props.file.name}`);
 		icon.style.scale = 1.2;
 

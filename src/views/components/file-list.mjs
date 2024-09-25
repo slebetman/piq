@@ -1,4 +1,5 @@
 import { make } from "../lib/dom-utils.mjs";
+import { isImage } from "../lib/image-files.mjs";
 import { fileListContainer } from "./lib/file-list-container.mjs";
 import { topBar } from "./lib/top-bar.mjs";
 
@@ -42,7 +43,8 @@ export function fileList (props) {
 		[
 			topBar({
 				currentPath: props.currentPath,
-				onChdir: props.onChdir
+				onChdir: props.onChdir,
+				imgCount: props.files.filter(x => isImage(x.name)).length,
 			}),
 			fileListContainer(props)
 		]
