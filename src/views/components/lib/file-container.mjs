@@ -1,11 +1,8 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
 
-export const DEFAULT_SIZE = 80;
-
 /**
  * @typedef {Object} FileContainerProps
- * @property {number} size - Size of file icons in px
  * @property {Dirent[]} [files] - File list
  * @property {Function} [onOpen]
  * @property {boolean} [showAll] - Show non-image files
@@ -24,36 +21,23 @@ function safePath (txt) {
 export function fileContainer (props) {
 	const icon = make.img({
 		title: props.file.name,
-		style: {
-			width: '100%',
-			height: '100%',
-			objectFit: 'contain',
-		}
+		className: 'thumbnail-img',
 	});
 
 	const fileName = make.div({
-		style: {
-			fontSize: '10px',
-			maxWidth: `${props.size ?? DEFAULT_SIZE}px`,
-			textOverflow: 'ellipsis',
-			overflow: 'hidden',
-			whiteSpace: 'nowrap',
-		}
+		className: 'thumbnail-name',
 	},props.file.name)
 
 	if (props.file.isDirectory) {
 		icon.src = '../components/icons/folder-solid.svg';
-		icon.style.maxHeight = '80%';
-		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
-			className: 'thumbnail',
+			className: 'thumbnail thumbnail-icon',
 			ondblclick: props.onOpen
 		},[ icon, fileName ])
 	}
 	else if (isImage(props.file.name)) {
 		icon.src = safePath(`${props.file.parentPath}/${props.file.name}`);
-		icon.style.scale = 1.2;
 
 		return make.div({
 			className: 'thumbnail',
@@ -61,11 +45,9 @@ export function fileContainer (props) {
 	}
 	else if (props.showAll) {
 		icon.src = '../components/icons/file-solid.svg';
-		icon.style.maxHeight = '80%';
-		icon.style.filter = 'invert(0.5)';
 
 		return make.div({
-			className: 'thumbnail',
+			className: 'thumbnail thumbnail-icon',
 		},[ icon, fileName ])
 	}
 	else {

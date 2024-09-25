@@ -12,7 +12,6 @@ import { topBar } from "./lib/top-bar.mjs";
 
 /**
  * @typedef {Object} FileListProps
- * @property {number} size - Size of file icons in px
  * @property {Dirent[]} [files] - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
@@ -45,7 +44,6 @@ export function fileList (props) {
 				currentPath: props.currentPath,
 				onChdir: props.onChdir,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
-				size: props.size,
 			}),
 			fileListContainer(props)
 		]

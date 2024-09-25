@@ -9,7 +9,6 @@ async function main () {
 		render(document.body, fileList({
 			files,
 			currentPath,
-			size: 150,
 			onChdir: async (path) => {
 				const normalPath = await api.normalizePath(path);
 				const newFiles = await api.listDir(path);

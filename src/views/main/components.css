@@ -1,17 +1,45 @@
+:root {
+	--default-thumbnail-size: 80px;
+}
+
 .thumbnail {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: var(--thumbnail-size, 80px);
-	height: var(--thumbnail-size, 80px);
+	width: var(--thumbnail-size, --default-thumbnail-size);
+	height: var(--thumbnail-size, --default-thumbnail-size);
 	overflow: hidden;
 	color: #ccc;
 }
 
+.thumbnail-img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	scale: 1.2;
+}
+
+.thumbnail-icon img {
+	max-height: 80%;
+	filter: invert(0.5);
+	scale: 1;
+}
+
+.thumbnail-name {
+	font-size: 10px;
+	max-width: var(--thumbnail-size, --default-thumbnail-size);
+	text-align: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 #files-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, var(--thumbnail-size, 80px));
-	grid-template-rows: var(--thumbnail-size, 80px) var(--thumbnail-size, 80px);
+	grid-template-columns:
+		repeat(auto-fill, var(--thumbnail-size, --default-thumbnail-size));
+	grid-template-rows:
+		var(--thumbnail-size, --default-thumbnail-size)
+		var(--thumbnail-size, --default-thumbnail-size);
 	grid-gap: 0;
 	width: 100%;
 	height: calc(100vh - var(--bar-height, 24px));

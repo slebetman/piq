@@ -1,6 +1,5 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { fileContainer } from "./file-container.mjs";
-import { BAR_HEIGHT } from "./top-bar.mjs";
 
 /**
  * @typedef {Object} Dirent
@@ -11,7 +10,6 @@ import { BAR_HEIGHT } from "./top-bar.mjs";
 
 /**
  * @typedef {Object} FileListContainerProps
- * @property {number} size - Size of file icons in px
  * @property {Dirent[]} [files] - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
@@ -34,7 +32,6 @@ export function fileListContainer (props) {
 			if (! f.name.startsWith('.')) {
 				const container = fileContainer({
 					file: f,
-					size: props.size,
 					onOpen: () => {
 						const fullPath = `${f.parentPath}/${f.name}`;
 
