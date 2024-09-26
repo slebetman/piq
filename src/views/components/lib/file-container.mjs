@@ -1,5 +1,6 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
+import { safePath } from "../../lib/safe-path.mjs";
 
 /**
  * @typedef {Object} FileContainerProps
@@ -7,12 +8,6 @@ import { isImage } from "../../lib/image-files.mjs";
  * @property {Function} [onOpen]
  * @property {boolean} [showAll] - Show non-image files
  */
-
-function safePath (txt) {
-	return txt.split('/')
-		.map(x => encodeURIComponent(x))
-		.join('/');
-}
 
 /**
  * @param {FileContainerProps} props 

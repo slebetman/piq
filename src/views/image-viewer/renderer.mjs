@@ -1,4 +1,5 @@
 import { make, render } from '../lib/dom-utils.mjs'
+import { safePath } from '../lib/safe-path.mjs';
 
 async function main () {
 	api.imgListener((stat) => {
@@ -9,7 +10,7 @@ async function main () {
 		// size: readable(stat.size),
 
 		const img = make.img({
-			src: stat.image,
+			src: safePath(stat.image),
 			style: {
 				width: '100vw',
 				height: '100vh',
