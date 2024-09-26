@@ -1,12 +1,6 @@
 import { ipcMain } from 'electron';
-import xdg from 'xdg-portable';
-import path from 'path';
 import fs from 'fs/promises';
-
-const APP_NAME = 'piq';
-
-export const CONFIG_DIR = path.join(xdg.config(), APP_NAME);
-export const CACHE_DIR = path.join(xdg.cache(), APP_NAME);
+import { CACHE_DIR, CONFIG_DIR } from './lib/config-paths.mjs';
 
 export async function init () {
 	// sync code here:

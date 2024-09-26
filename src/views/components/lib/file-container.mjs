@@ -41,6 +41,7 @@ export function fileContainer (props) {
 
 		return make.div({
 			className: 'thumbnail',
+			ondblclick: props.onOpen
 		},[ icon ])
 	}
 	else if (props.showAll) {

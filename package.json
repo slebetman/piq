@@ -13,6 +13,7 @@
     "electron": "^32.1.0"
   },
   "dependencies": {
+    "sharp": "^0.33.5",
     "xdg-portable": "^10.6.0"
   }
 }

@@ -21,5 +21,11 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	normalizePath: async (path) => {
 		return await ipcRenderer.invoke('path-normalize', path);
+	},
+	imgInfo: async (path) => {
+		return await ipcRenderer.invoke('img-info', path);
+	},
+	viewImage: async (path) => {
+		return await ipcRenderer.invoke('viewer', path);
 	}
 })

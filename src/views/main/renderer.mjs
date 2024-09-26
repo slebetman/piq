@@ -13,6 +13,9 @@ async function main () {
 				const normalPath = await api.normalizePath(path);
 				const newFiles = await api.listDir(path);
 				handleOpenDir({ files: newFiles, path: normalPath });
+			},
+			onOpen: async (path) => {
+				await api.viewImage(path);
 			}
 		}))
 	}
@@ -20,7 +23,7 @@ async function main () {
 	const lastPath = sessionStorage.getItem('currentPath');
 
 	if (lastPath) {
-		const files = await api.listDir(lastPath)		;
+		const files = await api.listDir(lastPath);
 		handleOpenDir({files, path: lastPath});
 	}
 	else {

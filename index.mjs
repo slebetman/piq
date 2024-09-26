@@ -4,7 +4,8 @@ import path from 'path';
 const services = [
 	'config.mjs',
 	'open-dialog.mjs',
-	'file-listing.mjs',
+	'file-ops.mjs',
+	'open-viewer.mjs',
 ];
 
 async function main () {
@@ -20,7 +21,7 @@ async function main () {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			preload: path.join(import.meta.dirname, 'src/preload/main.js'),
+			preload: path.join(import.meta.dirname, 'src/views/main/preload.js'),
 		}
 	});
 

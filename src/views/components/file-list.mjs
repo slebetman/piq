@@ -15,7 +15,7 @@ import { topBar } from "./lib/top-bar.mjs";
  * @property {Dirent[]} [files] - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
- * * @property {Function} [onChdir]
+ * @property {Function} [onChdir]
  */
 
 /**
