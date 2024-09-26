@@ -1,3 +1,5 @@
+![icon](icons/icon64.png)
+
 Piq
 ---
 
