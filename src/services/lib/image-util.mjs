@@ -12,15 +12,22 @@ export async function thumbnail (imgPath) {
 	const normalPath = path.normalize(imgPath);
 	const hashPath = hash(normalPath);
 
-	const cachePath = path.join(CACHE_DIR, hashPath);
+	const cachePath = path.join(CACHE_DIR, `${hashPath}.webp`);
 	
 	try {
+		const now = new Date();
 		await fs.stat(cachePath);
+		await fs.utimes(cachePath, now, now);
 	}
 	catch (err) {
-		await sharp(imgPath).resize(256,256,{
-			fit: 'inside'
-		})
+		await sharp(imgPath)
+			.resize(256,256,{
+				fit: 'inside'
+			})
+			.webp({
+				quality: 75
+			})
+			.toFile(cachePath);
 	}
 
 	return cachePath;
