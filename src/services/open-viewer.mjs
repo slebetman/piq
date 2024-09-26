@@ -7,7 +7,9 @@ export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath) => {
 		const primaryDisplay = screen.getPrimaryDisplay();
-  		const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
+  		const { height: screenHeight } = primaryDisplay.workAreaSize;
+		let cursor = screen.getCursorScreenPoint();
+		let distScreen = screen.getDisplayNearestPoint({x: cursor.x, y: cursor.y});
 
 		const stat = await imageInfo(imgPath);
 		let { width, height } = stat;
@@ -19,15 +21,16 @@ export async function init () {
 		}
 
 		const win = new BrowserWindow({
-			width,
-			height,
 			webPreferences: {
 				preload: path.join(import.meta.dirname, '../views/image-viewer/preload.js'),
-			}
+			},
+			x: Math.round(distScreen.bounds.x + ((distScreen.bounds.width - width) / 2)),
+			y: Math.round(distScreen.bounds.y + ((distScreen.bounds.height - height) / 2)),
 		});
 		win.setMenuBarVisibility(false);
 		win.setAspectRatio(aspect);
 		win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
+		win.setContentSize(width, height);
 
 		win.webContents.once('did-finish-load', () => {
 			win.webContents.send('image', {
