@@ -12,6 +12,8 @@ async function main () {
 			src: stat.image,
 			style: {
 				width: '100vw',
+				height: '100vh',
+				objectFit: 'contain',
 			}
 		});
 
