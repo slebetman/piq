@@ -11,16 +11,7 @@ import { make } from "../lib/dom-utils.mjs";
  */
 export function emptyPage (props) {
 	return make.div({
-		id: 'container',
-		style: {
-			display: 'flex',
-			width: '100vw',
-			height: '100vh',
-			alignItems: 'center',
-			justifyContent: 'center',
-			flexDirection: 'column',
-			gap: '5px',
-		}
+		id: 'empty-page',
 	},[
 		make.button({
 			onclick: async () => {

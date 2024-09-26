@@ -58,8 +58,8 @@ export function topBar (props) {
 		make('input',{
 			id: 'size-slider',
 			type: 'range',
-			min: 50,
-			max: 520,
+			min: 100,
+			max: 550,
 			step: 10,
 			value: size,
 			oninput: (e) => {

@@ -27,17 +27,6 @@ export function fileList (props) {
 	return make.div(
 		{
 			id: 'files',
-			style: {
-				display: 'flex',
-				flexDirection: 'row',
-				flexFlow: 'wrap',
-				width: '100vw',
-				height: '100vh',
-				justifyContent: 'center',
-				alignItems: 'flex-start',
-				alignContent: 'flex-start',
-				overflow: 'hidden',
-			}
 		},
 		[
 			topBar({
