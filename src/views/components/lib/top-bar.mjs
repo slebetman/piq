@@ -1,4 +1,5 @@
 import { cssVar, make } from "../../lib/dom-utils.mjs";
+import { slider } from "./slider.mjs";
 
 export const BAR_HEIGHT = '24px';
 let size = 150;
@@ -38,24 +39,32 @@ export function topBar (props) {
 			},
 			onclick: () => props.onChdir?.(`${props.currentPath}/..`),
 		}),
-		make.span({
-			style: {
-				fontSize: '10px',
-				pointerEvents: 'none',
-				maxWidth: '300px',
-				textOverflow: 'ellipsis',
-				overflow: 'hidden',
-				whiteSpace: 'nowrap',
-				direction: 'rtl',
+		make.div({
+			style:{
+				display: 'flex',
+				alignItems: 'center',
+				gap: '5px',
 			}
-		}, props.currentPath),
-		make.span({
-			style: {
-				fontSize: '10px',
-				pointerEvents: 'none',
-			}
-		}, props.imgCount ? `(${props.imgCount} images)` : ''),
-		make('input',{
+		},[
+			make.span({
+				style: {
+					fontSize: '10px',
+					pointerEvents: 'none',
+					maxWidth: '300px',
+					textOverflow: 'ellipsis',
+					overflow: 'hidden',
+					whiteSpace: 'nowrap',
+					direction: 'rtl',
+				}
+			}, props.currentPath),
+			make.span({
+				style: {
+					fontSize: '10px',
+					pointerEvents: 'none',
+				}
+			}, props.imgCount ? `(${props.imgCount} images)` : ''),
+		]),
+		slider({
 			id: 'size-slider',
 			type: 'range',
 			min: 100,
