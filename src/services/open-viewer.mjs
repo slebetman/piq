@@ -7,7 +7,7 @@ export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
 		const primaryDisplay = screen.getPrimaryDisplay();
-  		const { height: screenHeight } = primaryDisplay.workAreaSize;
+  		const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
 		let cursor = screen.getCursorScreenPoint();
 		let distScreen = screen.getDisplayNearestPoint({x: cursor.x, y: cursor.y});
 
@@ -18,6 +18,11 @@ export async function init () {
 		if (height > (screenHeight - 50)) {
 			height = (screenHeight - 50);
 			width = Math.round(aspect * height);
+		}
+
+		if (width > (screenWidth - 20)) {
+			width = (screenWidth - 20);
+			height = Math.round(width / aspect);
 		}
 
 		const win = new BrowserWindow({
