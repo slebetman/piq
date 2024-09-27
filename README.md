@@ -4,3 +4,5 @@ Piq
 ---
 
 Simple cross-platform image browser
+
+![screenshot](screenshot.png)
