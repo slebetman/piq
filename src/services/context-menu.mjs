@@ -1,7 +1,6 @@
 import { ipcMain, Menu } from "electron";
 import open from "open";
 
-
 export async function init () {
 	ipcMain.handle('context-menu-img', async (e, filePath) => {
 		const template = [

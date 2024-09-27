@@ -10,7 +10,7 @@ async function main () {
 		// type: stat.format,
 		// size: readable(stat.size),
 
-		const img = imgViewer(stat.image);
+		const img = imgViewer({imgPath: stat.image});
 
 		document.title = `Piq: ${stat.name}`;
 
