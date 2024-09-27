@@ -14,8 +14,8 @@ async function main () {
 				const newFiles = await api.listDir(path);
 				handleOpenDir({ files: newFiles, path: normalPath });
 			},
-			onOpen: async (path) => {
-				await api.viewImage(path);
+			onOpen: async (path, index) => {
+				await api.viewImage(path, files, index);
 			}
 		}))
 	}

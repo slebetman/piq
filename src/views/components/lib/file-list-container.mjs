@@ -28,7 +28,7 @@ export function fileListContainer (props) {
 		const regularFiles = [];
 		const directories = [];
 
-		for (const f of props.files) {
+		for (const [idx, f] of props.files.entries()) {
 			if (! f.name.startsWith('.')) {
 				const container = fileContainer({
 					file: f,
@@ -39,7 +39,7 @@ export function fileListContainer (props) {
 							props.onChdir?.(fullPath);
 						}
 						else {
-							props.onOpen?.(fullPath);
+							props.onOpen?.(fullPath,  idx);
 						}
 					},
 					showAll: props.showAll,

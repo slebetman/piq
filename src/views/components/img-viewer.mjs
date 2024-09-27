@@ -1,9 +1,9 @@
 import { make } from "../lib/dom-utils.mjs";
 import { safePath } from "../lib/safe-path.mjs";
 
-export function imgViewer ({ imgPath }) {
+export function imgViewer ({ stat }) {
 	return make.img({
-		src: safePath(imgPath),
+		src: safePath(stat.image),
 		style: {
 			width: '100vw',
 			height: '100vh',
@@ -11,7 +11,7 @@ export function imgViewer ({ imgPath }) {
 		},
 		onauxclick: (e) => {
 			if (e.button === 2) {
-				api.contextMenu(imgPath);
+				api.contextMenu(stat.image);
 			}
 		}
 	})

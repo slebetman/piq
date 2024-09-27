@@ -5,7 +5,7 @@ import path from 'path';
 
 export async function init () {
 	// sync code here:
-	ipcMain.handle('viewer', async (e, imgPath) => {
+	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
 		const primaryDisplay = screen.getPrimaryDisplay();
   		const { height: screenHeight } = primaryDisplay.workAreaSize;
 		let cursor = screen.getCursorScreenPoint();
@@ -40,7 +40,7 @@ export async function init () {
 				height,
 				type: stat.format,
 				size: readable(stat.size),
-			});
+			}, files, index);
 		})
 	});
 }
