@@ -2,13 +2,19 @@ import { imgViewer } from '../components/img-viewer.mjs';
 import { render } from '../lib/dom-utils.mjs'
 import { isImage } from '../lib/image-files.mjs';
 
-function displayImg (stat) {
+async function displayImg (stat, wrap = false) {
+	const imgPath = `${stat.parentPath}/${stat.name}`;
 	const img = imgViewer({
 		stat: {
-			image: `${stat.parentPath}/${stat.name}`,
+			image: imgPath,
 		}
 	});
 	render(document.body, img);
+
+	if (wrap) {
+		const imgInfo = await api.imgInfo(imgPath);
+		api.wrapWindow(imgInfo.width, imgInfo.height);
+	}
 }
 
 async function main () {
@@ -17,8 +23,7 @@ async function main () {
 		
 		// stat: {
 		//   image: imgPath,
-		//   width,
-		//   height,
+		//   name,
 		//   type: stat.format,
 		//   size: readable(stat.size),
 		// }
@@ -34,7 +39,7 @@ async function main () {
 						i++;
 						if (isImage(files[i].name)) {
 							idx = i;
-							displayImg(files[idx]);
+							displayImg(files[idx], true);
 							break;
 						}
 					}
@@ -46,7 +51,7 @@ async function main () {
 						i--;
 						if (isImage(files[i].name)) {
 							idx = i;
-							displayImg(files[idx]);
+							displayImg(files[idx], true);
 							break;
 						}
 					}

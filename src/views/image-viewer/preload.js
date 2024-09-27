@@ -15,4 +15,7 @@ contextBridge.exposeInMainWorld('api', {
 	imgInfo: async (path) => {
 		return await ipcRenderer.invoke('img-info', path);
 	},
+	wrapWindow: async (width, height) => {
+		return await ipcRenderer.invoke('wrap-window', width, height);
+	}
 })

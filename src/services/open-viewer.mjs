@@ -3,49 +3,80 @@ import { imageInfo } from './lib/image-util.mjs';
 import { readable } from './lib/readable-number.mjs';
 import path from 'path';
 
+/**
+ * @param {BrowserWindow} win 
+ * @param {number} width 
+ * @param {number} height 
+ */
+function wrapWindowAroundImage (win, width, height) {
+	let w = width;
+	let h = height;
+
+	const bounds = win.getContentBounds();
+	const center = {
+		x: (bounds.x + bounds.width) / 2,
+		y: (bounds.y + bounds.height) / 2,
+	};
+
+	const display = screen.getDisplayNearestPoint(center);
+	const { width: screenWidth, height: screenHeight } = display.workAreaSize;
+
+	const aspect = w/h;
+
+	if (h > (screenHeight - 50)) {
+		h = (screenHeight - 50);
+		w = Math.round(aspect * h);
+	}
+
+	if (w > (screenWidth - 20)) {
+		w = (screenWidth - 20);
+		h = Math.round(w / aspect);
+	}
+
+	win.setAspectRatio(aspect);
+	win.setContentSize(w, h);
+	win.setPosition(
+		Math.round(display.bounds.x + ((display.bounds.width - w) / 2)),
+		Math.round(display.bounds.y + ((display.bounds.height - h) / 2))
+	)
+
+	return {
+		width: w,
+		height: h,
+	}
+}
+
 export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
-		const primaryDisplay = screen.getPrimaryDisplay();
-  		const { width: screenWidth, height: screenHeight } = primaryDisplay.workAreaSize;
-		let cursor = screen.getCursorScreenPoint();
-		let distScreen = screen.getDisplayNearestPoint({x: cursor.x, y: cursor.y});
-
 		const stat = await imageInfo(imgPath);
-		let { width, height } = stat;
-		const aspect = width/height;
-
-		if (height > (screenHeight - 50)) {
-			height = (screenHeight - 50);
-			width = Math.round(aspect * height);
-		}
-
-		if (width > (screenWidth - 20)) {
-			width = (screenWidth - 20);
-			height = Math.round(width / aspect);
-		}
 
 		const win = new BrowserWindow({
 			webPreferences: {
 				preload: path.join(import.meta.dirname, '../views/image-viewer/preload.js'),
 			},
-			x: Math.round(distScreen.bounds.x + ((distScreen.bounds.width - width) / 2)),
-			y: Math.round(distScreen.bounds.y + ((distScreen.bounds.height - height) / 2)),
 		});
+		win.hide();
 		win.setMenuBarVisibility(false);
-		win.setAspectRatio(aspect);
 		win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
-		win.setContentSize(width, height);
+		wrapWindowAroundImage(win, stat.width, stat.height);
+		win.show();
 
 		win.webContents.once('did-finish-load', () => {
 			win.webContents.send('image', {
 				image: imgPath,
 				name: path.basename(imgPath),
-				width,
-				height,
 				type: stat.format,
 				size: readable(stat.size),
 			}, files, index);
 		})
 	});
+
+	ipcMain.handle('wrap-window', async (e, width, height) => {
+		const win = BrowserWindow.fromWebContents(e.sender);
+
+		if (win) {
+			wrapWindowAroundImage(win, width, height);
+		}
+	})
 }
