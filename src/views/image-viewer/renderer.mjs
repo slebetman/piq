@@ -1,3 +1,4 @@
+import { imgViewer } from '../components/img-viewer.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 import { safePath } from '../lib/safe-path.mjs';
 
@@ -9,14 +10,7 @@ async function main () {
 		// type: stat.format,
 		// size: readable(stat.size),
 
-		const img = make.img({
-			src: safePath(stat.image),
-			style: {
-				width: '100vw',
-				height: '100vh',
-				objectFit: 'contain',
-			}
-		});
+		const img = imgViewer(stat.image);
 
 		document.title = `Piq: ${stat.name}`;
 

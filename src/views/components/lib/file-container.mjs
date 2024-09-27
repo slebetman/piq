@@ -32,11 +32,17 @@ export function fileContainer (props) {
 		},[ icon, fileName ])
 	}
 	else if (isImage(props.file.name)) {
-		icon.src = safePath(`${props.file.parentPath}/${props.file.name}`);
+		const imgPath = `${props.file.parentPath}/${props.file.name}`;
+		icon.src = safePath(imgPath);
 
 		return make.div({
 			className: 'thumbnail',
-			ondblclick: props.onOpen
+			ondblclick: props.onOpen,
+			onauxclick: (e) => {
+				if (e.button === 2) {
+					api.contextMenu(imgPath);
+				}
+			},
 		},[ icon ])
 	}
 	else if (props.showAll) {

@@ -6,6 +6,7 @@ const services = [
 	'open-dialog.mjs',
 	'file-ops.mjs',
 	'open-viewer.mjs',
+	'context-menu.mjs',
 ];
 
 async function main () {
