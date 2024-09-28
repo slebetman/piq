@@ -13,11 +13,16 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 	let h = height;
 	let recenter = setCenter;
 
-	const bounds = win.getContentBounds();
+	const bounds = win.getBounds();
+	const contentBounds = win.getContentBounds();
 	const center = {
 		x: bounds.x + (bounds.width / 2),
 		y: bounds.y + (bounds.height / 2),
 	};
+
+	console.log(bounds, contentBounds);
+
+	const yDiff = contentBounds.y - bounds.y;
 
 	const display = screen.getDisplayNearestPoint(center);
 	const { width: screenWidth, height: screenHeight } = display.workAreaSize;
@@ -48,7 +53,7 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 	else {
 		win.setPosition(
 			Math.round(center.x - (w / 2)),
-			Math.round(center.y - (h / 2))
+			Math.round(center.y - (h / 2) - (yDiff / 2))
 		)
 	}
 
