@@ -20,8 +20,6 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 		y: bounds.y + (bounds.height / 2),
 	};
 
-	console.log(bounds, contentBounds);
-
 	const yDiff = contentBounds.y - bounds.y;
 
 	const display = screen.getDisplayNearestPoint(center);
