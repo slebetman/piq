@@ -9,7 +9,7 @@ const services = [
 	'context-menu.mjs',
 ];
 
-async function main () {
+async function main (dir) {
 	await app.whenReady();
 
 	for (const service of services) {
@@ -30,10 +30,16 @@ async function main () {
 	// win.autoHideMenuBar = true;
 	
 	win.loadFile(path.join(import.meta.dirname, 'src/views/main/index.html'));
+
+	win.webContents.once('did-finish-load', () => {
+		if (dir) {
+			win.webContents.send('dir', dir);
+		}
+	});
 }
 
 app.on('window-all-closed', () => {
 	app.quit();
 });
 
-main();
+main(process.argv[2]);

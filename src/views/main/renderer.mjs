@@ -3,6 +3,11 @@ import { fileList } from '../components/file-list.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
 async function main () {
+	api.dirListener(async (dirPath) => {
+		const files = await api.listDir(dirPath);
+		handleOpenDir({files, path: dirPath});
+	});
+
 	function handleOpenDir ({files, path: currentPath}) {
 		sessionStorage.setItem('currentPath', currentPath);
 
