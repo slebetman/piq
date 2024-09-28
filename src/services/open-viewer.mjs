@@ -13,7 +13,7 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 	let h = height;
 	let recenter = setCenter;
 
-	const bounds = win.getBounds();
+	const bounds = win.getContentBounds();
 	const center = {
 		x: bounds.x + (bounds.width / 2),
 		y: bounds.y + (bounds.height / 2),
@@ -24,8 +24,8 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 
 	const aspect = w/h;
 
-	if (h > (screenHeight - 50)) {
-		h = (screenHeight - 50);
+	if (h > (screenHeight - 20)) {
+		h = (screenHeight - 20);
 		w = Math.round(aspect * h);
 		recenter = true;
 	}
@@ -61,6 +61,7 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
+		const parent = BrowserWindow.fromWebContents(e.sender);
 		const stat = await imageInfo(imgPath);
 		const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 
@@ -70,6 +71,7 @@ export async function init () {
 			},
 			x: display.bounds.x + ((display.bounds.width - stat.width) / 2),
 			y: display.bounds.y + ((display.bounds.height - stat.height) / 2),
+			parent,
 		});
 		win.hide();
 		win.setMenuBarVisibility(false);
