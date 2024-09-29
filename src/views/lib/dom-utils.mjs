@@ -102,9 +102,9 @@ export function get (id) {
  */
 export function cssVar (name, value) {
 	if (value) {
-		return document.documentElement.style.setProperty(name, value);
+		return document?.documentElement?.style?.setProperty(name, value);
 	}
 	else {
-		return document.documentElement.style.getPropertyValue(name);
+		return document?.documentElement?.style?.getPropertyValue(name);
 	}
 }

@@ -24,6 +24,16 @@ import { topBar } from "./lib/top-bar.mjs";
  */
 
 export function fileList (props) {
+	const progressBar = make.div({
+		id: 'file-load-progress',
+		style: {
+			height: '4px',
+			backgroundColor: '#58f',
+			width: 0,
+			display: 'none',
+		}
+	});
+
 	return make.div(
 		{
 			id: 'files',
@@ -34,7 +44,19 @@ export function fileList (props) {
 				onChdir: props.onChdir,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
 			}),
-			fileListContainer(props)
+			progressBar,
+			fileListContainer({
+				...props,
+				updater: (percent) => {
+					if (percent === 0) {
+						progressBar.style.display = 'none';
+					}
+					else {
+						progressBar.style.display = 'block';
+					}
+					progressBar.style.width = `${percent}%`;
+				}
+			})
 		]
 	);
 }

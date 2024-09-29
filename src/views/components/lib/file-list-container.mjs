@@ -1,4 +1,4 @@
-import { make } from "../../lib/dom-utils.mjs";
+import { cssVar, make } from "../../lib/dom-utils.mjs";
 import { fileContainer } from "./file-container.mjs";
 
 /**
@@ -14,16 +14,22 @@ import { fileContainer } from "./file-container.mjs";
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
  * @property {Function} [onChdir]
+ * @property {Function} [updater]
  * @property {boolean} [showAll] - Show non-image files
  */
 
 const renderers = [];
 
-async function runRenderers () {
+async function runRenderers (updater) {
+	let count = 0;
+	let total = renderers.length;
 	while (renderers.length) {
 		const batch = renderers.splice(0, 24);
+		count += batch.length;
+		updater?.(100*count/total);
 		await Promise.all(batch.map(r => r()));
 	}
+	updater?.(0);
 }
 
 /**
@@ -31,6 +37,7 @@ async function runRenderers () {
  * @returns Div
  */
 export function fileListContainer (props) {
+	props.updater?.(0);
 	const children = [];
 	renderers.splice(0, renderers.length); // clear renderers;
 
@@ -68,7 +75,7 @@ export function fileListContainer (props) {
 		children.push(...directories, ...regularFiles);
 
 		if (renderers.length) {
-			runRenderers();
+			runRenderers(props.updater);
 		}
 	}
 
