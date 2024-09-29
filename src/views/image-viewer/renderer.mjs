@@ -3,6 +3,7 @@ import { render } from '../lib/dom-utils.mjs'
 import { isImage } from '../lib/image-files.mjs';
 
 async function displayImg (stat, wrap = false) {
+	document.title = `Piq: ${stat.name}`;
 	const imgPath = `${stat.parentPath}/${stat.name}`;
 	const img = imgViewer({
 		stat: {
@@ -18,7 +19,7 @@ async function displayImg (stat, wrap = false) {
 }
 
 async function main () {
-	api.imgListener((stat, files, index) => {
+	api.imgListener((files, index) => {
 		let idx = index;
 		
 		// stat: {
@@ -27,8 +28,7 @@ async function main () {
 		//   type: stat.format,
 		//   size: readable(stat.size),
 		// }
-
-		document.title = `Piq: ${stat.name}`;
+		
 		displayImg(files[idx]);
 
 		document.body.onkeyup = (e) => {

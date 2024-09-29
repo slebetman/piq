@@ -82,12 +82,7 @@ export async function init () {
 		wrapWindowAroundImage(win, stat.width, stat.height, true);
 
 		win.webContents.once('did-finish-load', () => {
-			win.webContents.send('image', {
-				image: imgPath,
-				name: path.basename(imgPath),
-				type: stat.format,
-				size: readable(stat.size),
-			}, files, index);
+			win.webContents.send('image', files, index);
 			win.show();
 		})
 	});

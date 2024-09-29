@@ -2,8 +2,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
 	imgListener: (callback) => {
-		ipcRenderer.on('image', (e, stat, files, index) => {
-			callback(stat, files, index);
+		ipcRenderer.on('image', (e, files, index) => {
+			callback(files, index);
 		})
 	},
 	contextMenu: async (filePath) => {
