@@ -8,7 +8,22 @@ export async function imageInfo (imgPath) {
 	return await sharp(imgPath).metadata();
 }
 
-export async function thumbnail (imgPath) {
+function thumbnailer (imgPath) {
+	return sharp(imgPath)
+		.resize(256,256,{
+			fit: 'inside'
+		})
+		.png({
+			quality: 75
+		});
+}
+
+export async function thumbnailBuffer (imgPath) {
+	return await thumbnailer(imgPath)
+		.toBuffer();
+}
+
+export async function thumbnailFile (imgPath) {
 	const normalPath = path.normalize(imgPath);
 	const hashPath = hash(normalPath);
 
@@ -20,13 +35,7 @@ export async function thumbnail (imgPath) {
 		await fs.utimes(cachePath, now, now);
 	}
 	catch (err) {
-		await sharp(imgPath)
-			.resize(256,256,{
-				fit: 'inside'
-			})
-			.webp({
-				quality: 75
-			})
+		await thumbnailer(imgPath)
 			.toFile(cachePath);
 	}
 

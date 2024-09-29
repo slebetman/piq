@@ -34,6 +34,9 @@ contextBridge.exposeInMainWorld('api', {
 	dirListener: (callback) => {
 		ipcRenderer.on('dir', (e, dirPath) => {
 			callback(dirPath);
-		})
+		});
+	},
+	thumbnailBuffer: async (imgPath) => {
+		return await ipcRenderer.invoke('thumbnail-buffer', imgPath);
 	},
 })

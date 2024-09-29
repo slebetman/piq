@@ -33,7 +33,12 @@ export function fileContainer (props) {
 	}
 	else if (isImage(props.file.name)) {
 		const imgPath = `${props.file.parentPath}/${props.file.name}`;
-		icon.src = safePath(imgPath);
+		icon.src = '../components/icons/file-solid.svg';
+
+		api.thumbnailBuffer(imgPath).then((imgUrl) => {
+			console.log(imgUrl);
+			icon.src = imgUrl;
+		});
 
 		return make.div({
 			className: 'thumbnail',
