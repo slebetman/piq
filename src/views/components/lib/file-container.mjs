@@ -5,8 +5,9 @@ const thumbnailCache = {};
 
 /**
  * @typedef {Object} FileContainerProps
- * @property {Dirent[]} [files] - File list
+ * @property {Dirent[]} files - File list
  * @property {Function} [onOpen]
+ * @property {Function} registerRenderer
  * @property {boolean} [showAll] - Show non-image files
  */
 
@@ -46,14 +47,25 @@ export function fileContainer (props) {
 		},[]);
 
 		if (thumbnailCache[imgPath]) {
-			icon.src = thumbnailCache[imgPath];
-			imgDiv.appendChild(icon);
+			props.registerRenderer(async () => {
+				const done = new Promise((ok) => {
+					icon.onload = ok;
+				})
+				icon.src = thumbnailCache[imgPath];
+				imgDiv.appendChild(icon);
+				await done;
+			});
 		}
 		else {
-			api.thumbnailBuffer(imgPath).then((imgUrl) => {
+			props.registerRenderer(async () => {
+				const done = new Promise((ok) => {
+					icon.onload = ok;
+				})
+				const imgUrl = await api.thumbnailBuffer(imgPath);
 				thumbnailCache[imgPath] = imgUrl;
 				icon.src = imgUrl;
 				imgDiv.appendChild(icon);
+				await done;
 			});
 		}
 

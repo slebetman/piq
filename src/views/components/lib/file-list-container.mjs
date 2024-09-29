@@ -10,12 +10,21 @@ import { fileContainer } from "./file-container.mjs";
 
 /**
  * @typedef {Object} FileListContainerProps
- * @property {Dirent[]} [files] - File list
+ * @property {Dirent[]} files - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
  * @property {Function} [onChdir]
  * @property {boolean} [showAll] - Show non-image files
  */
+
+const renderers = [];
+
+async function runRenderers () {
+	while (renderers.length) {
+		const batch = renderers.splice(0, 24);
+		await Promise.all(batch.map(r => r()));
+	}
+}
 
 /**
  * @param {FileListContainerProps} props 
@@ -23,6 +32,7 @@ import { fileContainer } from "./file-container.mjs";
  */
 export function fileListContainer (props) {
 	const children = [];
+	renderers.splice(0, renderers.length); // clear renderers;
 
 	if (props.files?.length) {
 		const regularFiles = [];
@@ -42,6 +52,9 @@ export function fileListContainer (props) {
 							props.onOpen?.(fullPath,  idx);
 						}
 					},
+					registerRenderer: (rendererFunc) => {
+						renderers.push(rendererFunc);
+					},
 					showAll: props.showAll,
 				});
 
@@ -53,6 +66,10 @@ export function fileListContainer (props) {
 		}
 
 		children.push(...directories, ...regularFiles);
+
+		if (renderers.length) {
+			runRenderers();
+		}
 	}
 
 	return make.div(
