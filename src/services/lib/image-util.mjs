@@ -10,17 +10,17 @@ export async function imageInfo (imgPath) {
 
 function thumbnailer (imgPath) {
 	return sharp(imgPath)
-		.resize(256,256,{
+		.resize(512,512,{
 			fit: 'inside'
 		})
 		.png({
-			quality: 75
+			quality: 70,
+			effort: 2,
 		});
 }
 
 export async function thumbnailBuffer (imgPath) {
-	return await thumbnailer(imgPath)
-		.toBuffer();
+	return await thumbnailer(imgPath).toBuffer();
 }
 
 export async function thumbnailFile (imgPath) {

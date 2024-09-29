@@ -16,8 +16,8 @@ async function main () {
 			currentPath,
 			onChdir: async (path) => {
 				const normalPath = await api.normalizePath(path);
-				sessionStorage.setItem('currentPath', normalPath);
-				window.location.reload();
+				const newFiles = await api.listDir(path);
+				handleOpenDir({ files: newFiles, path: normalPath });
 			},
 			onOpen: async (path, index) => {
 				await api.viewImage(path, files, index);

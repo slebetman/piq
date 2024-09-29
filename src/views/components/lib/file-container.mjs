@@ -1,6 +1,7 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
-import { safePath } from "../../lib/safe-path.mjs";
+
+const thumbnailCache = {};
 
 /**
  * @typedef {Object} FileContainerProps
@@ -33,14 +34,8 @@ export function fileContainer (props) {
 	}
 	else if (isImage(props.file.name)) {
 		const imgPath = `${props.file.parentPath}/${props.file.name}`;
-		icon.src = '../components/icons/file-solid.svg';
 
-		api.thumbnailBuffer(imgPath).then((imgUrl) => {
-			console.log(imgUrl);
-			icon.src = imgUrl;
-		});
-
-		return make.div({
+		const imgDiv = make.div({
 			className: 'thumbnail',
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
@@ -48,7 +43,21 @@ export function fileContainer (props) {
 					api.contextMenu(imgPath);
 				}
 			},
-		},[ icon ])
+		},[]);
+
+		if (thumbnailCache[imgPath]) {
+			icon.src = thumbnailCache[imgPath];
+			imgDiv.appendChild(icon);
+		}
+		else {
+			api.thumbnailBuffer(imgPath).then((imgUrl) => {
+				thumbnailCache[imgPath] = imgUrl;
+				icon.src = imgUrl;
+				imgDiv.appendChild(icon);
+			});
+		}
+
+		return imgDiv;
 	}
 	else if (props.showAll) {
 		icon.src = '../components/icons/file-solid.svg';
