@@ -2,6 +2,8 @@ import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
+const scrollPosition = {};
+
 async function main () {
 	api.dirListener(async (dirPath) => {
 		const files = await api.listDir(dirPath);
@@ -15,6 +17,8 @@ async function main () {
 			files,
 			currentPath,
 			onChdir: async (path) => {
+				scrollPosition[currentPath] = document.getElementById('files-container').scrollTop;
+
 				const normalPath = await api.normalizePath(path);
 				const newFiles = await api.listDir(path);
 				handleOpenDir({ files: newFiles, path: normalPath });
@@ -23,6 +27,10 @@ async function main () {
 				await api.viewImage(path, files, index);
 			}
 		}));
+
+		if (scrollPosition[currentPath]) {
+			document.getElementById('files-container').scrollTop = scrollPosition[currentPath];
+		}
 
 		api.watch(currentPath).then(async (x) => {
 			if (x) {
