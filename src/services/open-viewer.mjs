@@ -1,6 +1,5 @@
 import { BrowserWindow, ipcMain, screen } from 'electron';
 import { imageInfo } from './lib/image-util.mjs';
-import { readable } from './lib/readable-number.mjs';
 import path from 'path';
 
 /**
