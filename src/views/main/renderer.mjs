@@ -22,7 +22,15 @@ async function main () {
 			onOpen: async (path, index) => {
 				await api.viewImage(path, files, index);
 			}
-		}))
+		}));
+
+		api.watch(currentPath).then(async (x) => {
+			if (x) {
+				const normalPath = await api.normalizePath(currentPath);
+				const newFiles = await api.listDir(currentPath);
+				handleOpenDir({ files: newFiles, path: normalPath });
+			}
+		});
 	}
 
 	const lastPath = sessionStorage.getItem('currentPath');

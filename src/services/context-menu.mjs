@@ -2,6 +2,7 @@ import { clipboard, ipcMain, Menu, nativeImage } from 'electron';
 import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
+import trash from 'trash';
 
 export async function init () {
 	ipcMain.handle('context-menu-img', async (e, filePath) => {
@@ -37,6 +38,15 @@ export async function init () {
 					const imgBuffer = await sharp(filePath).png().toBuffer();
 					const img = nativeImage.createFromBuffer(imgBuffer);
 					clipboard.writeImage(img);
+				}
+			},
+			{ type: 'separator'},
+			{
+				label: 'Move to Trash',
+				click: () => {
+					trash(filePath,{
+						glob: false
+					})
 				}
 			},
 		];
