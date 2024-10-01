@@ -12,8 +12,13 @@ const services = [
 
 async function main (argument0) {
 	let dir = argument0;
+	let win = null;
 	app.addListener('open-file', (ev, path) => {
 		dir = path;
+
+		if (win) {
+			win.webContents.send('dir', dir);
+		}
 	})
 	await app.whenReady();
 
@@ -23,7 +28,7 @@ async function main (argument0) {
 		)).init();
 	}
 
-	const win = new BrowserWindow({
+	win = new BrowserWindow({
 		width: 800,
 		height: 600,
 		webPreferences: {

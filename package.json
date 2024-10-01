@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "electron": "^32.1.0",
-    "electron-builder": "^25.0.5",
+    "electron-builder": "^25.0.5"
   },
   "dependencies": {
     "open": "^10.1.0",
