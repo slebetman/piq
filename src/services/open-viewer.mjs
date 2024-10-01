@@ -73,12 +73,21 @@ export async function init () {
 			},
 			x: display.bounds.x + ((display.bounds.width - stat.width) / 2),
 			y: display.bounds.y + ((display.bounds.height - stat.height) / 2),
-			parent,
 		});
 		win.hide();
 		win.setMenuBarVisibility(false);
 		win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
 		wrapWindowAroundImage(win, stat.width, stat.height, true);
+
+		const handleParentClose = () => {
+			win.removeAllListeners();
+			win.close();
+		}
+
+		parent.addListener('close', handleParentClose);
+		win.addListener('close', () => {
+			parent.removeListener('close', handleParentClose);
+		})
 
 		win.webContents.once('did-finish-load', () => {
 			win.webContents.send('image', files, index);
