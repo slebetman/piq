@@ -2,21 +2,48 @@
   "name": "piq",
   "version": "1.0.0",
   "description": "Simple cross-platform image browser.",
+  "homepage": "https://github.com/slebetman/piq",
   "main": "index.mjs",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "electron-packager . --out build --icon icons/icon512 --overwrite true",
-    "package-deb": "electron-installer-debian --src build/piq-linux-x64/ --dest build/ --arch amd64 --icon icons/icon128.png --description 'Simple cross-platform image browser.'",
-    "package-dmg": "electron-installer-dmg build/piq-darwin-arm64/piq.app piq --out build --icon icons/icon512.icns --overwrite"
+    "build-mac": "electron-builder --mac",
+    "build-deb": "electron-builder --linux deb --x64"
   },
-  "author": "",
+  "author": "Adly Abdullah <slebetman@gmail.com>",
   "license": "ISC",
+  "build": {
+    "fileAssociations": [
+      {
+        "ext": "jpg",
+        "name": "JPEG",
+        "role": "Viewer"
+      },
+      {
+        "ext": "jpeg",
+        "name": "JPEG",
+        "role": "Viewer"
+      },
+      {
+        "ext": "png",
+        "name": "PNG",
+        "role": "Viewer"
+      },
+      {
+        "ext": "webp",
+        "name": "WebP",
+        "role": "Viewer"
+      },
+      {
+        "ext": "*",
+        "name": "Anything",
+        "role": "Viewer"
+      }
+    ]
+  },
   "devDependencies": {
-    "@electron/packager": "^18.3.5",
     "electron": "^32.1.0",
-    "electron-installer-debian": "^3.2.0",
-    "electron-installer-dmg": "^5.0.1"
+    "electron-builder": "^25.0.5",
   },
   "dependencies": {
     "open": "^10.1.0",

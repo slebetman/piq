@@ -10,7 +10,11 @@ const services = [
 	'img-ops.mjs',
 ];
 
-async function main (dir) {
+async function main (argument0) {
+	let dir = argument0;
+	app.addListener('open-file', (ev, path) => {
+		dir = path;
+	})
 	await app.whenReady();
 
 	for (const service of services) {
