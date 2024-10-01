@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('api', {
 			callback(files, index);
 		})
 	},
-	contextMenu: async (filePath) => {
+	contextMenuImg: async (filePath) => {
 		await ipcRenderer.invoke('context-menu-img', filePath);
 	},
 	normalizePath: async (path) => {

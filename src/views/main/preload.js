@@ -28,8 +28,11 @@ contextBridge.exposeInMainWorld('api', {
 	viewImage: async (path, files, index) => {
 		return await ipcRenderer.invoke('viewer', path, files, index);
 	},
-	contextMenu: async (filePath) => {
+	contextMenuImg: async (filePath) => {
 		await ipcRenderer.invoke('context-menu-img', filePath);
+	},
+	contextMenuDir: async (filePath) => {
+		await ipcRenderer.invoke('context-menu-dir', filePath);
 	},
 	dirListener: (callback) => {
 		ipcRenderer.on('dir', (e, dirPath) => {

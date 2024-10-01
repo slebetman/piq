@@ -26,11 +26,17 @@ export function fileContainer (props) {
 	},props.file.name)
 
 	if (props.file.isDirectory) {
+		const dirPath = `${props.file.parentPath}/${props.file.name}`;
 		icon.src = '../components/icons/folder-solid.svg';
 
 		return make.div({
 			className: 'thumbnail thumbnail-icon',
-			ondblclick: props.onOpen
+			ondblclick: props.onOpen,
+			onauxclick: (e) => {
+				if (e.button === 2) {
+					api.contextMenuDir(dirPath);
+				}
+			},
 		},[ icon, fileName ])
 	}
 	else if (isImage(props.file.name)) {
@@ -41,7 +47,7 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
 				if (e.button === 2) {
-					api.contextMenu(imgPath);
+					api.contextMenuImg(imgPath);
 				}
 			},
 		},[]);
