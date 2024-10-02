@@ -17,12 +17,10 @@
 	display: grid;
 	grid-template-columns:
 		repeat(auto-fill, var(--thumbnail-size));
-	grid-template-rows:
-		var(--thumbnail-size)
-		var(--thumbnail-size);
+	grid-template-rows: var(--thumbnail-size);
 	grid-gap: 0;
 	width: 100%;
-	height: calc(100vh - var(--bar-height));
+	max-height: calc(100vh - var(--bar-height));
 	justify-content: space-around;
 	overflow-x: hidden;
 	overflow-y: auto;
