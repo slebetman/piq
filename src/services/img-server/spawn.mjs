@@ -1,4 +1,4 @@
-import { fork } from 'child_process';
+import { ChildProcess, fork } from 'child_process';
 import { ipcMain } from 'electron';
 import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -6,7 +6,16 @@ import os from 'os';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * @typedef {Object} ImgServer
+ * @property {ChildProcess} process
+ * @property {string} buffer
+ */
+
+/** @type {ImgServer[]} */
 const servers = [];
+
+const imgCache = {};
 
 function sleep (ms) {
 	return new Promise((ok) => setTimeout(ok, ms));
@@ -17,12 +26,6 @@ function spawnServer () {
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
 	});
 
-	console.log(process);
-
-	if (!process) {
-		return;
-	}
-
 	const serv = {
 		process,
 		buffer: ''
@@ -32,22 +35,21 @@ function spawnServer () {
 		serv.buffer += data;
 	}));
 	process.on('exit', () => {
+		console.error('Thumbnail process died!');
 		const i = servers.findIndex(x => x === serv);
 		servers.splice(i,1); // remove dead server
+		spawnServer(); // replace dead server
 	})
 }
 
-export async function init () {
-	for (let i=0; i<os.cpus().length; i++) {
-		spawnServer()
-	}
+async function genThumbnail (imgPath) {
+	const i = Math.floor(Math.random() * servers.length);
+	let retries = 100;
 
-	ipcMain.handle('thumbnail-buffer-spawn', async (e, imgPath) => {
-		const i = Math.floor(Math.random() * servers.length);
-
+	try {
 		servers[i].process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
 
-		while (1) {
+		while (retries--) {
 			const newline = servers[i].buffer.indexOf('\n');
 		
 			if (newline != -1) {
@@ -57,8 +59,30 @@ export async function init () {
 				return line;
 			}
 
-			await sleep(1);
+			await sleep(10);
 		}
+	}
+	catch (err) {
+		console.error(err.message);
+	}
+
+	// Should not get here!
+	servers[i].process.kill('SIGKILL');
+
+	// Keep retrying
+	return await genThumbnail(imgPath);
+}
+
+export async function init () {
+	for (let i=0; i < (os.cpus().length * 2); i++) {
+		spawnServer()
+	}
+
+	ipcMain.handle('thumbnail-buffer-spawn', async (e, imgPath) => {
+		if (!imgCache[imgPath]) {
+			imgCache[imgPath] = await genThumbnail(imgPath);
+		}
+		return imgCache[imgPath];
 	})
 }
 

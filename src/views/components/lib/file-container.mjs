@@ -1,8 +1,6 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
 
-const thumbnailCache = {};
-
 /**
  * @typedef {Object} FileContainerProps
  * @property {Dirent[]} files - File list
@@ -52,28 +50,14 @@ export function fileContainer (props) {
 			},
 		},[]);
 
-		if (thumbnailCache[imgPath]) {
-			props.registerRenderer(async () => {
-				const done = new Promise((ok) => {
-					icon.onload = ok;
-				})
-				icon.src = thumbnailCache[imgPath];
-				imgDiv.appendChild(icon);
-				await done;
-			});
-		}
-		else {
-			props.registerRenderer(async () => {
-				const done = new Promise((ok) => {
-					icon.onload = ok;
-				})
-				const imgUrl = await api.thumbnailBuffer(imgPath);
-				thumbnailCache[imgPath] = imgUrl;
-				icon.src = imgUrl;
-				imgDiv.appendChild(icon);
-				await done;
-			});
-		}
+		props.registerRenderer(async () => {
+			const done = new Promise((ok) => {
+				icon.onload = ok;
+			})
+			icon.src = await api.thumbnailBuffer(imgPath);
+			imgDiv.appendChild(icon);
+			await done;
+		});
 
 		return imgDiv;
 	}

@@ -21,10 +21,14 @@ import { fileContainer } from "./file-container.mjs";
 const renderers = [];
 
 async function runRenderers (updater) {
+	const config = await api.getConfig();
+
+	console.log(config);
+
 	let count = 0;
 	let total = renderers.length;
 	while (renderers.length) {
-		const batch = renderers.splice(0, 24);
+		const batch = renderers.splice(0, config.threads*2);
 		count += batch.length;
 		updater?.(100*count/total);
 		await Promise.all(batch.map(r => r()));
