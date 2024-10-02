@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import os from 'os';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const threads = os.cpus().length;
 
 /**
  * @typedef {Object} ImgServer
@@ -35,35 +36,35 @@ function spawnServer () {
 		serv.buffer += data;
 	}));
 	process.on('exit', () => {
-		console.error('Thumbnail process died!');
 		const i = servers.findIndex(x => x === serv);
 		servers.splice(i,1); // remove dead server
 		spawnServer(); // replace dead server
 	})
 }
 
+let turn = threads;
+function nextServer () {
+	turn = (turn + 1) % threads;
+	return turn;
+}
+
 async function genThumbnail (imgPath) {
-	const i = Math.floor(Math.random() * servers.length);
+	const i = nextServer();
 	let retries = 100;
 
-	try {
-		servers[i].process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
+	servers[i].process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
 
-		while (retries--) {
-			const newline = servers[i].buffer.indexOf('\n');
-		
-			if (newline != -1) {
-				const line = servers[i].buffer.substring(0, newline);
-				servers[i].buffer = servers[i].buffer.substring(newline+1);
+	while (retries--) {
+		const newline = servers[i].buffer.indexOf('\n');
+	
+		if (newline != -1) {
+			const line = servers[i].buffer.substring(0, newline);
+			servers[i].buffer = servers[i].buffer.substring(newline+1);
 
-				return line;
-			}
-
-			await sleep(10);
+			return line;
 		}
-	}
-	catch (err) {
-		console.error(err.message);
+
+		await sleep(10);
 	}
 
 	// Should not get here!
@@ -74,7 +75,7 @@ async function genThumbnail (imgPath) {
 }
 
 export async function init () {
-	for (let i=0; i < (os.cpus().length * 2); i++) {
+	for (let i=0; i < threads; i++) {
 		spawnServer()
 	}
 
