@@ -1,4 +1,4 @@
-import { spawn } from 'child_process';
+import { fork } from 'child_process';
 import { ipcMain } from 'electron';
 import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -13,15 +13,24 @@ function sleep (ms) {
 }
 
 function spawnServer () {
-	const process = spawn('node', [ path.join(__dirname, 'server.mjs') ]);
+	const process = fork(path.join(__dirname, 'server.mjs'),{
+		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+	});
+
+	console.log(process);
+
+	if (!process) {
+		return;
+	}
+
 	const serv = {
 		process,
 		buffer: ''
 	};
 	servers.push(serv);
-	process.stdout.on('data', (data) => {
+	process.on('spawn', () => process.stdout.on('data', (data) => {
 		serv.buffer += data;
-	});
+	}));
 	process.on('exit', () => {
 		const i = servers.findIndex(x => x === serv);
 		servers.splice(i,1); // remove dead server
@@ -36,7 +45,7 @@ export async function init () {
 	ipcMain.handle('thumbnail-buffer-spawn', async (e, imgPath) => {
 		const i = Math.floor(Math.random() * servers.length);
 
-		servers[i].process.stdin.write(`${btoa(imgPath)}\n`);
+		servers[i].process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
 
 		while (1) {
 			const newline = servers[i].buffer.indexOf('\n');
