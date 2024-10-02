@@ -40,7 +40,7 @@ contextBridge.exposeInMainWorld('api', {
 		});
 	},
 	thumbnailBuffer: async (imgPath) => {
-		return await ipcRenderer.invoke('thumbnail-buffer', imgPath);
+		return await ipcRenderer.invoke('thumbnail-buffer-spawn', imgPath);
 	},
 	watch: async (path) => {
 		return await ipcRenderer.invoke('watch', path);

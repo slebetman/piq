@@ -8,6 +8,7 @@ const services = [
 	'open-viewer.mjs',
 	'context-menu.mjs',
 	'img-ops.mjs',
+	'img-server/spawn.mjs',
 ];
 
 async function main (argument0) {
