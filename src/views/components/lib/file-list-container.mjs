@@ -28,7 +28,7 @@ async function runRenderers (updater) {
 	let count = 0;
 	let total = renderers.length;
 	while (renderers.length) {
-		const batch = renderers.splice(0, config.threads);
+		const batch = renderers.splice(0, config.threads * 4);
 		count += batch.length;
 		updater?.(100*count/total);
 		await Promise.all(batch.map(r => r()));

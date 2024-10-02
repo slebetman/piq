@@ -36,9 +36,13 @@ function spawnServer () {
 		serv.buffer += data;
 	}));
 	process.on('exit', () => {
+		// console.error('Thumbnailer died..');
 		const i = servers.findIndex(x => x === serv);
 		servers.splice(i,1); // remove dead server
 		spawnServer(); // replace dead server
+	})
+	process.on('error', (err) => {
+		console.error(err.message);
 	})
 }
 
@@ -49,26 +53,28 @@ function nextServer () {
 }
 
 async function genThumbnail (imgPath) {
-	const i = nextServer();
-	let retries = 100;
+	const serv = servers[nextServer()];
+	let retries = 1500;
 
-	servers[i].process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
+	serv.process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
 
 	while (retries--) {
-		const newline = servers[i].buffer.indexOf('\n');
+		const newline = serv.buffer.indexOf('\n');
 	
 		if (newline != -1) {
-			const line = servers[i].buffer.substring(0, newline);
-			servers[i].buffer = servers[i].buffer.substring(newline+1);
+			const line = serv.buffer.substring(0, newline);
+			serv.buffer = serv.buffer.substring(newline+1);
 
 			return line;
 		}
 
-		await sleep(10);
+		await sleep(1);
 	}
 
 	// Should not get here!
-	servers[i].process.kill('SIGKILL');
+	serv.process.kill('SIGKILL');
+
+	await sleep(100);
 
 	// Keep retrying
 	return await genThumbnail(imgPath);
