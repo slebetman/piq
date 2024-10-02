@@ -53,4 +53,9 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
-main(process.argv[2]);
+if (app.isPackaged) {
+	main(process.argv[1]);	
+}
+else {
+	main(process.argv[2]);
+}
