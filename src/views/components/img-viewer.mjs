@@ -11,7 +11,7 @@ export function imgViewer ({ stat }) {
 		},
 		onauxclick: (e) => {
 			if (e.button === 2) {
-				api.contextMenu(stat.image);
+				api.contextMenuImg(stat.image);
 			}
 		}
 	})
