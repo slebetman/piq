@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
-import { openMainWindow } from './src/views/main/lib.mjs';
+import { mainWindows, openMainWindow } from './src/views/main/lib.mjs';
 
 const services = [
 	'config.mjs',
@@ -12,36 +12,9 @@ const services = [
 	'img-server/spawn.mjs',
 ];
 
-/**
- * @typedef {Object} MainWindowObject
- * @property {BrowserWindow} window
- * @property {readonly string} currentPath
- */
-
-/** @type {MainWindowObject[]} */
-const mainWindows = [];
-
-/**
- * @param {string | undefined} dir 
- */
-async function makeMainWindow (dir) {
-	const win = await openMainWindow(dir);
-
-	mainWindows.push(win);
-
-	win.window.on('close', () => {
-		const idx = mainWindows.findIndex(x => x === win);
-		if (idx !== -1) {
-			mainWindows.splice(idx,1); // remove closed window
-		}
-
-		if (mainWindows.length === 0) {
-			app.quit();
-		}
-	})
-}
-
 async function main (dir) {
+	await app.whenReady();
+
 	app.addListener('open-file', async (ev, path) => {
 		for (const w of mainWindows) {
 			if (!w.currentPath) {
@@ -50,10 +23,8 @@ async function main (dir) {
 			}
 		}
 
-		await makeMainWindow(path);
+		await openMainWindow(path);
 	})
-
-	await app.whenReady();
 
 	for (const service of services) {
 		await (await import(
@@ -61,7 +32,7 @@ async function main (dir) {
 		)).init();
 	}
 
-	await makeMainWindow(dir);
+	await openMainWindow(dir);
 }
 
 app.on('window-all-closed', () => {

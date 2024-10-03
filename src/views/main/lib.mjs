@@ -1,6 +1,16 @@
 import { app, BrowserWindow } from "electron";
+
 /**
- * @param {string} path
+ * @typedef {Object} MainWindowObject
+ * @property {BrowserWindow} window
+ * @property {readonly string} currentPath
+ */
+
+/** @type {MainWindowObject[]} */
+export const mainWindows = [];
+
+/**
+ * @param {string | undefined} dir 
  */
 export async function openMainWindow (path) {
 	let dir = path;
@@ -28,10 +38,23 @@ export async function openMainWindow (path) {
 		app.addRecentDocument(currentPath);
 	})
 
-	return {
+	const winObj = {
 		window: win,
 		get currentPath() {
 			return dir;
 		}
 	}
+
+	mainWindows.push(winObj);
+
+	win.on('close', () => {
+		const idx = mainWindows.findIndex(x => x === winObj);
+		if (idx !== -1) {
+			mainWindows.splice(idx,1); // remove closed window
+		}
+
+		if (mainWindows.length === 0) {
+			app.quit();
+		}
+	})
 }
