@@ -13,6 +13,7 @@ function thumbnailer (imgPath) {
 		.resize(512,512,{
 			fit: 'inside'
 		})
+		.rotate()
 		.webp({
 			quality: 70,
 			effort: 2,
