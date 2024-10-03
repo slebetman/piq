@@ -12,10 +12,12 @@ const services = [
 	'img-server/spawn.mjs',
 ];
 
-async function main (dir) {
-	await app.whenReady();
+async function main (argument0) {
+	let dir = argument0;
 
 	app.addListener('open-file', async (ev, path) => {
+		dir = path;
+		
 		for (const w of mainWindows) {
 			if (!w.currentPath) {
 				w.window.webContents.send('dir', path);
@@ -25,6 +27,8 @@ async function main (dir) {
 
 		await openMainWindow(path);
 	})
+
+	await app.whenReady();
 
 	for (const service of services) {
 		await (await import(
