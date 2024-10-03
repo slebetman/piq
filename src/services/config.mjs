@@ -3,16 +3,18 @@ import fs from 'fs/promises';
 import { CACHE_DIR, CONFIG_DIR } from './lib/config-paths.mjs';
 import os from 'os';
 
+export const config = {
+	dir: {
+		config: CONFIG_DIR,
+		cache: CACHE_DIR,
+	},
+	threads: os.cpus().length,
+};
+
 export async function init () {
 	// sync code here:
 	ipcMain.handle('config',() => {
-		return {
-			dir: {
-				config: CONFIG_DIR,
-				cache: CACHE_DIR,
-			},
-			threads: os.cpus().length,
-		}
+		return config;
 	});
 
 	// async code below this:

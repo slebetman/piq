@@ -2,12 +2,12 @@ import { ChildProcess, fork } from 'child_process';
 import { ipcMain } from 'electron';
 import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import os from 'os';
 import { sleep } from '../lib/sleep.mjs';
 import { encodeBase64 } from '../lib/base64.mjs';
+import { config } from '../config.mjs';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const threads = os.cpus().length;
+const threads = config.threads;
 
 /**
  * @typedef {Object} ImgServer
