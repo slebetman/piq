@@ -39,6 +39,9 @@ contextBridge.exposeInMainWorld('api', {
 			callback(dirPath);
 		});
 	},
+	updateCurrentPath: (path) => {
+		ipcRenderer.send('current-path', path);
+	},
 	thumbnailBuffer: async (imgPath) => {
 		return await ipcRenderer.invoke('thumbnail-buffer-spawn', imgPath);
 	},

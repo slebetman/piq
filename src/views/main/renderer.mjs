@@ -12,6 +12,8 @@ async function main () {
 
 	function handleOpenDir ({files, path: currentPath}) {
 		sessionStorage.setItem('currentPath', currentPath);
+		document.title = currentPath.split('/').pop();
+		api.updateCurrentPath(currentPath);
 
 		render(document.body, fileList({
 			files,

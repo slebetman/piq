@@ -3,7 +3,7 @@ import { render } from '../lib/dom-utils.mjs'
 import { isImage } from '../lib/image-files.mjs';
 
 async function displayImg (stat, wrap = false) {
-	document.title = `Piq: ${stat.name}`;
+	document.title = stat.name;
 	const imgPath = `${stat.parentPath}/${stat.name}`;
 	const img = imgViewer({
 		stat: {

@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
+import { openMainWindow } from './src/views/main/lib.mjs';
 
 const services = [
 	'config.mjs',
@@ -11,16 +12,47 @@ const services = [
 	'img-server/spawn.mjs',
 ];
 
-async function main (argument0) {
-	let dir = argument0;
-	let win = null;
-	app.addListener('open-file', (ev, path) => {
-		dir = path;
+/**
+ * @typedef {Object} MainWindowObject
+ * @property {BrowserWindow} window
+ * @property {readonly string} currentPath
+ */
 
-		if (win) {
-			win.webContents.send('dir', dir);
+/** @type {MainWindowObject[]} */
+const mainWindows = [];
+
+/**
+ * @param {string | undefined} dir 
+ */
+async function makeMainWindow (dir) {
+	const win = await openMainWindow(dir);
+
+	mainWindows.push(win);
+
+	win.window.on('close', () => {
+		const idx = mainWindows.findIndex(x => x === win);
+		if (idx !== -1) {
+			mainWindows.splice(idx,1); // remove closed window
+		}
+
+		if (mainWindows.length === 0) {
+			app.quit();
 		}
 	})
+}
+
+async function main (dir) {
+	app.addListener('open-file', async (ev, path) => {
+		for (const w of mainWindows) {
+			if (!w.currentPath) {
+				w.window.webContents.send('dir', path);
+				return;
+			}
+		}
+
+		await makeMainWindow(path);
+	})
+
 	await app.whenReady();
 
 	for (const service of services) {
@@ -29,24 +61,7 @@ async function main (argument0) {
 		)).init();
 	}
 
-	win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			preload: path.join(import.meta.dirname, 'src/views/main/preload.js'),
-		}
-	});
-
-	win.setMenuBarVisibility(false);
-	// win.autoHideMenuBar = true;
-	
-	win.loadFile(path.join(import.meta.dirname, 'src/views/main/index.html'));
-
-	win.webContents.once('did-finish-load', () => {
-		if (dir) {
-			win.webContents.send('dir', dir);
-		}
-	});
+	await makeMainWindow(dir);
 }
 
 app.on('window-all-closed', () => {
