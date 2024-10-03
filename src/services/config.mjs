@@ -5,10 +5,16 @@ import os from 'os';
 import { join } from 'path';
 
 /**
+ * @typedef {Object} EditorSpec
+ * @property {string} name
+ * @property {string} extensions
+ */
+
+/**
  * @typedef {Object} Config
  * @property {Record<string,string>} dir
  * @property {number} threads
- * @property {string[]} [editors]
+ * @property {EditorSpec[]} [editors]
  * @property {boolean} useFileCache
  */
 
@@ -65,7 +71,10 @@ export async function init () {
 	}
 	catch (err) {
 		if (err.code === 'ENOENT') {
-			config.editors = [ 'gimp' ];
+			config.editors = [{
+				name: 'gimp',
+				extensions: '*',
+			}];
 
 			// Create default file
 			await fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());

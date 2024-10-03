@@ -9,6 +9,40 @@ const fileManager = process.platform === 'darwin' ? 'Finder'
 	: process.platform === 'win32' ? 'File Explorer'
 	: 'File Manager';
 
+function getOpenWithMenu (filePath) {
+	const menu = config.editors
+		.filter(editor => {
+			const { extensions } = editor;
+			const ext = extensions.replace(/\*/g,'.*');
+			return filePath.match(new RegExp(`\\.(${ext})$`));
+		})
+		.map(editor => {
+			const { name } = editor;
+
+			return {
+				label: `Open with ${name[0].toUpperCase() + name.slice(1)}`,
+				click: () => {
+					open(filePath, {app: {name}});
+				}
+			}
+		});
+	
+	if (menu.length <= 3) {
+		return menu;
+	}
+	else {
+		return [
+			{
+				label: 'Open with',
+				submenu: menu.map(x => {
+					x.label = x.label.replace(/^Open with /,'');
+					return x;
+				})
+			}
+		]
+	}
+}
+
 export async function init () {
 	ipcMain.handle('context-menu-img', async (e, filePath) => {
 		const template = [
@@ -18,12 +52,7 @@ export async function init () {
 					open(filePath);
 				}
 			},
-			... config.editors.map(editor => ({
-				label: `Open with ${editor[0].toUpperCase() + editor.slice(1)}`,
-				click: () => {
-					open(filePath, {app: {name: editor}});
-				}
-			})),
+			...getOpenWithMenu(filePath),
 			{ type: 'separator'},
 			{
 				label: 'Copy file path',
