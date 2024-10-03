@@ -3,7 +3,6 @@ import { ipcMain } from 'electron';
 import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { sleep } from '../lib/sleep.mjs';
-import { encodeBase64 } from '../lib/base64.mjs';
 import { config } from '../config.mjs';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -52,7 +51,9 @@ function spawnServer () {
 	process.on('spawn', () => {
 		process.on('message', handler);
 		process.stderr.on('data', (data) => {
-			console.error(data.toString());
+			if (config.debug) {
+				console.error(data.toString());
+			}
 		});
 	});
 	process.on('exit', () => {
