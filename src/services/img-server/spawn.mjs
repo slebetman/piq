@@ -3,6 +3,8 @@ import { ipcMain } from 'electron';
 import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import os from 'os';
+import { sleep } from '../lib/sleep.mjs';
+import { encodeBase64 } from '../lib/base64.mjs';
     
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const threads = os.cpus().length;
@@ -18,12 +20,8 @@ const servers = [];
 
 const imgCache = {};
 
-function sleep (ms) {
-	return new Promise((ok) => setTimeout(ok, ms));
-}
-
 function spawnServer () {
-	const process = fork(path.join(__dirname, 'server.mjs'),{
+	const process = fork(path.join(__dirname, 'server-filecache.mjs'),{
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
 	});
 
@@ -32,9 +30,14 @@ function spawnServer () {
 		buffer: ''
 	};
 	servers.push(serv);
-	process.on('spawn', () => process.stdout.on('data', (data) => {
-		serv.buffer += data;
-	}));
+	process.on('spawn', () => {
+		process.stdout.on('data', (data) => {
+			serv.buffer += data;
+		});
+		process.stderr.on('data', (data) => {
+			console.error(data.toString());
+		});
+	});
 	process.on('exit', () => {
 		// console.error('Thumbnailer died..');
 		const i = servers.findIndex(x => x === serv);
@@ -56,7 +59,7 @@ async function genThumbnail (imgPath) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
-	serv.process.stdin.write(`${Buffer.from(imgPath).toString('base64')}\n`);
+	serv.process.stdin.write(`${encodeBase64(imgPath)}\n`);
 
 	while (retries--) {
 		const newline = serv.buffer.indexOf('\n');
