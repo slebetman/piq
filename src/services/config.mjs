@@ -8,7 +8,8 @@ import { join } from 'path';
  * @typedef {Object} Config
  * @property {Record<string,string>} dir
  * @property {number} threads
- * @property {string[]} editors
+ * @property {string[]} [editors]
+ * @property {boolean} useFileCache
  */
 
 /** @type {Config} */
@@ -18,6 +19,7 @@ export const config = {
 		cache: CACHE_DIR,
 	},
 	threads: os.cpus().length,
+	useFileCache: true,
 };
 
 export function stringifyConfig () {
@@ -52,6 +54,7 @@ export async function init () {
 					}
 					// no break here
 				case 'editors':
+				case 'useFileCache':
 				case 'debug':
 					config[key] = val;
 					break;

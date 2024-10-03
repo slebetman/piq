@@ -31,7 +31,11 @@ const servers = [];
 const imgCache = {};
 
 function spawnServer () {
-	const process = fork(path.join(__dirname, 'server-filecache.mjs'),{
+	const process = fork(path.join(__dirname,
+		config.useFileCache ?
+			'server-filecache.mjs' :
+			'server.mjs'
+	),{
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
 	});
 
