@@ -39,7 +39,6 @@ function spawnServer () {
 		});
 	});
 	process.on('exit', () => {
-		// console.error('Thumbnailer died..');
 		const i = servers.findIndex(x => x === serv);
 		servers.splice(i,1); // remove dead server
 		spawnServer(); // replace dead server
