@@ -1,27 +1,29 @@
 import { thumbnailBuffer } from "../lib/image-util.mjs";
 
-let inputBuffer = '';
+/**
+ * @typedef {Object} RequestMessage
+ * @property {string} imgPath
+ */
 
-async function processLine (imgPath) {
-	const buf = await thumbnailBuffer(Buffer.from(imgPath,'base64').toString());
-	process.stdout.write('data:image/webp;base64,' + buf.toString('base64') + '\n');
+/**
+ * @typedef {Object} ResponseMessage
+ * @property {string} imgPath
+ * @property {string} cachePath
+ */
+
+/**
+ * @param {RequestMessage} data 
+ */
+async function handler (data) {
+	const buf = await thumbnailBuffer(data.imgPath);
+	
+	/** @type {ResponseMessage} */
+	const response = {
+		imgPath: data.imgPath,
+		cachePath: 'data:image/webp;base64,' + buf.toString('base64'),
+	}
+
+	process.send(response);
 }
 
-
-process.stdin.on('data', (data) => {
-	inputBuffer += data;
-
-	while (1) {	
-		const newline = inputBuffer.indexOf('\n');
-		
-		if (newline != -1) {
-			const line = inputBuffer.substring(0, newline);
-			inputBuffer = inputBuffer.substring(newline+1);
-			
-			processLine(line);
-		}
-		else {
-			break;
-		}		
-	}
-});
+process.on('message', handler);
