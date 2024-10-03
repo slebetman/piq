@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 /**
  * @param {string} path
  */
@@ -25,6 +25,7 @@ export async function openMainWindow (path) {
 
 	win.webContents.ipc.on('current-path', (e, currentPath) => {
 		dir = currentPath;
+		app.addRecentDocument(currentPath);
 	})
 
 	return {
