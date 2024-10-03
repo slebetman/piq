@@ -10,9 +10,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const threads = config.threads;
 
 /**
+ * @typedef {Object} RequestMessage
+ * @property {string} imgPath
+ */
+
+/**
+ * @typedef {Object} ResponseMessage
+ * @property {string} imgPath
+ * @property {string} cachePath
+ */
+
+/**
  * @typedef {Object} ImgServer
  * @property {ChildProcess} process
- * @property {string} buffer
+ * @property {Record<string,ResponseMessage>} buffer
  */
 
 /** @type {ImgServer[]} */
@@ -27,13 +38,19 @@ function spawnServer () {
 
 	const serv = {
 		process,
-		buffer: ''
+		buffer: {}
 	};
+
+	/**
+	 * @param {ResponseMessage} data 
+	 */
+	function handler (data) {
+		serv.buffer[data.imgPath] = data;
+	}
+
 	servers.push(serv);
 	process.on('spawn', () => {
-		process.stdout.on('data', (data) => {
-			serv.buffer += data;
-		});
+		process.on('message', handler);
 		process.stderr.on('data', (data) => {
 			console.error(data.toString());
 		});
@@ -58,16 +75,13 @@ async function genThumbnail (imgPath) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
-	serv.process.stdin.write(`${encodeBase64(imgPath)}\n`);
+	serv.process.send({imgPath});
 
 	while (retries--) {
-		const newline = serv.buffer.indexOf('\n');
-	
-		if (newline != -1) {
-			const line = serv.buffer.substring(0, newline);
-			serv.buffer = serv.buffer.substring(newline+1);
-
-			return line;
+		const reply = serv.buffer[imgPath];
+		if (reply) {
+			delete serv.buffer[imgPath];
+			return reply.cachePath;
 		}
 
 		await sleep(1);
