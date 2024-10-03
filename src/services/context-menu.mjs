@@ -3,6 +3,7 @@ import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
 import trash from 'trash';
+import { config } from './config.mjs';
 
 const fileManager = process.platform === 'darwin' ? 'Finder'
 	: process.platform === 'win32' ? 'File Explorer'
@@ -17,12 +18,12 @@ export async function init () {
 					open(filePath);
 				}
 			},
-			{
-				label: 'Open with Gimp',
+			... config.editors.map(editor => ({
+				label: `Open with ${editor[0].toUpperCase() + editor.slice(1)}`,
 				click: () => {
-					open(filePath, {app: {name: 'gimp'}});
+					open(filePath, {app: {name: editor}});
 				}
-			},
+			})),
 			{ type: 'separator'},
 			{
 				label: 'Copy file path',
