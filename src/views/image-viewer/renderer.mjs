@@ -5,6 +5,9 @@ import { isImage } from '../lib/image-files.mjs';
 async function displayImg (stat, wrap = false) {
 	document.title = stat.name;
 	const imgPath = `${stat.parentPath}/${stat.name}`;
+
+	api.updateCurrentPath(imgPath);
+
 	const img = imgViewer({
 		stat: {
 			image: imgPath,

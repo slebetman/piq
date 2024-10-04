@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import { config } from '../../services/config.mjs';
 import fs from 'fs/promises';
 import path from 'path';
-import { openViewerWindow } from '../image-viewer/lib.mjs';
+import { getViewWindowFromImgPath, openViewerWindow } from '../image-viewer/lib.mjs';
 
 /**
  * @typedef {Object} MainWindowObject

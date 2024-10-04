@@ -17,5 +17,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	wrapWindow: async (width, height) => {
 		return await ipcRenderer.invoke('wrap-window', width, height);
+	},
+	updateCurrentPath: (path) => {
+		ipcRenderer.send('current-path', path);
 	}
 })

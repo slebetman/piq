@@ -2,6 +2,19 @@ import { BrowserWindow, screen } from 'electron';
 import { imageInfo } from '../../services/lib/image-util.mjs';
 
 /**
+ * @typedef {Object} ViewWindowObject
+ * @property {BrowserWindow} window
+ * @property {readonly string} imagePath
+ */
+
+/** @type {ViewWindowObject[]} */
+export const viewWindows = [];
+
+export function getViewWindowFromImgPath (path) {
+	return viewWindows.find(x => x.imagePath === path);
+}
+
+/**
  * @param {BrowserWindow} win 
  * @param {number} width 
  * @param {number} height 
@@ -60,7 +73,16 @@ export function wrapWindowAroundImage (win, width, height, setCenter = false) {
 }
 
 export async function openViewerWindow (imgPath, files, index) {
-	const meta = await imageInfo(imgPath);
+	let img = imgPath;
+
+	const alreadyOpenedWindow = getViewWindowFromImgPath(img);
+
+	if (alreadyOpenedWindow) {
+		alreadyOpenedWindow.window.focus();
+		return;  // don't open duplicate window.
+	}
+
+	const meta = await imageInfo(img);
 	const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 
 	const win = new BrowserWindow({
@@ -78,5 +100,25 @@ export async function openViewerWindow (imgPath, files, index) {
 	win.webContents.once('did-finish-load', () => {
 		win.webContents.send('image', files, index);
 		win.show();
+	});
+
+	win.webContents.ipc.on('current-path', (e, currentPath) => {
+		img = currentPath;
+	})
+
+	const winObj = {
+		window: win,
+		get imagePath() {
+			return img;
+		}
+	}
+
+	viewWindows.push(winObj);
+
+	win.on('close', () => {
+		const idx = viewWindows.findIndex(x => x === winObj);
+		if (idx !== -1) {
+			viewWindows.splice(idx,1); // remove closed window
+		}
 	})
 }
