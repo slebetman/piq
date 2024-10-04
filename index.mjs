@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app } from 'electron';
 import path from 'path';
 import { mainWindows, openMainWindow } from './src/views/main/lib.mjs';
+import { setMainMenu } from './src/services/main-menu.mjs';
 
 const services = [
 	'config.mjs',
@@ -14,6 +15,8 @@ const services = [
 
 async function main (argument0) {
 	let dir = argument0;
+
+	setMainMenu();
 
 	app.addListener('open-file', async (ev, path) => {
 		dir = path;

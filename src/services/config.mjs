@@ -1,4 +1,4 @@
-import { dialog, ipcMain } from 'electron';
+import { app, dialog, ipcMain } from 'electron';
 import fs from 'fs/promises';
 import { CACHE_DIR, CONFIG_DIR } from './lib/config-paths.mjs';
 import os from 'os';
@@ -16,16 +16,20 @@ import { join } from 'path';
  * @property {number} threads
  * @property {EditorSpec[]} [editors]
  * @property {boolean} useFileCache
+ * @property {string} version
+ * @property {boolean} hideMenuBar
  */
 
 /** @type {Config} */
 export const config = {
+	version: app.getVersion(),
 	dir: {
 		config: CONFIG_DIR,
 		cache: CACHE_DIR,
 	},
 	threads: os.cpus().length,
 	useFileCache: true,
+	hideMenuBar: true,
 };
 
 export function stringifyConfig () {
@@ -33,6 +37,8 @@ export function stringifyConfig () {
 		threads: config.threads === os.cpus().length ? 'cpu_cores' : config.threads,
 		editors: config.editors,
 		debug: config.debug ?? false,
+		useFileCache: config.useFileCache,
+		hideMenuBar: config.hideMenuBar,
 	}
 
 	return JSON.stringify(val, null, 2);
@@ -61,6 +67,7 @@ export async function init () {
 					// no break here
 				case 'editors':
 				case 'useFileCache':
+				case 'hideMenuBar':
 				case 'debug':
 					config[key] = val;
 					break;

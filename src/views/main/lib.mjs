@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { config } from "../../services/config.mjs";
 
 /**
  * @typedef {Object} MainWindowObject
@@ -22,8 +23,10 @@ export async function openMainWindow (path) {
 		}
 	});
 
-	win.setMenuBarVisibility(false);
-	win.autoHideMenuBar = true;
+	if (config.hideMenuBar) {
+		win.setMenuBarVisibility(false);
+		win.autoHideMenuBar = true;
+	}
 	
 	win.loadFile(import.meta.dirname + '/index.html');
 
