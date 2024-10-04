@@ -60,28 +60,32 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 	}
 }
 
+export async function openViewerWindow (imgPath, files, index) {
+	const meta = await imageInfo(imgPath);
+	const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+
+	const win = new BrowserWindow({
+		webPreferences: {
+			preload: path.join(import.meta.dirname, '../views/image-viewer/preload.js'),
+		},
+		x: display.bounds.x + ((display.bounds.width - meta.width) / 2),
+		y: display.bounds.y + ((display.bounds.height - meta.height) / 2),
+	});
+	win.hide();
+	win.setMenuBarVisibility(false);
+	win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
+	wrapWindowAroundImage(win, meta.width, meta.height, true);
+
+	win.webContents.once('did-finish-load', () => {
+		win.webContents.send('image', files, index);
+		win.show();
+	})
+}
+
 export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
-		const stat = await imageInfo(imgPath);
-		const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
-
-		const win = new BrowserWindow({
-			webPreferences: {
-				preload: path.join(import.meta.dirname, '../views/image-viewer/preload.js'),
-			},
-			x: display.bounds.x + ((display.bounds.width - stat.width) / 2),
-			y: display.bounds.y + ((display.bounds.height - stat.height) / 2),
-		});
-		win.hide();
-		win.setMenuBarVisibility(false);
-		win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
-		wrapWindowAroundImage(win, stat.width, stat.height, true);
-
-		win.webContents.once('did-finish-load', () => {
-			win.webContents.send('image', files, index);
-			win.show();
-		})
+		return await openViewerWindow(imgPath, files, index);
 	});
 
 	ipcMain.handle('wrap-window', async (e, width, height) => {

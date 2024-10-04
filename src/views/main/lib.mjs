@@ -1,5 +1,8 @@
-import { app, BrowserWindow } from "electron";
-import { config } from "../../services/config.mjs";
+import { app, BrowserWindow } from 'electron';
+import { config } from '../../services/config.mjs';
+import fs from 'fs/promises';
+import path from 'path';
+import { openViewerWindow } from '../../services/open-viewer.mjs';
 
 /**
  * @typedef {Object} MainWindowObject
@@ -13,8 +16,34 @@ export const mainWindows = [];
 /**
  * @param {string | undefined} dir 
  */
-export async function openMainWindow (path) {
-	let dir = path;
+export async function openMainWindow (dirPath) {
+	let dir = dirPath;
+
+	const stat = await fs.stat(dir);
+
+	if (!stat.isDirectory()) {
+		const image  = path.basename(dirPath);
+		dir = path.dirname(dirPath);
+
+		const files = (await fs.readdir(dir,{
+			withFileTypes: true
+		})).map(x => ({
+			name: x.name,
+			isDirectory: x.isDirectory(),
+			parentPath: x.parentPath,
+		}));
+
+		const index = files.findIndex(x => x.name === image);
+
+		openViewerWindow(dirPath, files, index);
+
+		const alreadyOpenedWindow = mainWindows.find(x => x.currentPath === dir);
+
+		if (alreadyOpenedWindow) {
+			return; // don't open duplicate window.
+		}
+	}
+
 	const win = new BrowserWindow({
 		width: 800,
 		height: 600,
