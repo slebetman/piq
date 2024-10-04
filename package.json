@@ -13,6 +13,9 @@
   "author": "Adly Abdullah <slebetman@gmail.com>",
   "license": "BSD-2-Clause",
   "build": {
+    "electronLanguages": [
+      "en-US"
+    ],
     "fileAssociations": [
       {
         "ext": "jpg",
