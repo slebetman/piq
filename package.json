@@ -49,7 +49,7 @@
       ]
     },
     "dmg": {
-      "background": "bg.png"
+      "background": "bg.tiff"
     }
   },
   "devDependencies": {
