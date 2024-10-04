@@ -63,7 +63,6 @@ function wrapWindowAroundImage (win, width, height, setCenter = false) {
 export async function init () {
 	// sync code here:
 	ipcMain.handle('viewer', async (e, imgPath, files, index) => {
-		const parent = BrowserWindow.fromWebContents(e.sender);
 		const stat = await imageInfo(imgPath);
 		const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 
@@ -78,16 +77,6 @@ export async function init () {
 		win.setMenuBarVisibility(false);
 		win.loadFile(path.join(import.meta.dirname, '../views/image-viewer/index.html'));
 		wrapWindowAroundImage(win, stat.width, stat.height, true);
-
-		const handleParentClose = () => {
-			win.removeAllListeners();
-			win.close();
-		}
-
-		parent.addListener('close', handleParentClose);
-		win.addListener('close', () => {
-			parent.removeListener('close', handleParentClose);
-		})
 
 		win.webContents.once('did-finish-load', () => {
 			win.webContents.send('image', files, index);
