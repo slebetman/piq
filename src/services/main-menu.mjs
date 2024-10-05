@@ -75,7 +75,8 @@ export function setMainMenu () {
 							aboutBoxVisible = false;
 						}
 					}
-				}
+				},
+				...(app.isPackaged ? [] : [{ role: 'toggleDevTools' }])
 			]
 		}] : [])
 	]);
