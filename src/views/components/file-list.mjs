@@ -1,7 +1,7 @@
 import { make } from "../lib/dom-utils.mjs";
 import { isImage } from "../lib/image-files.mjs";
 import { fileListContainer } from "./lib/file-list-container.mjs";
-import { topBar } from "./lib/top-bar.mjs";
+import { BAR_HEIGHT, topBar } from "./lib/top-bar.mjs";
 
 /**
  * @typedef {Object} Dirent
@@ -31,6 +31,9 @@ export function fileList (props) {
 			backgroundColor: '#58f',
 			width: 0,
 			display: 'none',
+			position: 'fixed',
+			top: BAR_HEIGHT,
+			opacity: 0.75,
 		}
 	});
 
@@ -44,7 +47,6 @@ export function fileList (props) {
 				onChdir: props.onChdir,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
 			}),
-			progressBar,
 			fileListContainer({
 				...props,
 				updater: (percent) => {
@@ -56,7 +58,8 @@ export function fileList (props) {
 					}
 					progressBar.style.width = `${percent}%`;
 				}
-			})
+			}),
+			progressBar
 		]
 	);
 }
