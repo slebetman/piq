@@ -13,6 +13,7 @@ cssVar('--bar-height', BAR_HEIGHT);
  * @property {number} [imgCount]
  * @property {Function} [onSizeChange]
  * @property {Function} [onChdir]
+ * @property {number} [thumbnailSize]
  */
 
 /**
@@ -20,6 +21,11 @@ cssVar('--bar-height', BAR_HEIGHT);
  * @returns Div
  */
 export function topBar (props) {
+	if (props.thumbnailSize) {
+		size = props.thumbnailSize;
+		cssVar('--thumbnail-size', `${size}px`);
+	}
+
 	return make.div({
 		style: {
 			width: '100vw',

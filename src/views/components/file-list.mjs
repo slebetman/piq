@@ -16,13 +16,13 @@ import { BAR_HEIGHT, topBar } from "./lib/top-bar.mjs";
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
  * @property {Function} [onChdir]
+ * @property {number} [thumbnailSize]
  */
 
 /**
  * @param {FileListProps} props 
  * @returns Div
  */
-
 export function fileList (props) {
 	const progressBar = make.div({
 		id: 'file-load-progress',
@@ -46,6 +46,7 @@ export function fileList (props) {
 				currentPath: props.currentPath,
 				onChdir: props.onChdir,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
+				thumbnailSize: props.thumbnailSize,
 			}),
 			fileListContainer({
 				...props,
