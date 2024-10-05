@@ -29,7 +29,7 @@ contextBridge.exposeInMainWorld('api', {
 		return await ipcRenderer.invoke('viewer', path, files, index);
 	},
 	contextMenuImg: async (filePath) => {
-		await ipcRenderer.invoke('context-menu-img', filePath);
+		await ipcRenderer.invoke('context-menu-img', filePath, true);
 	},
 	contextMenuDir: async (filePath) => {
 		await ipcRenderer.invoke('context-menu-dir', filePath);

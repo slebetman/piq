@@ -44,7 +44,7 @@ function getOpenWithMenu (filePath) {
 }
 
 export async function init () {
-	ipcMain.handle('context-menu-img', async (e, filePath) => {
+	ipcMain.handle('context-menu-img', async (e, filePath, thumbnail = false) => {
 		const template = [
 			{
 				label: 'Open',
@@ -75,6 +75,12 @@ export async function init () {
 				}
 			},
 			{ type: 'separator'},
+			... (thumbnail ? [{
+				label: 'Regenerate thumbnail',
+				click: () => {
+
+				}
+			}] : []),
 			{
 				label: 'Move to Trash',
 				click: () => {
