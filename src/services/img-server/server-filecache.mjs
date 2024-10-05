@@ -1,4 +1,5 @@
-import { thumbnailFile } from "../lib/image-util.mjs";
+import { thumbnailFile } from '../lib/image-util.mjs';
+import fs from 'fs/promises';
 
 /**
  * @typedef {Object} RequestMessage
@@ -15,7 +16,16 @@ import { thumbnailFile } from "../lib/image-util.mjs";
  * @param {RequestMessage} data 
  */
 async function handler (data) {
-	const buf = await thumbnailFile(data.imgPath);
+	let buf;
+	let retries = 10;
+
+	// retry if file is empty
+	while (retries--) {
+		buf = await thumbnailFile(data.imgPath);
+		const stat = await fs.stat(buf);
+		if (stat.size) break;
+		await fs.unlink(buf);
+	}
 	
 	/** @type {ResponseMessage} */
 	const response = {
