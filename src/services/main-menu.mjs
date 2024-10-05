@@ -55,6 +55,10 @@ export function setMainMenu () {
 				}
 			]
 		},
+		...(app.isPackaged ? [] : [{
+			label: 'Debug',
+			submenu : [{ role: 'toggleDevTools' }]
+		}]),
 		...(notMac ? [{
 			role: 'help',
 			submenu: [
@@ -76,7 +80,6 @@ export function setMainMenu () {
 						}
 					}
 				},
-				...(app.isPackaged ? [] : [{ role: 'toggleDevTools' }])
 			]
 		}] : [])
 	]);
