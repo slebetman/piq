@@ -1,5 +1,6 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
+import { imgCache } from '../components/lib/file-container.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
 const scrollPosition = {};
@@ -10,6 +11,14 @@ async function main () {
 	api.dirListener(async (dirPath) => {
 		const files = await api.listDir(dirPath);
 		handleOpenDir({files, path: dirPath});
+	});
+
+	api.thumbnailListener(async (imgPath) => {
+		const img = imgCache[imgPath].getElementsByTagName('img')[0];
+
+		if (img) {
+			img.src = await api.thumbnailBuffer(imgPath, true);
+		}
 	});
 
 	function handleOpenDir ({files, path: currentPath}) {

@@ -76,11 +76,11 @@ function nextServer () {
 	return turn;
 }
 
-async function genThumbnail (imgPath) {
+async function genThumbnail (imgPath, regenerate) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
-	serv.process.send({imgPath});
+	serv.process.send({imgPath, regenerate});
 
 	while (retries--) {
 		const reply = serv.buffer[imgPath];
@@ -103,13 +103,18 @@ async function genThumbnail (imgPath) {
 
 export async function init () {
 	for (let i=0; i < threads; i++) {
-		spawnServer()
+		spawnServer();
 	}
 
-	ipcMain.handle('thumbnail-buffer-spawn', async (e, imgPath) => {
-		if (!imgCache[imgPath]) {
-			imgCache[imgPath] = await genThumbnail(imgPath);
+	ipcMain.handle('thumbnail-buffer-spawn', async (e, imgPath, regenerate = false) => {
+		if (!imgCache[imgPath] || regenerate) {
+			imgCache[imgPath] = await genThumbnail(imgPath, regenerate);
 		}
+
+		if (regenerate) {
+			setTimeout(() => e.sender.reloadIgnoringCache(), 200);
+		}
+
 		return imgCache[imgPath];
 	})
 }

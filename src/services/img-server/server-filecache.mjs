@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 /**
  * @typedef {Object} RequestMessage
  * @property {string} imgPath
+ * @property {boolean} regenerate
  */
 
 /**
@@ -21,7 +22,7 @@ async function handler (data) {
 
 	// retry if file is empty
 	while (retries--) {
-		buf = await thumbnailFile(data.imgPath);
+		buf = await thumbnailFile(data.imgPath, data.regenerate);
 		const stat = await fs.stat(buf);
 		if (stat.size) break;
 		await fs.unlink(buf);

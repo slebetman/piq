@@ -2,7 +2,7 @@ import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
 
 /** @type {Record<string,HTMLElement>} */
-let imgCache = {};
+export let imgCache = {};
 
 /**
  * @typedef {Object} FileContainerProps

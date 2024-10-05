@@ -39,11 +39,16 @@ contextBridge.exposeInMainWorld('api', {
 			callback(dirPath);
 		});
 	},
+	thumbnailListener: (callback) => {
+		ipcRenderer.on('thumbnail-regenerate', (e, imgPath) => {
+			callback(imgPath);
+		})
+	},
 	updateCurrentPath: (path) => {
 		ipcRenderer.send('current-path', path);
 	},
-	thumbnailBuffer: async (imgPath) => {
-		return await ipcRenderer.invoke('thumbnail-buffer-spawn', imgPath);
+	thumbnailBuffer: async (imgPath, regenerate = false) => {
+		return await ipcRenderer.invoke('thumbnail-buffer-spawn', imgPath, regenerate);
 	},
 	watch: async (path) => {
 		return await ipcRenderer.invoke('watch', path);

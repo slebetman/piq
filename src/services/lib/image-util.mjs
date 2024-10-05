@@ -24,20 +24,27 @@ export async function thumbnailBuffer (imgPath) {
 	return await thumbnailer(imgPath).toBuffer();
 }
 
-export async function thumbnailFile (imgPath) {
+export async function thumbnailFile (imgPath, regenerate = false) {
 	const normalPath = path.normalize(imgPath);
 	const hashPath = hash(normalPath);
 
 	const cachePath = path.join(CACHE_DIR, `${hashPath}.webp`);
 	
-	try {
-		const now = new Date();
-		await fs.stat(cachePath);
-		await fs.utimes(cachePath, now, now);
-	}
-	catch (err) {
+	if (regenerate) {
+		console.error('regenerate', imgPath);
 		await thumbnailer(imgPath)
 			.toFile(cachePath);
+	}
+	else {
+		try {
+			const now = new Date();
+			await fs.stat(cachePath);
+			await fs.utimes(cachePath, now, now);
+		}
+		catch (err) {
+			await thumbnailer(imgPath)
+				.toFile(cachePath);
+		}
 	}
 
 	return cachePath;

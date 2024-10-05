@@ -1,4 +1,4 @@
-import { clipboard, ipcMain, Menu, nativeImage } from 'electron';
+import { BrowserWindow, clipboard, ipcMain, Menu, nativeImage } from 'electron';
 import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
@@ -45,6 +45,8 @@ function getOpenWithMenu (filePath) {
 
 export async function init () {
 	ipcMain.handle('context-menu-img', async (e, filePath, thumbnail = false) => {
+		const sender = e.sender;
+
 		const template = [
 			{
 				label: 'Open',
@@ -78,7 +80,7 @@ export async function init () {
 			... (thumbnail ? [{
 				label: 'Regenerate thumbnail',
 				click: () => {
-
+					sender.send('thumbnail-regenerate', filePath);
 				}
 			}] : []),
 			{
