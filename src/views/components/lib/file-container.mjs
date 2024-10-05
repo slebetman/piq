@@ -1,6 +1,9 @@
 import { make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
 
+/** @type {Record<string,HTMLElement>} */
+let imgCache = {};
+
 /**
  * @typedef {Object} FileContainerProps
  * @property {Dirent[]} files - File list
@@ -40,6 +43,10 @@ export function fileContainer (props) {
 	else if (isImage(props.file.name)) {
 		const imgPath = `${props.file.parentPath}/${props.file.name}`;
 
+		if (imgCache[imgPath]) {
+			return imgCache[imgPath];
+		}
+
 		const imgDiv = make.div({
 			className: 'thumbnail',
 			ondblclick: props.onOpen,
@@ -56,6 +63,7 @@ export function fileContainer (props) {
 			})
 			icon.src = await api.thumbnailBuffer(imgPath);
 			imgDiv.appendChild(icon);
+			imgCache[imgPath] = imgDiv;
 			await done;
 		});
 
