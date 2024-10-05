@@ -18,6 +18,8 @@ import { join } from 'path';
  * @property {boolean} useFileCache
  * @property {string} version
  * @property {boolean} hideMenuBar
+ * @property {number} defaultBrowserWidth
+ * @property {number} defaultBrowserHeight
  */
 
 /** @type {Config} */
@@ -30,6 +32,8 @@ export const config = {
 	threads: os.cpus().length,
 	useFileCache: true,
 	hideMenuBar: true,
+	defaultBrowserWidth: 800,
+	defaultBrowserHeight: 600,
 };
 
 export function stringifyConfig () {

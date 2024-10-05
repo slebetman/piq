@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import { config } from '../../services/config.mjs';
 import fs from 'fs/promises';
 import path from 'path';
-import { getViewWindowFromImgPath, openViewerWindow } from '../image-viewer/lib.mjs';
+import { openViewerWindow } from '../image-viewer/lib.mjs';
 
 /**
  * @typedef {Object} MainWindowObject
@@ -49,8 +49,8 @@ export async function openMainWindow (dirPath) {
 	}
 
 	const win = new BrowserWindow({
-		// width: 800,
-		// height: 600,
+		width: config.defaultBrowserWidth,
+		height: config.defaultBrowserHeight,
 		webPreferences: {
 			preload: import.meta.dirname + '/preload.js',
 		}
