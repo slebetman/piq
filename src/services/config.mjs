@@ -18,10 +18,16 @@ import { join } from 'path';
  * @property {boolean} useFileCache
  * @property {string} version
  * @property {boolean} hideMenuBar
+ * @property {boolean} debug
  * @property {number} defaultBrowserWidth
  * @property {number} defaultBrowserHeight
  * @property {number} defaultThumbnailSize
  */
+
+/**
+ * @typedef {keyof Config} ConfigKeys
+ * @typedef {Omit<ConfigKeys, version | dir>} SettableConfigKeys
+ * */
 
 /** @type {Config} */
 export const config = {
@@ -33,12 +39,21 @@ export const config = {
 	threads: os.cpus().length,
 	useFileCache: true,
 	hideMenuBar: true,
+	debug: false,
 	defaultBrowserWidth: 800,
 	defaultBrowserHeight: 600,
 	defaultThumbnailSize: 150,
 };
 
-function updateConfigFile () {
+/**
+ * @param {SettableConfigKeys} key 
+ * @param {number|string|boolean} val 
+ */
+export function setConfig (key, val) {
+	config[key] = val;
+}
+
+export function updateConfigFile () {
 	return fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
 }
 

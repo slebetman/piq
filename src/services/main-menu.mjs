@@ -2,6 +2,7 @@ import { app, dialog, Menu, nativeImage } from "electron";
 import path from 'path';
 import { showOpenDialog } from "./open-dialog.mjs";
 import { mainWindows, openMainWindow } from "../views/main/lib.mjs";
+import { config, setConfig } from "./config.mjs";
 
 const isMac = process.platform === 'darwin'
 const notMac = !isMac;
@@ -57,7 +58,17 @@ export function setMainMenu () {
 		},
 		...(app.isPackaged ? [] : [{
 			label: 'Debug',
-			submenu : [{ role: 'toggleDevTools' }]
+			submenu : [
+				{ role: 'toggleDevTools' },
+				{
+					label: 'Debug mode',
+					type: 'checkbox',
+					checked: config.debug,
+					click: () => {
+						setConfig('debug', !config.debug);
+					}
+				}
+			]
 		}]),
 		...(notMac ? [{
 			role: 'help',
