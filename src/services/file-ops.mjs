@@ -3,7 +3,8 @@ import fs from 'fs/promises'
 import path from 'path'
 import { imageInfo } from './lib/image-util.mjs';
 
-let watchAbort = null;
+/** @type {Record<string,AbortController>} */
+let watchAbort = {};
 
 export async function init () {
 	// sync code here:
@@ -28,26 +29,30 @@ export async function init () {
 	});
 
 	ipcMain.handle('watch', async (e, dirPath) => {
-		if (watchAbort) {
-			watchAbort.abort();
-		}
-
-		watchAbort = new AbortController();
+		const controller = new AbortController();
+		watchAbort[dirPath] = controller;
 
 		const watchOptions = {
 			persistent: false,
-			signal: watchAbort.signal,
+			signal: controller.signal,
 		}
 
 		const result = fs.watch(dirPath, watchOptions);
 		try {
 			for await (const e of result) {
-				watchAbort = null;
+				delete watchAbort[dirPath];
 				return e;
 			}
 		}
 		catch (err) {
 			return;
+		}
+	});
+
+	ipcMain.handle('unwatch', async (e, dirPath) => {
+		const controller = watchAbort[dirPath];
+		if (controller) {
+			controller.abort();
 		}
 	});
 }

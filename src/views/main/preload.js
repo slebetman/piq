@@ -47,5 +47,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	watch: async (path) => {
 		return await ipcRenderer.invoke('watch', path);
+	},
+	unwatch: async (path) => {
+		return await ipcRenderer.invoke('unwatch', path);
 	}
 })

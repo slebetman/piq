@@ -11,6 +11,7 @@ async function main () {
 	});
 
 	function handleOpenDir ({files, path: currentPath}) {
+		const oldPath = sessionStorage.getItem('currentPath');
 		sessionStorage.setItem('currentPath', currentPath);
 		document.title = currentPath.split('/').pop();
 		api.updateCurrentPath(currentPath);
@@ -34,11 +35,20 @@ async function main () {
 			document.getElementById('files-container').scrollTop = scrollPosition[currentPath];
 		}
 
+		let debounce;
+
+		if (oldPath) {
+			api.unwatch(oldPath);
+		}
+
 		api.watch(currentPath).then(async (x) => {
 			if (x) {
-				const normalPath = await api.normalizePath(currentPath);
-				const newFiles = await api.listDir(currentPath);
-				handleOpenDir({ files: newFiles, path: normalPath });
+				clearTimeout(debounce);
+				debounce = setTimeout(async () => {
+					const normalPath = await api.normalizePath(currentPath);
+					const newFiles = await api.listDir(currentPath);
+					handleOpenDir({ files: newFiles, path: normalPath });
+				}, 500);
 			}
 		});
 	}
