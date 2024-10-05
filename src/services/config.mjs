@@ -20,6 +20,7 @@ import { join } from 'path';
  * @property {boolean} hideMenuBar
  * @property {number} defaultBrowserWidth
  * @property {number} defaultBrowserHeight
+ * @property {number} defaultThumbnailSize
  */
 
 /** @type {Config} */
@@ -34,15 +35,24 @@ export const config = {
 	hideMenuBar: true,
 	defaultBrowserWidth: 800,
 	defaultBrowserHeight: 600,
+	defaultThumbnailSize: 150,
 };
+
+function updateConfigFile () {
+	return fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
+}
 
 export function stringifyConfig () {
 	const val = {
+		version: config.version,
 		threads: config.threads === os.cpus().length ? 'cpu_cores' : config.threads,
 		editors: config.editors,
 		debug: config.debug ?? false,
 		useFileCache: config.useFileCache,
 		hideMenuBar: config.hideMenuBar,
+		defaultBrowserWidth: config.defaultBrowserWidth,
+		defaultBrowserHeight: config.defaultBrowserHeight,
+		defaultThumbnailSize: config.defaultThumbnailSize,
 	}
 
 	return JSON.stringify(val, null, 2);
@@ -61,6 +71,7 @@ export async function init () {
 	try {
 		const configFile = await fs.readFile(join(CONFIG_DIR, 'config.json'),'utf8');
 		const configObj = JSON.parse(configFile);
+		let oldVersion;
 
 		for (let [ key, val ]  of Object.entries(configObj)) {
 			switch(key) {
@@ -68,16 +79,32 @@ export async function init () {
 					if (val === 'cpu_cores') {
 						val = os.cpus().length;
 					}
-					// no break here
+					config[key] = val;
+					break;
+				case 'version':
+					oldVersion = config.version;
+					config[key] = val;
+					break;
 				case 'editors':
 				case 'useFileCache':
 				case 'hideMenuBar':
+				case 'defaultBrowserWidth':
+				case 'defaultBrowserHeight':
+				case 'defaultThumbnailSize':
 				case 'debug':
 					config[key] = val;
 					break;
 				default:
-					dialog.showErrorBox('Config Error', `Invalid configuration ${key}`);
+					dialog.showErrorBox(
+						'Config Error',
+						`Invalid configuration ${key}`
+					);
 			}
+		}
+
+		if (config.version !== oldVersion) {
+			// update old config file
+			await updateConfigFile();
 		}
 	}
 	catch (err) {
@@ -88,7 +115,7 @@ export async function init () {
 			}];
 
 			// Create default file
-			await fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
+			await updateConfigFile();
 		}
 	}
 }

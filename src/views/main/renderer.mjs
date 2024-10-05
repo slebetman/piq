@@ -5,6 +5,8 @@ import { render } from '../lib/dom-utils.mjs'
 const scrollPosition = {};
 
 async function main () {
+	const config = await api.getConfig();
+
 	api.dirListener(async (dirPath) => {
 		const files = await api.listDir(dirPath);
 		handleOpenDir({files, path: dirPath});
@@ -28,7 +30,8 @@ async function main () {
 			},
 			onOpen: async (path, index) => {
 				await api.viewImage(path, files, index);
-			}
+			},
+			thumbnailSize: config.defaultThumbnailSize,
 		}));
 
 		if (scrollPosition[currentPath]) {
