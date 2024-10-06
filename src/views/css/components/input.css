@@ -36,16 +36,15 @@
 
 .tab-container {
     display: flex;
-    gap: 2px;
 }
 
 .tab-item {
-    border: 1px solid #999;
-    border-bottom: none;
+    border: 1px solid #888;
+    border-bottom: 1px solid #ccc;
     padding: 5px 10px 0 10px;
     border-radius: 10px 10px 0 0;
     background: #222;
-    color: #999;
+    color: #888;
 	cursor: pointer;
 	user-select: none;
 	font-size: 14px;
@@ -56,4 +55,9 @@
     border-bottom: none;
 	background: #333;
     color: #ccc;
+}
+
+.tab-filler {
+	border-bottom: 1px solid #ccc;
+	flex-grow: 1;
 }

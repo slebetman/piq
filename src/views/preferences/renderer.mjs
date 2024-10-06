@@ -6,15 +6,30 @@ async function main () {
 	const config = await api.getConfig();
 	delete config.version;
 	delete config.editors;
+	let selected = 0;
 
 	const tabs = tab({
 		tabs: ['Settings', 'Editors'],
-		selected: 0,
+		selected,
+		onClick: (name, idx) => {
+			if (idx !== selected) {
+				selected = idx;
+
+				if (idx === 0) {
+					cfg.replaceChild(preferencesPanel, editorsPanel);
+				}
+				else {
+					cfg.replaceChild(editorsPanel, preferencesPanel);
+				}
+			}
+		}
 	})
 
-	const preferencesTab = preferences({
+	const preferencesPanel = preferences({
 		config,
 	});
+
+	const editorsPanel = make.div({},'HELLO');
 
 	const buttons = make.div({
 		style: {
@@ -51,7 +66,7 @@ async function main () {
 		}
 	},[
 		tabs,
-		preferencesTab,
+		preferencesPanel,
 		buttons,
 	]);
 

@@ -33,5 +33,10 @@ export function tab (props) {
 
 	return make.div({
 		className: 'tab-container'
-	},tabs);
+	},[
+		...tabs,
+		make.div({
+			className: 'tab-filler',
+		})
+	]);
 }
