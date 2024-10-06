@@ -53,8 +53,8 @@ export function setConfig (key, val) {
 	config[key] = val;
 }
 
-export function updateConfigFile () {
-	return fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
+export async function updateConfigFile () {
+	return await fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
 }
 
 export function savedConfig () {
@@ -86,11 +86,15 @@ export async function init () {
 	});
 
 	ipcMain.handle('set-config',(e, key, val) => {
-		setConfig(key, val);
+		let value = val;
+		if (key === 'threads' && value === 'cpu_cores') {
+			value = os.cpus().length;
+		}
+		setConfig(key, value);
 	});
 
-	ipcMain.handle('update-config', () => {
-		updateConfigFile();
+	ipcMain.handle('update-config', async () => {
+		return await updateConfigFile();
 	})
 
 	// async code below this:
