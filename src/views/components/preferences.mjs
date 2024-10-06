@@ -22,8 +22,6 @@ import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
 /**
  * @typedef {Object} PreferencesProps
  * @property {Config} config
- * @property {Function} onCancel
- * @property {Function} onSave
  */
 
 /**
@@ -32,7 +30,7 @@ import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
  */
 
 export function preferences (props) {
-	const { config, onCancel, onSave } = props;
+	const { config } = props;
 
 	return make('div',{
 		id: 'config-tab',
