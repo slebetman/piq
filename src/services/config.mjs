@@ -57,8 +57,8 @@ export function updateConfigFile () {
 	return fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
 }
 
-export function stringifyConfig () {
-	const val = {
+export function savedConfig () {
+	return {
 		version: config.version,
 		threads: config.threads === os.cpus().length ? 'cpu_cores' : config.threads,
 		editors: config.editors,
@@ -69,8 +69,10 @@ export function stringifyConfig () {
 		defaultBrowserHeight: config.defaultBrowserHeight,
 		defaultThumbnailSize: config.defaultThumbnailSize,
 	}
+}
 
-	return JSON.stringify(val, null, 2);
+export function stringifyConfig () {
+	return JSON.stringify(savedConfig(), null, 2);
 }
 
 export async function init () {
@@ -78,6 +80,18 @@ export async function init () {
 	ipcMain.handle('config',() => {
 		return config;
 	});
+
+	ipcMain.handle('get-saved-config', () => {
+		return savedConfig();
+	});
+
+	ipcMain.handle('set-config',(e, key, val) => {
+		setConfig(key, val);
+	});
+
+	ipcMain.handle('update-config', () => {
+		updateConfigFile();
+	})
 
 	// async code below this:
 	await fs.mkdir(CONFIG_DIR, {recursive: true});

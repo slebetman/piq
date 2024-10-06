@@ -1,0 +1,35 @@
+:root {
+	--input-text-color: #ccc;
+}
+
+.input-group {
+	display: flex;
+	margin: 10px 0 0 20px;
+	gap: 5px;
+}
+
+.input-label {
+	width: 70%;
+	color: var(--input-text-color);
+}
+
+.input-value {
+	width: 20%;
+}
+
+.input-heading {
+	color: var(--input-text-color);
+	font-weight: bold;
+	font-size: larger;
+	margin-top: 20px;
+}
+
+.input-heading:first-child {
+	margin-top: 0;
+}
+
+.input-description {
+	color: var(--input-text-color);
+	margin-left: 20px;
+	font-size: 11px;
+}

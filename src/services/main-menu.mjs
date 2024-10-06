@@ -3,6 +3,7 @@ import path from 'path';
 import { showOpenDialog } from "./open-dialog.mjs";
 import { mainWindows, openMainWindow } from "../views/main/lib.mjs";
 import { config, setConfig } from "./config.mjs";
+import { openConfigWindow } from "../views/preferences/lib.mjs";
 
 const isMac = process.platform === 'darwin'
 const notMac = !isMac;
@@ -53,6 +54,12 @@ export function setMainMenu () {
 							await openMainWindow(path);
 						}
 					}
+				},
+				{
+					label: 'Preferences',
+					click: () => {
+						openConfigWindow();
+					}
 				}
 			]
 		},
@@ -60,6 +67,7 @@ export function setMainMenu () {
 			label: 'Debug',
 			submenu : [
 				{ role: 'toggleDevTools' },
+				{ role: 'reload' },
 				{
 					label: 'Debug mode',
 					type: 'checkbox',
