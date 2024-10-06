@@ -20,6 +20,7 @@ export async function openConfigWindow () {
 
 	win.setMenuBarVisibility(false);
 	win.autoHideMenuBar = false;
+	win.resizable = false;
 	
 	win.loadFile(import.meta.dirname + '/index.html');
 

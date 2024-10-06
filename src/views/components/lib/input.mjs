@@ -14,7 +14,7 @@ import { make } from "../../lib/dom-utils.mjs";
  * @param {InputProps} props 
  * @returns Div containing inputs
  */
-export function TextInput (props) {
+export function textInput (props) {
 	return make.div({
 		className: 'input-group text-input',
 		style: {
@@ -50,7 +50,7 @@ export function TextInput (props) {
  * @param {NumberInputProps} props 
  * @returns Div containing inputs
  */
-export function NumberInput (props) {
+export function numberInput (props) {
 	return make.div({
 		className: 'input-group text-input',
 		style: {
@@ -87,7 +87,7 @@ export function NumberInput (props) {
  * @param {InputProps} props 
  * @returns Div containing inputs
  */
-export function CheckboxInput (props) {
+export function checkboxInput (props) {
 	return make.div({
 		className: 'input-group text-input',
 		style: {

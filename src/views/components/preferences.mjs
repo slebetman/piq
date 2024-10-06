@@ -1,5 +1,5 @@
 import { make } from "../lib/dom-utils.mjs";
-import { CheckboxInput, NumberInput, TextInput } from "./lib/input.mjs";
+import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
 
 /**
  * @typedef {Object} EditorSpec
@@ -31,18 +31,17 @@ import { CheckboxInput, NumberInput, TextInput } from "./lib/input.mjs";
  * @returns Div
  */
 
-export function Preferences (props) {
+export function preferences (props) {
 	const { config, onCancel, onSave } = props;
 
 	return make('div',{
+		id: 'config-tab',
 		style: {
-			width: '100vw',
-			height: '100vh',
 			padding: '10px',
 		}
 	},[
 		make.div({ className: 'input-heading' }, 'Image Browser'),
-		CheckboxInput({
+		checkboxInput({
 			label: 'Hide menu',
 			value: config.hideMenuBar,
 			onChange: (x) => config.hideMenuBar = x,
@@ -50,19 +49,19 @@ export function Preferences (props) {
 		make.div({ className: 'input-description '},
 			'this has no effect on Mac OS'
 		),
-		NumberInput({
+		numberInput({
 			label: 'Default window width',
 			value: config.defaultBrowserWidth,
 			min: 200,
 			onChange: (x) => config.defaultBrowserWidth = x,
 		}),
-		NumberInput({
+		numberInput({
 			label: 'Default window height',
 			value: config.defaultBrowserHeight,
 			min: 200,
 			onChange: (x) => config.defaultBrowserHeight = x,
 		}),
-		NumberInput({
+		numberInput({
 			label: 'Default thumbnail size',
 			min: 100,
 			max: 550,
@@ -70,7 +69,7 @@ export function Preferences (props) {
 			onChange: (x) => config.defaultThumbnailSize = x,
 		}),
 		make.div({ className: 'input-heading' }, 'Thumbnailer'),
-		CheckboxInput({
+		checkboxInput({
 			label: 'Use file cache',
 			value: config.useFileCache,
 			onChange: (x) => config.useFileCache = x,
@@ -78,7 +77,7 @@ export function Preferences (props) {
 		make.div({ className: 'input-description '},
 			'thumbnails will only be stored in RAM if disabled'
 		),
-		TextInput({
+		textInput({
 			label: 'Number of threads',
 			value: config.threads,
 			onChange: (x) => {
@@ -99,24 +98,5 @@ export function Preferences (props) {
 		make.div({ className: 'input-description '},
 			'use "cpu_cores" to create the same number as cpu cores'
 		),
-		make.div({
-			style: {
-				display: 'flex',
-				justifyContent: 'end',
-				gap: '10px',
-				position: 'fixed',
-				bottom: 0,
-				left: 0,
-				width: 'calc(100vw - 40px)',
-				padding: '20px',
-			}
-		},[
-			make.button({
-				onclick: onCancel
-			},'Cancel'),
-			make.button({
-				onclick: onSave
-			},'Save'),
-		]),
 	]);
 }
