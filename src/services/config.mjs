@@ -26,7 +26,6 @@ import { join } from 'path';
 
 /**
  * @typedef {keyof Config} ConfigKeys
- * @typedef {Omit<ConfigKeys, version | dir>} SettableConfigKeys
  * */
 
 /** @type {Config} */
@@ -46,11 +45,15 @@ export const config = {
 };
 
 /**
- * @param {SettableConfigKeys} key 
+ * @param {ConfigKeys} key 
  * @param {number|string|boolean} val 
  */
 export function setConfig (key, val) {
-	config[key] = val;
+	let value = val;
+	if (key === 'threads' && value === 'cpu_cores') {
+		value = os.cpus().length;
+	}
+	config[key] = value;
 }
 
 export async function updateConfigFile () {
@@ -86,10 +89,6 @@ export async function init () {
 	});
 
 	ipcMain.handle('set-config',(e, key, val) => {
-		let value = val;
-		if (key === 'threads' && value === 'cpu_cores') {
-			value = os.cpus().length;
-		}
 		setConfig(key, value);
 	});
 
@@ -108,16 +107,11 @@ export async function init () {
 
 		for (let [ key, val ]  of Object.entries(configObj)) {
 			switch(key) {
-				case 'threads':
-					if (val === 'cpu_cores') {
-						val = os.cpus().length;
-					}
-					config[key] = val;
-					break;
 				case 'version':
 					oldVersion = config.version;
 					config[key] = val;
 					break;
+				case 'threads':
 				case 'editors':
 				case 'useFileCache':
 				case 'hideMenuBar':
@@ -125,7 +119,7 @@ export async function init () {
 				case 'defaultBrowserHeight':
 				case 'defaultThumbnailSize':
 				case 'debug':
-					config[key] = val;
+					setConfig(key, val);
 					break;
 				default:
 					dialog.showErrorBox(
