@@ -108,8 +108,7 @@ export async function init () {
 		for (let [ key, val ]  of Object.entries(configObj)) {
 			switch(key) {
 				case 'version':
-					oldVersion = config.version;
-					config[key] = val;
+					oldVersion = val;
 					break;
 				case 'threads':
 				case 'editors':
