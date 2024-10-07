@@ -126,6 +126,9 @@ export async function init () {
 	});
 
 	ipcMain.handle('context-menu-dir', async (e, filePath, thumbnailSize) => {
+		const sender = e.sender;
+		const win = BrowserWindow.fromWebContents(sender);
+		
 		const template = [
 			{
 				label: `Open in ${fileManager}`,
