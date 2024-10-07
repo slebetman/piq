@@ -37,18 +37,6 @@ async function main (argument0) {
 	// Replace initial handler with regular open event handler:
 	app.removeAllListeners('open-file');
 	app.addListener('open-file', async (ev, path) => {
-		for (const w of mainWindows) {
-			if (!w.currentPath) {
-				w.window.webContents.send('dir', path);
-				return;
-			}
-			if (w.currentPath === path) {
-				w.window.show();
-				w.window.focus();
-				return;
-			}
-		}
-
 		await openMainWindow(path);
 	});
 }

@@ -2,7 +2,7 @@ import { app, dialog, Menu, nativeImage } from "electron";
 import path from 'path';
 import { showOpenDialog } from "./open-dialog.mjs";
 import { mainWindows, openMainWindow } from "../views/main/lib.mjs";
-import { config, setConfig } from "./config.mjs";
+import { config, readHistory, setConfig } from "./config.mjs";
 import { openConfigWindow } from "../views/preferences/lib.mjs";
 
 const isMac = process.platform === 'darwin'
@@ -10,12 +10,14 @@ const notMac = !isMac;
 
 let aboutBoxVisible = false;
 
-export function setMainMenu () {
+export async function setMainMenu () {
 	const icon = nativeImage.createFromPath(
 		path.normalize(
 			path.join(import.meta.dirname, '../../icons/icon128.png')
 		)
 	);
+
+	const history = await readHistory();
 
 	const mainMenu = Menu.buildFromTemplate([
 		...(isMac ? [{
@@ -60,6 +62,18 @@ export function setMainMenu () {
 							await openMainWindow(path);
 						}
 					}
+				},
+				{
+					label: 'Open Recent',
+					submenu: history.map(dirPath => {
+						const dirName = path.basename(dirPath);
+						return {
+							label: dirName,
+							click: async () => {
+								await openMainWindow(dirPath);
+							}
+						}
+					})
 				},
 				...(isMac ? [] :[{
 					label: 'Settings',

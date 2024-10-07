@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import { CACHE_DIR, CONFIG_DIR } from './lib/config-paths.mjs';
 import os from 'os';
 import { join } from 'path';
+import { moveToTop } from './lib/array-ops.mjs';
 
 /**
  * @typedef {Object} EditorSpec
@@ -22,6 +23,7 @@ import { join } from 'path';
  * @property {number} defaultBrowserWidth
  * @property {number} defaultBrowserHeight
  * @property {number} defaultThumbnailSize
+ * @property {number} recentFolderHistory
  */
 
 /**
@@ -42,6 +44,7 @@ export const config = {
 	defaultBrowserWidth: 800,
 	defaultBrowserHeight: 600,
 	defaultThumbnailSize: 150,
+	recentFolderHistory: 10,
 };
 
 /**
@@ -60,6 +63,51 @@ export async function updateConfigFile () {
 	return await fs.writeFile(join(CONFIG_DIR, 'config.json'), stringifyConfig());
 }
 
+/**
+ * @returns History array
+ */
+export async function readHistory () {
+	try {
+		const historyFile = await fs.readFile(join(CONFIG_DIR, 'history.txt'),'utf8');
+		return historyFile.split('\n').filter(x => x);
+	}
+	catch (err) {
+		return [];
+	}
+}
+
+/**
+ * @param {string[]} history 
+ */
+export async function writeHistory (history) {
+	return await fs.writeFile(
+		join(CONFIG_DIR, 'history.txt'),
+		history
+			.slice(0,config.recentFolderHistory)
+			.join('\n')
+	);
+}
+
+/**
+ * @param {string} path 
+ */
+export async function addHistory (path) {
+	let history = await readHistory();
+
+	const idx = history.findIndex(x => x === path);
+
+	if (idx !== -1) {
+		moveToTop(history, idx);
+	}
+	else {
+		history.unshift(path);
+	}
+
+	app.addRecentDocument(path);
+
+	return await writeHistory(history);
+}
+
 export function savedConfig () {
 	return {
 		version: config.version,
@@ -71,6 +119,7 @@ export function savedConfig () {
 		defaultBrowserWidth: config.defaultBrowserWidth,
 		defaultBrowserHeight: config.defaultBrowserHeight,
 		defaultThumbnailSize: config.defaultThumbnailSize,
+		recentFolderHistory: config.recentFolderHistory,
 	}
 }
 
@@ -94,7 +143,11 @@ export async function init () {
 
 	ipcMain.handle('update-config', async () => {
 		return await updateConfigFile();
-	})
+	});
+
+	ipcMain.handle('get-history', () => readHistory());
+
+	ipcMain.handle('add-history', (e, path) => addHistory(path));
 
 	// async code below this:
 	await fs.mkdir(CONFIG_DIR, {recursive: true});
@@ -117,6 +170,7 @@ export async function init () {
 				case 'defaultBrowserWidth':
 				case 'defaultBrowserHeight':
 				case 'defaultThumbnailSize':
+				case 'recentFolderHistory':
 				case 'debug':
 					setConfig(key, val);
 					break;

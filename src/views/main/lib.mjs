@@ -1,8 +1,9 @@
 import { app, BrowserWindow } from 'electron';
-import { config } from '../../services/config.mjs';
+import { addHistory, config } from '../../services/config.mjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { openViewerWindow } from '../image-viewer/lib.mjs';
+import { setMainMenu } from '../../services/main-menu.mjs';
 
 /**
  * @typedef {Object} MainWindowObject
@@ -24,6 +25,18 @@ export async function openMainWindow (dirPath) {
 	let dir = dirPath;
 
 	if (dir) {
+		for (const w of mainWindows) {
+			if (!w.currentPath) {
+				w.window.webContents.send('dir', dir);
+				return;
+			}
+			if (w.currentPath === dir) {
+				w.window.show();
+				w.window.focus();
+				return;
+			}
+		}
+
 		const stat = await fs.stat(dir);
 
 		if (!stat.isDirectory()) {
@@ -69,9 +82,10 @@ export async function openMainWindow (dirPath) {
 		}
 	});
 
-	win.webContents.ipc.on('current-path', (e, currentPath) => {
+	win.webContents.ipc.on('current-path', async (e, currentPath) => {
 		dir = currentPath;
-		app.addRecentDocument(currentPath);
+		await addHistory(currentPath);
+		await setMainMenu();
 	})
 
 	const winObj = {
