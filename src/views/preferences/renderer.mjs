@@ -1,5 +1,5 @@
 import { tab } from '../components/lib/tab.mjs';
-import { editors, preferences } from '../components/preferences.mjs';
+import { editorPrefs, generalPrefs, appearencePrefs } from '../components/preferences.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 
 /**
@@ -23,7 +23,7 @@ async function main () {
 	let selected = 0;
 
 	const tabs = tab({
-		tabs: ['General', 'Open with..'],
+		tabs: ['Appearence', 'General', 'Open with..'],
 		selected,
 		onClick: (name, idx) => {
 			if (idx !== selected) {
@@ -34,8 +34,9 @@ async function main () {
 	})
 
 	const tabPanels = [
-		preferences({ config }),
-		editors({ config }),
+		appearencePrefs({ config }),
+		generalPrefs({ config }),
+		editorPrefs({ config }),
 	];
 
 	const buttons = make.div({

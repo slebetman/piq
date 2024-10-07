@@ -12,7 +12,7 @@ export async function openConfigWindow () {
 
 	const win = new BrowserWindow({
 		width: 540,
-		height: 460,
+		height: 400,
 		webPreferences: {
 			preload: import.meta.dirname + '/preload.js',
 		}

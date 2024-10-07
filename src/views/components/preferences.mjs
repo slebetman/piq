@@ -10,7 +10,7 @@ import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
  * @param {PreferencesProps} props 
  * @returns Div
  */
-export function preferences (props) {
+export function appearencePrefs (props) {
 	const { config } = props;
 
 	return make('div',{
@@ -47,6 +47,22 @@ export function preferences (props) {
 			value: config.defaultThumbnailSize,
 			onChange: (x) => config.defaultThumbnailSize = x,
 		}),
+	]);
+}
+
+/**
+ * @param {PreferencesProps} props 
+ * @returns Div
+ */
+export function generalPrefs (props) {
+	const { config } = props;
+
+	return make('div',{
+		id: 'history-panel',
+		style: {
+			padding: '10px',
+		}
+	},[
 		make.div({ className: 'input-heading' }, 'Thumbnailer'),
 		checkboxInput({
 			label: 'Use file cache',
@@ -77,6 +93,26 @@ export function preferences (props) {
 		make.div({ className: 'input-description '},
 			'use "cpu_cores" to create the same number as cpu cores'
 		),
+		make.div({ className: 'input-heading' }, 'Open Recent'),
+		numberInput({
+			label: 'History size',
+			value: config.recentFolderHistory,
+			min: 2,
+			max: 100,
+			onChange: (x) => config.recentFolderHistory = x,
+		}),
+		make.div({
+			style: {
+				marginTop: '20px',
+				marginLeft: '20px',
+			}
+		},[
+			make.button({
+				onclick: () => {
+					
+				}
+			}, 'Clear history')
+		]),
 	]);
 }
 
@@ -131,7 +167,7 @@ function drawEditors (editors, onDelete) {
  * @param {PreferencesProps} props 
  * @returns Div
  */
-export function editors (props) {
+export function editorPrefs (props) {
 	const { config } = props;
 
 	/**

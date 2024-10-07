@@ -149,6 +149,8 @@ export async function init () {
 
 	ipcMain.handle('add-history', (e, path) => addHistory(path));
 
+	ipcMain.handle('clear-history', () => writeHistory([]));
+
 	// async code below this:
 	await fs.mkdir(CONFIG_DIR, {recursive: true});
 	await fs.mkdir(CACHE_DIR, {recursive: true});
