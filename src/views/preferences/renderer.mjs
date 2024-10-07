@@ -3,7 +3,7 @@ import { editors, preferences } from '../components/preferences.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 
 /**
- * @param {import('../components/preferences.mjs').EditorSpec[]} editors 
+ * @param {import('../../services/config.mjs').EditorSpec[]} editors 
  */
 function cleanUpEditors (editors) {
 	return editors.filter?.(ed => {

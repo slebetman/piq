@@ -2,26 +2,8 @@ import { make, render } from "../lib/dom-utils.mjs";
 import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
 
 /**
- * @typedef {Object} EditorSpec
- * @property {string} name
- * @property {string} extensions
- */
-
-/**
- * @typedef {Object} Config
- * @property {number} threads
- * @property {EditorSpec[]} [editors]
- * @property {boolean} useFileCache
- * @property {boolean} hideMenuBar
- * @property {boolean} debug
- * @property {number} defaultBrowserWidth
- * @property {number} defaultBrowserHeight
- * @property {number} defaultThumbnailSize
- */
-
-/**
  * @typedef {Object} PreferencesProps
- * @property {Config} config
+ * @property {import("../../services/config.mjs").Config} config
  */
 
 /**
@@ -99,7 +81,7 @@ export function preferences (props) {
 }
 
 /**
- * @param {EditorSpec[]} editors
+ * @param {import("../../services/config.mjs").EditorSpec[]} editors
  * @param {Function} onDelete
  * @returns Div array
  */
