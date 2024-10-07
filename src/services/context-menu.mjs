@@ -3,7 +3,7 @@ import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
 import trash from 'trash';
-import { config } from './config.mjs';
+import { config, updateConfigFile } from './config.mjs';
 
 const fileManager = process.platform === 'darwin' ? 'Finder'
 	: process.platform === 'win32' ? 'File Explorer'
@@ -43,9 +43,34 @@ function getOpenWithMenu (filePath) {
 	}
 }
 
+/**
+ * @param {BrowserWindow} win 
+ */
+function setAsDefaultMenu (win, thumbnailSize) {
+	return {
+		label: 'Settings',
+		submenu: [{
+			label: 'Set as default window size',
+			click: () => {
+				const {width, height} = win.getBounds();
+				config.defaultBrowserWidth = width;
+				config.defaultBrowserHeight = height;
+				updateConfigFile();
+			}
+		},{
+			label: 'Set as default thumbnail size',
+			click: () => {
+				config.defaultThumbnailSize = thumbnailSize;
+				updateConfigFile();
+			}
+		}]
+	}
+}
+
 export async function init () {
-	ipcMain.handle('context-menu-img', async (e, filePath, thumbnail = false) => {
+	ipcMain.handle('context-menu-img', async (e, filePath, thumbnailSize = 0) => {
 		const sender = e.sender;
+		const win = BrowserWindow.fromWebContents(sender);
 
 		const template = [
 			{
@@ -77,12 +102,15 @@ export async function init () {
 				}
 			},
 			{ type: 'separator'},
-			... (thumbnail ? [{
-				label: 'Regenerate thumbnail',
-				click: () => {
-					sender.send('thumbnail-regenerate', filePath);
-				}
-			}] : []),
+			... (thumbnailSize ? [
+				setAsDefaultMenu(win, thumbnailSize),
+				{
+					label: 'Regenerate thumbnail',
+					click: () => {
+						sender.send('thumbnail-regenerate', filePath);
+					}
+				}] : []
+			),
 			{
 				label: 'Move to Trash',
 				click: () => {
@@ -97,7 +125,7 @@ export async function init () {
 		menu.popup();
 	});
 
-	ipcMain.handle('context-menu-dir', async (e, filePath) => {
+	ipcMain.handle('context-menu-dir', async (e, filePath, thumbnailSize) => {
 		const template = [
 			{
 				label: `Open in ${fileManager}`,
@@ -112,6 +140,7 @@ export async function init () {
 				}
 			},
 			{ type: 'separator'},
+			setAsDefaultMenu(win, thumbnailSize),
 			{
 				label: 'Move to Trash',
 				click: () => {

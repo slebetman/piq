@@ -10,6 +10,7 @@ const services = [
 	'open-viewer.mjs',
 	'context-menu.mjs',
 	'img-ops.mjs',
+	'window-ops.mjs',
 	'img-server/spawn.mjs',
 ];
 

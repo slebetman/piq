@@ -25,6 +25,7 @@ export function setMainMenu () {
 				{ type: 'separator' },
 				{
 					label: 'Settings',
+					accelerator: 'Command+,',
 					click: () => {
 						openConfigWindow();
 					}
@@ -62,6 +63,7 @@ export function setMainMenu () {
 				},
 				...(isMac ? [] :[{
 					label: 'Settings',
+					accelerator: 'Control+,',
 					click: () => {
 						openConfigWindow();
 					}

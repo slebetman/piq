@@ -1,4 +1,4 @@
-import { make } from "../../lib/dom-utils.mjs";
+import { cssVar, make } from "../../lib/dom-utils.mjs";
 import { isImage } from "../../lib/image-files.mjs";
 
 /** @type {Record<string,HTMLElement>} */
@@ -35,7 +35,8 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
 				if (e.button === 2) {
-					api.contextMenuDir(dirPath);
+					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
+					api.contextMenuDir(dirPath, thumbnailSize);
 				}
 			},
 		},[ icon, fileName ])
@@ -52,7 +53,8 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
 				if (e.button === 2) {
-					api.contextMenuImg(imgPath);
+					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
+					api.contextMenuImg(imgPath, thumbnailSize);
 				}
 			},
 		},[]);
