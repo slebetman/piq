@@ -43,6 +43,7 @@ async function main (argument0) {
 				return;
 			}
 			if (w.currentPath === path) {
+				w.window.show();
 				w.window.focus();
 				return;
 			}

@@ -78,6 +78,7 @@ export async function openViewerWindow (imgPath, files, index) {
 	const alreadyOpenedWindow = getViewWindowFromImgPath(img);
 
 	if (alreadyOpenedWindow) {
+		alreadyOpenedWindow.window.show();
 		alreadyOpenedWindow.window.focus();
 		return;  // don't open duplicate window.
 	}

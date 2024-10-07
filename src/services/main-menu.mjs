@@ -70,6 +70,12 @@ export function setMainMenu () {
 				}])
 			]
 		},
+		{
+			role: 'window',
+			submenu: [
+				{ role: 'minimize' },
+			]
+		 },
 		...(app.isPackaged ? [] : [{
 			label: 'Debug',
 			submenu : [
