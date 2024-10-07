@@ -109,7 +109,7 @@ export function generalPrefs (props) {
 		},[
 			make.button({
 				onclick: () => {
-					
+					api.clearHistory();
 				}
 			}, 'Clear history')
 		]),

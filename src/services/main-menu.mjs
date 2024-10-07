@@ -43,7 +43,6 @@ export async function setMainMenu () {
 		{
 			label: 'File',
 			submenu: [
-				{ role: isMac ? 'close' : 'quit' },
 				{
 					label: 'Open Folder',
 					accelerator: 'CommandOrControl+O',
@@ -81,7 +80,9 @@ export async function setMainMenu () {
 					click: () => {
 						openConfigWindow();
 					}
-				}])
+				}]),
+				{ type: 'separator' },
+				{ role: isMac ? 'close' : 'quit' },
 			]
 		},
 		{

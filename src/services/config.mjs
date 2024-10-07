@@ -4,6 +4,7 @@ import { CACHE_DIR, CONFIG_DIR } from './lib/config-paths.mjs';
 import os from 'os';
 import { join } from 'path';
 import { moveToTop } from './lib/array-ops.mjs';
+import { setMainMenu } from './main-menu.mjs';
 
 /**
  * @typedef {Object} EditorSpec
@@ -149,7 +150,10 @@ export async function init () {
 
 	ipcMain.handle('add-history', (e, path) => addHistory(path));
 
-	ipcMain.handle('clear-history', () => writeHistory([]));
+	ipcMain.handle('clear-history', async () => {
+		await writeHistory([]);
+		await setMainMenu();
+	});
 
 	// async code below this:
 	await fs.mkdir(CONFIG_DIR, {recursive: true});

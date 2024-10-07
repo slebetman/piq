@@ -12,5 +12,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	close: () => {
 		return ipcRenderer.invoke('close-window');
+	},
+	clearHistory: () => {
+		return ipcRenderer.invoke('clear-history');
 	}
 });
