@@ -51,7 +51,19 @@ async function main () {
 		},'Cancel'),
 		make.button({
 			onclick: async () => {
-				for (const [key, val] of Object.entries(config)) {
+				for (let [key, val] of Object.entries(config)) {
+					if (key === 'editors') {
+						val = val.filter?.(ed => {
+							if (
+								ed.name?.trim?.() == '' ||
+								ed.extensions?.trim?.() == ''
+							) {
+								return false;
+							}
+							return true;
+						})
+					}
+
 					api.setConfig(key, val);
 				}
 				await api.updateConfig();
