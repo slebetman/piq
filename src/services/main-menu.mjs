@@ -23,7 +23,12 @@ export function setMainMenu () {
 			submenu: [
 				{ role: 'about' },
 				{ type: 'separator' },
-				{ role: 'services' },
+				{
+					label: 'Settings',
+					click: () => {
+						openConfigWindow();
+					}
+				},
 				{ type: 'separator' },
 				{ role: 'hide' },
 				{ role: 'hideOthers' },
@@ -55,12 +60,12 @@ export function setMainMenu () {
 						}
 					}
 				},
-				{
-					label: 'Preferences',
+				...(isMac ? [] :[{
+					label: 'Settings',
 					click: () => {
 						openConfigWindow();
 					}
-				}
+				}])
 			]
 		},
 		...(app.isPackaged ? [] : [{
