@@ -18,18 +18,10 @@ async function main (argument0) {
 
 	setMainMenu();
 
+	// Handle Mac initial drag-and-drop:
 	app.addListener('open-file', async (ev, path) => {
 		dir = path;
-		
-		for (const w of mainWindows) {
-			if (!w.currentPath) {
-				w.window.webContents.send('dir', path);
-				return;
-			}
-		}
-
-		await openMainWindow(path);
-	})
+	});
 
 	await app.whenReady();
 
@@ -40,6 +32,23 @@ async function main (argument0) {
 	}
 
 	await openMainWindow(dir);
+
+	// Replace initial handler with regular open event handler:
+	app.removeAllListeners('open-file');
+	app.addListener('open-file', async (ev, path) => {
+		for (const w of mainWindows) {
+			if (!w.currentPath) {
+				w.window.webContents.send('dir', path);
+				return;
+			}
+			if (w.currentPath === path) {
+				w.window.focus();
+				return;
+			}
+		}
+
+		await openMainWindow(path);
+	});
 }
 
 app.on('window-all-closed', () => {
