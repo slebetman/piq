@@ -70,14 +70,21 @@ make.img = (prop) => make('img', prop);
  * Adds child element to parent replacing any old content
  * 
  * @param {HTMLElement} parent 
- * @param {HTMLElement} child 
+ * @param {HTMLElement|HTMLElement[]} child 
  */
 export function render (parent, child) {
 	for (const e of Array.from(parent.childNodes)) {
 		parent.removeChild(e);
 	}
 
-	parent.appendChild(child);
+	if (child instanceof Array) {
+		for (const c of child) {
+			parent.appendChild(c);
+		}
+	}
+	else {
+		parent.appendChild(child);
+	}
 }
 
 /**

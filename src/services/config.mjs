@@ -89,7 +89,7 @@ export async function init () {
 	});
 
 	ipcMain.handle('set-config',(e, key, val) => {
-		setConfig(key, value);
+		setConfig(key, val);
 	});
 
 	ipcMain.handle('update-config', async () => {
