@@ -111,18 +111,9 @@ export function editors (props) {
 		return make.div({
 			style: {
 				display: 'flex',
+				alignItems: 'end',
 			}
 		},[
-			textInput({
-				label: 'Program',
-				labelStyle: {
-					width: '30%',
-				},
-				inputStyle: {
-					width: '60%',
-				},
-				value: name
-			}),
 			textInput({
 				label: 'Extensions',
 				labelStyle: {
@@ -133,6 +124,19 @@ export function editors (props) {
 				},
 				value: extensions
 			}),
+			textInput({
+				label: 'Program',
+				labelStyle: {
+					width: '30%',
+				},
+				inputStyle: {
+					width: '60%',
+				},
+				value: name
+			}),
+			make.div({
+				className: 'editor-delete',
+			},'✕'),
 		])
 	})
 
@@ -140,6 +144,20 @@ export function editors (props) {
 		id: 'editors-tab',
 		style: {
 			padding: '10px',
+			display: 'flex',
+			flexDirection: 'column',
+			height: 'calc(100vh - 100px)',
 		}
-	}, editors);
+	}, [
+		make.div({ className: 'input-heading' }, 'File Associations'),
+		make.div({ className: 'input-description '},`
+			Do not include the dot (".") in the extension list.
+			Use star ("*") to match any character.<br>
+			Separate extensions with the pipe ("|") character.
+			For example: "jp*g|png" will match jpg, jpeg and png.
+		`),
+		make.div({
+			className: 'editors-list'
+		}, editors),
+	]);
 }

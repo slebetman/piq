@@ -8,7 +8,7 @@ async function main () {
 	let selected = 0;
 
 	const tabs = tab({
-		tabs: ['Settings', 'Editors'],
+		tabs: ['General', 'Open with..'],
 		selected,
 		onClick: (name, idx) => {
 			if (idx !== selected) {

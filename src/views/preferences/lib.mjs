@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 
 let alreadyOpened = false;
 
@@ -12,7 +12,7 @@ export async function openConfigWindow () {
 
 	const win = new BrowserWindow({
 		width: 540,
-		height: 400,
+		height: 460,
 		webPreferences: {
 			preload: import.meta.dirname + '/preload.js',
 		}

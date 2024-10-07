@@ -1,0 +1,63 @@
+.input-heading {
+	color: var(--input-text-color);
+	font-weight: bold;
+	font-size: larger;
+	margin-top: 20px;
+}
+
+.input-heading:first-child {
+	margin-top: 0;
+}
+
+.input-description {
+	color: var(--input-text-color);
+	margin-left: 20px;
+	font-size: 12px;
+}
+
+.tab-container {
+    display: flex;
+	padding-top: 2px;
+}
+
+.tab-item {
+    border: 1px solid #888;
+    border-bottom: 1px solid var(--input-text-color);
+    padding: 5px 10px 0 10px;
+    border-radius: 10px 10px 0 0;
+    background: #222;
+    color: #888;
+	cursor: pointer;
+	user-select: none;
+	font-size: 14px;
+}
+
+.tab-item.selected {
+	border: 1px solid var(--input-text-color);
+    border-bottom: none;
+	background: #333;
+    color: var(--input-text-color);
+}
+
+.tab-filler {
+	border-bottom: 1px solid var(--input-text-color);
+	flex-grow: 1;
+}
+
+.editors-list {
+	margin-top: 10px;
+	border: 1px solid #777;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+
+.editor-delete {
+	color: var(--input-text-color);
+	cursor: pointer;
+	border-radius: 5px;
+	padding: 2px 5px;
+}
+
+.editor-delete:hover {
+	background: #777;
+}
