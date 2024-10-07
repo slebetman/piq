@@ -2,6 +2,21 @@ import { tab } from '../components/lib/tab.mjs';
 import { editors, preferences } from '../components/preferences.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 
+/**
+ * @param {import('../components/preferences.mjs').EditorSpec[]} editors 
+ */
+function cleanUpEditors (editors) {
+	return editors.filter?.(ed => {
+		if (
+			ed.name?.trim?.() == '' ||
+			ed.extensions?.trim?.() == ''
+		) {
+			return false;
+		}
+		return true;
+	})
+}
+
 async function main () {
 	const config = await api.getConfig();
 	delete config.version;
@@ -13,24 +28,15 @@ async function main () {
 		onClick: (name, idx) => {
 			if (idx !== selected) {
 				selected = idx;
-
-				if (idx === 0) {
-					cfg.replaceChild(preferencesPanel, editorsPanel);
-				}
-				else {
-					cfg.replaceChild(editorsPanel, preferencesPanel);
-				}
+				cfg.replaceChild(tabPanels[selected], cfg.childNodes[1]);
 			}
 		}
 	})
 
-	const preferencesPanel = preferences({
-		config,
-	});
-
-	const editorsPanel = editors({
-		config
-	});
+	const tabPanels = [
+		preferences({ config }),
+		editors({ config }),
+	];
 
 	const buttons = make.div({
 		style: {
@@ -53,15 +59,7 @@ async function main () {
 			onclick: async () => {
 				for (let [key, val] of Object.entries(config)) {
 					if (key === 'editors') {
-						val = val.filter?.(ed => {
-							if (
-								ed.name?.trim?.() == '' ||
-								ed.extensions?.trim?.() == ''
-							) {
-								return false;
-							}
-							return true;
-						})
+						val = cleanUpEditors(val);
 					}
 
 					api.setConfig(key, val);
@@ -79,7 +77,7 @@ async function main () {
 		}
 	},[
 		tabs,
-		preferencesPanel,
+		tabPanels[selected],
 		buttons,
 	]);
 
