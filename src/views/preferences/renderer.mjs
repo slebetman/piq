@@ -1,11 +1,10 @@
 import { tab } from '../components/lib/tab.mjs';
-import { preferences } from '../components/preferences.mjs';
+import { editors, preferences } from '../components/preferences.mjs';
 import { make, render } from '../lib/dom-utils.mjs'
 
 async function main () {
 	const config = await api.getConfig();
 	delete config.version;
-	delete config.editors;
 	let selected = 0;
 
 	const tabs = tab({
@@ -29,7 +28,9 @@ async function main () {
 		config,
 	});
 
-	const editorsPanel = make.div({},'HELLO');
+	const editorsPanel = editors({
+		config
+	});
 
 	const buttons = make.div({
 		style: {

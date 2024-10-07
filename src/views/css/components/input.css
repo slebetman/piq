@@ -4,8 +4,9 @@
 
 .input-group {
 	display: flex;
-	margin: 10px 0 0 20px;
+	margin: 12px 0 0 20px;
 	gap: 5px;
+	font-size: 14px;
 }
 
 .input-label {

@@ -28,7 +28,6 @@ import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
  * @param {PreferencesProps} props 
  * @returns Div
  */
-
 export function preferences (props) {
 	const { config } = props;
 
@@ -97,4 +96,50 @@ export function preferences (props) {
 			'use "cpu_cores" to create the same number as cpu cores'
 		),
 	]);
+}
+
+/**
+ * @param {PreferencesProps} props 
+ * @returns Div
+ */
+export function editors (props) {
+	const { config } = props;
+
+	const editors = config.editors?.map(ed => {
+		const { name, extensions } = ed;
+
+		return make.div({
+			style: {
+				display: 'flex',
+			}
+		},[
+			textInput({
+				label: 'Program',
+				labelStyle: {
+					width: '30%',
+				},
+				inputStyle: {
+					width: '60%',
+				},
+				value: name
+			}),
+			textInput({
+				label: 'Extensions',
+				labelStyle: {
+					width: '30%',
+				},
+				inputStyle: {
+					width: '60%',
+				},
+				value: extensions
+			}),
+		])
+	})
+
+	return make('div',{
+		id: 'editors-tab',
+		style: {
+			padding: '10px',
+		}
+	}, editors);
 }
