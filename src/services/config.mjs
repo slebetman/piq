@@ -151,6 +151,7 @@ export async function init () {
 	ipcMain.handle('add-history', (e, path) => addHistory(path));
 
 	ipcMain.handle('clear-history', async () => {
+		app.clearRecentDocuments();
 		await writeHistory([]);
 		await setMainMenu();
 	});
