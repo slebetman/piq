@@ -6,4 +6,4 @@ Simple cross-platform image browser
 
 - Clean UI, no clutter.
 - Very fast thumbnail generator (thanks to [sharp#](https://sharp.pixelplumbing.com/)).
-- Supports common image files: **jpeg**, **png**, **webp**, **svg**, **gif**
+- Supports common image files: **jpeg**, **png**, **webp**, **svg**, **gif**, **avif**
