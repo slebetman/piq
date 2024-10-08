@@ -56,6 +56,8 @@ async function main () {
 
 		api.watch(currentPath).then(async (x) => {
 			if (x) {
+				scrollPosition[currentPath] = document.getElementById('files-container').scrollTop;
+				sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 				clearTimeout(debounce);
 				debounce = setTimeout(async () => {
 					const normalPath = await api.normalizePath(currentPath);
@@ -81,6 +83,7 @@ async function main () {
 	}
 
 	window.onbeforeunload = () => {
+		scrollPosition[sessionStorage.setItem('currentPath')] = document.getElementById('files-container').scrollTop;
 		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 	}
 }
