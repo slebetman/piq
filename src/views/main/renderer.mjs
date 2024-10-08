@@ -3,7 +3,7 @@ import { fileList } from '../components/file-list.mjs';
 import { imgCache } from '../components/lib/file-container.mjs';
 import { render } from '../lib/dom-utils.mjs'
 
-const scrollPosition = {};
+const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
 
 async function main () {
 	const config = await api.getConfig();
@@ -32,6 +32,7 @@ async function main () {
 			currentPath,
 			onChdir: async (path) => {
 				scrollPosition[currentPath] = document.getElementById('files-container').scrollTop;
+				sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 
 				const normalPath = await api.normalizePath(path);
 				const newFiles = await api.listDir(path);
