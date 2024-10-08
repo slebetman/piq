@@ -79,6 +79,10 @@ async function main () {
 
 		render(document.body, page);
 	}
+
+	window.onbeforeunload = () => {
+		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
+	}
 }
 
 main();
