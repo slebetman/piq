@@ -1,5 +1,6 @@
 import { imgViewer } from '../components/img-viewer.mjs';
 import { render } from '../lib/dom-utils.mjs'
+import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
 import { isImage } from '../lib/image-files.mjs';
 
 async function displayImg (stat, wrap = false) {
@@ -24,13 +25,6 @@ async function displayImg (stat, wrap = false) {
 async function main () {
 	api.imgListener((files, index) => {
 		let idx = index;
-		
-		// stat: {
-		//   image: imgPath,
-		//   name,
-		//   type: stat.format,
-		//   size: readable(stat.size),
-		// }
 		
 		displayImg(files[idx]);
 
@@ -61,10 +55,11 @@ async function main () {
 					break;
 				}
 				case 'Escape':
+						exitFullscreen();
 					break;
 				case 'KeyF':
 					if (e.ctrlKey || e.metaKey) {
-						console.log('FULLSCREEN');
+						toggleFullScreen();
 					}
 					break;
 				default:
