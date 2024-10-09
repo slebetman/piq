@@ -6,9 +6,41 @@ import { config, readHistory, setConfig } from "./config.mjs";
 import { openConfigWindow } from "../views/preferences/lib.mjs";
 
 const isMac = process.platform === 'darwin'
-const notMac = !isMac;
+
+const icon = nativeImage.createFromPath(
+	path.normalize(
+		path.join(import.meta.dirname, '../../icons/icon128.png')
+	)
+);
 
 let aboutBoxVisible = false;
+
+function macMenu () {
+	if (isMac) {
+		return [{
+			label: app.name,
+			submenu: [
+				{ role: 'about' },
+				{ type: 'separator' },
+				{
+					label: 'Settings',
+					accelerator: 'Command+,',
+					click: () => {
+						openConfigWindow();
+					}
+				},
+				{ type: 'separator' },
+				{ role: 'hide' },
+				{ role: 'hideOthers' },
+				{ role: 'unhide' },
+				{ type: 'separator' },
+				{ role: 'quit' }
+			]
+		}];
+	}
+
+	return [];
+}
 
 async function fileMenu () {
 	const history = await readHistory();
@@ -80,75 +112,106 @@ function debugMenu () {
 	}];
 }
 
-export async function setMainMenu () {
-	const icon = nativeImage.createFromPath(
-		path.normalize(
-			path.join(import.meta.dirname, '../../icons/icon128.png')
-		)
-	);
+/**
+ * @param {"main" | "viewer"} type 
+ * @returns 
+ */
+function windowMenu (type = 'main') {
+	const menu = [
+		{ role: 'minimize' },
+		{
+			label: 'Toggle Full Screen',
+			accelerator: 'CommandOrControl+F',
+			click: () => {
+				BrowserWindow.getFocusedWindow().webContents.send('toggle-fullscreen');
+			}
+		}
+	];
 
-	const mainMenu = Menu.buildFromTemplate([
-		...(isMac ? [{
-			label: app.name,
-			submenu: [
-				{ role: 'about' },
-				{ type: 'separator' },
-				{
-					label: 'Settings',
-					accelerator: 'Command+,',
-					click: () => {
-						openConfigWindow();
+	if (type === 'viewer') {
+		menu.push(
+			{ type: 'separator' },
+			{
+				label: 'Full Size',
+				accelerator: 'CommandOrControl+1',
+			},
+			{
+				label: '1/2 Size',
+				accelerator: 'CommandOrControl+2',
+			},
+			{
+				label: '1/3 Size',
+				accelerator: 'CommandOrControl+3',
+			},
+			{
+				label: '1/4 Size',
+				accelerator: 'CommandOrControl+4',
+			}
+		)
+	}
+
+	return menu;
+}
+
+function aboutMenu () {
+	if (isMac) return [];
+
+	return [{
+		role: 'help',
+		submenu: [
+			{
+				label: 'About',
+				click: async () => {
+					if (aboutBoxVisible === false) {
+						aboutBoxVisible = true;
+						await dialog.showMessageBox({
+							type: 'info',
+							title: 'About Piq',
+							icon,
+							message: 
+								'Piq: Simple image browser.\n' +
+								`Version ${app.getVersion()}\n` +
+								'Copyright © 2024 Adly Abdullah <slebetman@gmail.com>'
+						})
+						aboutBoxVisible = false;
 					}
-				},
-				{ type: 'separator' },
-				{ role: 'hide' },
-				{ role: 'hideOthers' },
-				{ role: 'unhide' },
-				{ type: 'separator' },
-				{ role: 'quit' }
-			]
-		}] : []),
+				}
+			},
+		]
+	}];
+}
+
+export async function setMainMenu () {
+	const mainMenu = Menu.buildFromTemplate([
+		...macMenu(),
 		{
 			label: 'File',
 			submenu: await fileMenu(),
 		},
 		{
 			role: 'window',
-			submenu: [
-				{ role: 'minimize' },
-				{
-					label: 'Toggle Full Screen',
-					accelerator: 'CommandOrControl+F',
-					click: () => {
-						BrowserWindow.getFocusedWindow().webContents.send('toggle-fullscreen');
-					}
-				}
-			]
+			submenu: windowMenu('main'),
 		},
 		...debugMenu(),
-		...(notMac ? [{
-			role: 'help',
-			submenu: [
-				{
-					label: 'About',
-					click: async () => {
-						if (aboutBoxVisible === false) {
-							aboutBoxVisible = true;
-							await dialog.showMessageBox({
-								type: 'info',
-								title: 'About Piq',
-								icon,
-								message: 
-									'Piq: Simple image browser.\n' +
-									`Version ${app.getVersion()}\n` +
-									'Copyright © 2024 Adly Abdullah <slebetman@gmail.com>'
-							})
-							aboutBoxVisible = false;
-						}
-					}
-				},
-			]
-		}] : [])
+		...aboutMenu(),
+	]);
+
+	Menu.setApplicationMenu(mainMenu);
+}
+
+export async function setViewerMenu () {
+	const mainMenu = Menu.buildFromTemplate([
+		...macMenu(),
+		{
+			label: 'File',
+			submenu: await fileMenu(),
+		},
+		{
+			role: 'window',
+			submenu: windowMenu('viewer'),
+		},
+		...debugMenu(),
+		...aboutMenu(),
 	]);
 
 	Menu.setApplicationMenu(mainMenu);

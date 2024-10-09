@@ -110,4 +110,6 @@ export async function openMainWindow (dirPath) {
 			app.quit();
 		}
 	})
+
+	win.on('focus', () => setMainMenu());
 }

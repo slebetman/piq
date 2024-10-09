@@ -27,4 +27,6 @@ export async function openConfigWindow () {
 	win.on('close', () => {
 		alreadyOpened = false;
 	});
+
+	win.on('focus', () => setMainMenu());
 }

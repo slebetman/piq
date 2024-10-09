@@ -1,5 +1,6 @@
 import { BrowserWindow, screen } from 'electron';
 import { imageInfo } from '../../services/lib/image-util.mjs';
+import { setViewerMenu } from '../../services/main-menu.mjs';
 
 /**
  * @typedef {Object} ViewWindowObject
@@ -121,5 +122,7 @@ export async function openViewerWindow (imgPath, files, index) {
 		if (idx !== -1) {
 			viewWindows.splice(idx,1); // remove closed window
 		}
-	})
+	});
+
+	win.on('focus', () => setViewerMenu());
 }
