@@ -55,5 +55,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	unwatch: async (path) => {
 		return await ipcRenderer.invoke('unwatch', path);
+	},
+	fullScreenToggleListener: (callback) => {
+		ipcRenderer.on('toggle-fullscreen', callback);
 	}
 })

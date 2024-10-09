@@ -9,6 +9,10 @@ const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
 async function main () {
 	const config = await api.getConfig();
 
+	api.fullScreenToggleListener(() => {
+		toggleFullScreen();
+	});
+
 	api.dirListener(async (dirPath) => {
 		const files = await api.listDir(dirPath);
 		handleOpenDir({files, path: dirPath});
@@ -80,11 +84,6 @@ async function main () {
 			switch (e.code) {
 				case 'Escape':
 						exitFullscreen();
-					break;
-				case 'KeyF':
-					if (e.ctrlKey || e.metaKey) {
-						toggleFullScreen();
-					}
 					break;
 				case 'Backspace':
 					chdir(`${currentPath}/..`);

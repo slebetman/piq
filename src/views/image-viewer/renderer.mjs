@@ -23,6 +23,10 @@ async function displayImg (stat, wrap = false) {
 }
 
 async function main () {
+	api.fullScreenToggleListener(() => {
+		toggleFullScreen();
+	});
+
 	api.imgListener((files, index) => {
 		let idx = index;
 		
@@ -57,16 +61,11 @@ async function main () {
 				case 'Escape':
 						exitFullscreen();
 					break;
-				case 'KeyF':
-					if (e.ctrlKey || e.metaKey) {
-						toggleFullScreen();
-					}
-					break;
 				default:
 					console.log(e.code);
 			}
 		}
-	})
+	});
 }
 
 main();

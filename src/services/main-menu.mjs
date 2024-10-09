@@ -1,4 +1,4 @@
-import { app, dialog, Menu, nativeImage } from "electron";
+import { app, BrowserWindow, dialog, Menu, nativeImage } from "electron";
 import path from 'path';
 import { showOpenDialog } from "./open-dialog.mjs";
 import { mainWindows, openMainWindow } from "../views/main/lib.mjs";
@@ -10,14 +10,82 @@ const notMac = !isMac;
 
 let aboutBoxVisible = false;
 
+async function fileMenu () {
+	const history = await readHistory();
+
+	return [
+		{
+			label: 'Open Folder',
+			accelerator: 'CommandOrControl+O',
+			click: async () => {
+				const dir = await showOpenDialog();
+
+				if (!dir.canceled) {
+					const path = dir.filePaths[0];
+					for (const w of mainWindows) {
+						if (!w.currentPath) {
+							w.window.webContents.send('dir', path);
+							return;
+						}
+					}
+			
+					await openMainWindow(path);
+				}
+			}
+		},
+		{
+			label: 'Open Recent',
+			submenu: history.map(dirPath => {
+				const dirName = path.basename(dirPath);
+				return {
+					label: dirName,
+					click: async () => {
+						await openMainWindow(dirPath);
+					}
+				}
+			})
+		},
+		...(isMac ? [] :[
+			{
+				label: 'Settings',
+				accelerator: 'Control+,',
+				click: () => {
+					openConfigWindow();
+				}
+			},
+			{ type: 'separator' },
+			{ role: 'quit' },
+		]),
+		{ role: 'close' },
+	];
+}
+
+function debugMenu () {
+	if (app.isPackaged) return [];
+
+	return [{
+		label: 'Debug',
+		submenu : [
+			{ role: 'toggleDevTools' },
+			{ role: 'reload' },
+			{
+				label: 'Debug mode',
+				type: 'checkbox',
+				checked: config.debug,
+				click: () => {
+					setConfig('debug', !config.debug);
+				}
+			}
+		]
+	}];
+}
+
 export async function setMainMenu () {
 	const icon = nativeImage.createFromPath(
 		path.normalize(
 			path.join(import.meta.dirname, '../../icons/icon128.png')
 		)
 	);
-
-	const history = await readHistory();
 
 	const mainMenu = Menu.buildFromTemplate([
 		...(isMac ? [{
@@ -42,73 +110,22 @@ export async function setMainMenu () {
 		}] : []),
 		{
 			label: 'File',
-			submenu: [
-				{
-					label: 'Open Folder',
-					accelerator: 'CommandOrControl+O',
-					click: async () => {
-						const dir = await showOpenDialog();
-
-						if (!dir.canceled) {
-							const path = dir.filePaths[0];
-							for (const w of mainWindows) {
-								if (!w.currentPath) {
-									w.window.webContents.send('dir', path);
-									return;
-								}
-							}
-					
-							await openMainWindow(path);
-						}
-					}
-				},
-				{
-					label: 'Open Recent',
-					submenu: history.map(dirPath => {
-						const dirName = path.basename(dirPath);
-						return {
-							label: dirName,
-							click: async () => {
-								await openMainWindow(dirPath);
-							}
-						}
-					})
-				},
-				...(isMac ? [] :[
-					{
-						label: 'Settings',
-						accelerator: 'Control+,',
-						click: () => {
-							openConfigWindow();
-						}
-					},
-					{ type: 'separator' },
-					{ role: 'quit' },
-				]),
-			]
+			submenu: await fileMenu(),
 		},
 		{
 			role: 'window',
 			submenu: [
 				{ role: 'minimize' },
-				{ role: 'close' },
-			]
-		 },
-		...(app.isPackaged ? [] : [{
-			label: 'Debug',
-			submenu : [
-				{ role: 'toggleDevTools' },
-				{ role: 'reload' },
 				{
-					label: 'Debug mode',
-					type: 'checkbox',
-					checked: config.debug,
+					label: 'Toggle Full Screen',
+					accelerator: 'CommandOrControl+F',
 					click: () => {
-						setConfig('debug', !config.debug);
+						BrowserWindow.getFocusedWindow().webContents.send('toggle-fullscreen');
 					}
 				}
 			]
-		}]),
+		},
+		...debugMenu(),
 		...(notMac ? [{
 			role: 'help',
 			submenu: [

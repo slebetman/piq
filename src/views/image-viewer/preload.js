@@ -20,5 +20,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	updateCurrentPath: (path) => {
 		ipcRenderer.send('current-path', path);
+	},
+	fullScreenToggleListener: (callback) => {
+		ipcRenderer.on('toggle-fullscreen', callback);
 	}
 })
