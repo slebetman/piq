@@ -1,4 +1,4 @@
-import { BrowserWindow, clipboard, ipcMain, Menu, nativeImage } from 'electron';
+import { BrowserWindow, clipboard, ipcMain, Menu, nativeImage, shell } from 'electron';
 import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
@@ -80,9 +80,9 @@ export async function init () {
 				}
 			},
 			{
-				label: `Open folder in ${fileManager}`,
+				label: `Reveal in ${fileManager}`,
 				click: () => {
-					open(path.dirname(filePath));
+					shell.showItemInFolder(filePath);
 				}
 			},
 			...getOpenWithMenu(filePath),
