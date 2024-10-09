@@ -1,4 +1,4 @@
-import { make } from '../lib/dom-utils.mjs';
+import { cssVar, make } from '../lib/dom-utils.mjs';
 import { isImage } from '../lib/image-files.mjs';
 import { fileListContainer } from './lib/file-list-container.mjs';
 import { BAR_HEIGHT, topBar } from './lib/top-bar.mjs';
@@ -40,6 +40,13 @@ export function fileList (props) {
 	return make.div(
 		{
 			id: 'files',
+			onauxclick: (e) => {
+				console.log('CLICKED');
+				if (e.button === 2) {
+					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
+					api.contextMenuEmpty(props.currentPath, thumbnailSize);
+				}
+			},
 		},
 		[
 			fileListContainer({

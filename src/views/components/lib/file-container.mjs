@@ -34,10 +34,12 @@ export function fileContainer (props) {
 			className: 'thumbnail thumbnail-icon',
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
+				console.log('DIR');
 				if (e.button === 2) {
 					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
 					api.contextMenuDir(dirPath, thumbnailSize);
 				}
+				e.stopPropagation();
 			},
 		},[ icon, fileName ])
 	}
@@ -52,10 +54,12 @@ export function fileContainer (props) {
 			className: 'thumbnail',
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
+				console.log('IMG');
 				if (e.button === 2) {
 					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
 					api.contextMenuImg(imgPath, thumbnailSize);
 				}
+				e.stopPropagation();
 			},
 		},[]);
 

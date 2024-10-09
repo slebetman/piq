@@ -94,7 +94,7 @@ export async function init () {
 				}
 			},
 			{
-				label: 'Copy directory path',
+				label: 'Copy folder path',
 				click: () => {
 					clipboard.writeText(path.dirname(filePath));
 				}
@@ -158,6 +158,31 @@ export async function init () {
 					})
 				}
 			},
+		];
+
+		const menu = Menu.buildFromTemplate(template);
+		menu.popup();
+	});
+
+	ipcMain.handle('context-menu-empty', async (e, filePath, thumbnailSize = 0) => {
+		const sender = e.sender;
+		const win = BrowserWindow.fromWebContents(sender);
+
+		const template = [
+			{
+				label: `Open folder in ${fileManager}`,
+				click: () => {
+					open(filePath);
+				}
+			},
+			{
+				label: 'Copy folder path',
+				click: () => {
+					clipboard.writeText(filePath);
+				}
+			},
+			{ type: 'separator'},
+			setAsDefaultMenu(win, thumbnailSize),
 		];
 
 		const menu = Menu.buildFromTemplate(template);
