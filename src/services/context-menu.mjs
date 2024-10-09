@@ -79,6 +79,12 @@ export async function init () {
 					open(filePath);
 				}
 			},
+			{
+				label: `Open folder in ${fileManager}`,
+				click: () => {
+					open(path.dirname(filePath));
+				}
+			},
 			...getOpenWithMenu(filePath),
 			{ type: 'separator'},
 			{
