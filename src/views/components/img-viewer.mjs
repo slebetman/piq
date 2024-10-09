@@ -7,7 +7,8 @@ export function imgViewer ({ stat }) {
 		style: {
 			width: '100vw',
 			height: '100vh',
-			objectFit: 'contain',
+			objectFit: 'cover',
+			objectPosition: 'bottom',
 		},
 		onauxclick: (e) => {
 			if (e.button === 2) {
