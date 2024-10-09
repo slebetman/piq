@@ -107,7 +107,16 @@ export async function openViewerWindow (imgPath, files, index) {
 
 	win.webContents.ipc.on('current-path', (e, currentPath) => {
 		img = currentPath;
-	})
+	});
+
+	win.webContents.ipc.on('resize', (e, divisor) => {
+		wrapWindowAroundImage(
+			win,
+			Math.round(meta.width/divisor),
+			Math.round(meta.height/divisor),
+			true
+		);
+	});
 
 	const winObj = {
 		window: win,

@@ -134,18 +134,42 @@ function windowMenu (type = 'main') {
 			{
 				label: 'Full Size',
 				accelerator: 'CommandOrControl+1',
+				click: () => {
+					const win = BrowserWindow.getFocusedWindow();
+					if (win) {
+						win.webContents.send('resize', 1);
+					}
+				}
 			},
 			{
 				label: '1/2 Size',
 				accelerator: 'CommandOrControl+2',
+				click: () => {
+					const win = BrowserWindow.getFocusedWindow();
+					if (win) {
+						win.webContents.send('resize', 2);
+					}
+				}
 			},
 			{
 				label: '1/3 Size',
 				accelerator: 'CommandOrControl+3',
+				click: () => {
+					const win = BrowserWindow.getFocusedWindow();
+					if (win) {
+						win.webContents.send('resize', 3);
+					}
+				}
 			},
 			{
 				label: '1/4 Size',
 				accelerator: 'CommandOrControl+4',
+				click: () => {
+					const win = BrowserWindow.getFocusedWindow();
+					if (win) {
+						win.webContents.send('resize', 4);
+					}
+				}
 			}
 		)
 	}
