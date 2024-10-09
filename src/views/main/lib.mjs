@@ -73,6 +73,9 @@ export async function openMainWindow (dirPath) {
 		win.setMenuBarVisibility(false);
 		win.autoHideMenuBar = true;
 	}
+	else {
+		win.setMenuBarVisibility(true);
+	}
 	
 	win.loadFile(import.meta.dirname + '/index.html');
 

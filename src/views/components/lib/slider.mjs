@@ -8,6 +8,7 @@ import { make } from "../../lib/dom-utils.mjs";
  * @property {number} max
  * @property {number} step
  * @property {number} value
+ * @property {Object} style
  */
 
 /**
@@ -29,6 +30,7 @@ export function slider (props) {
 		style: {
 			display: 'flex',
 			alignItems: 'center',
+			...(props.style ?? {}),
 		}
 	},[
 		make('input',{

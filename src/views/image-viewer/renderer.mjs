@@ -28,7 +28,7 @@ async function main () {
 		
 		displayImg(files[idx]);
 
-		document.body.onkeyup = (e) => {
+		window.onkeyup = (e) => {
 			switch (e.code) {
 				case 'ArrowRight': {
 					let i = idx;

@@ -35,6 +35,9 @@ export function topBar (props) {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'space-between',
+			position: 'fixed',
+			top: '0',
+			left: '0',
 		}
 	},[
 		make.img({
@@ -77,6 +80,9 @@ export function topBar (props) {
 			max: 550,
 			step: 10,
 			value: size,
+			style: {
+				marginRight: BAR_HEIGHT
+			},
 			oninput: (e) => {
 				size = e.currentTarget.value;
 				cssVar('--thumbnail-size', `${size}px`);

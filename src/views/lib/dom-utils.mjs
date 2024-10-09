@@ -94,10 +94,7 @@ export function render (parent, child) {
  * @returns HTML element
  */
 export function get (id) {
-	if (!eCache[id]) {
-		eCache[id] = document.getElementById(id);
-	}
-	return eCache[id];
+	return document.getElementById(id);
 }
 
 /**

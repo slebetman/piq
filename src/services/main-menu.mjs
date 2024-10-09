@@ -74,21 +74,24 @@ export async function setMainMenu () {
 						}
 					})
 				},
-				...(isMac ? [] :[{
-					label: 'Settings',
-					accelerator: 'Control+,',
-					click: () => {
-						openConfigWindow();
-					}
-				}]),
-				{ type: 'separator' },
-				{ role: isMac ? 'close' : 'quit' },
+				...(isMac ? [] :[
+					{
+						label: 'Settings',
+						accelerator: 'Control+,',
+						click: () => {
+							openConfigWindow();
+						}
+					},
+					{ type: 'separator' },
+					{ role: 'quit' },
+				]),
 			]
 		},
 		{
 			role: 'window',
 			submenu: [
 				{ role: 'minimize' },
+				{ role: 'close' },
 			]
 		 },
 		...(app.isPackaged ? [] : [{

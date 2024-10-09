@@ -1,7 +1,7 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
 import { imgCache } from '../components/lib/file-container.mjs';
-import { render } from '../lib/dom-utils.mjs'
+import { get, render } from '../lib/dom-utils.mjs'
 import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
 
 const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
@@ -24,9 +24,9 @@ async function main () {
 
 	async function chdir (path) {
 		const oldPath = sessionStorage.getItem('currentPath');
-		scrollPosition[oldPath] = document.getElementById('files-container').scrollTop;
+		scrollPosition[oldPath] = get('files-container').scrollTop;
 		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
-
+	
 		const normalPath = await api.normalizePath(path);
 		const newFiles = await api.listDir(path);
 		handleOpenDir({ files: newFiles, path: normalPath });
@@ -48,8 +48,13 @@ async function main () {
 			thumbnailSize: config.defaultThumbnailSize,
 		}));
 
+		const filesContainer = get('files-container');
+
 		if (scrollPosition[currentPath]) {
-			document.getElementById('files-container').scrollTop = scrollPosition[currentPath];
+			filesContainer.scrollTop = scrollPosition[currentPath];
+		}
+		else {
+			filesContainer.scrollTop = 0;
 		}
 
 		let debounce;
@@ -60,7 +65,7 @@ async function main () {
 
 		api.watch(currentPath).then(async (x) => {
 			if (x) {
-				scrollPosition[currentPath] = document.getElementById('files-container').scrollTop;
+				scrollPosition[currentPath] = get('files-container').scrollTop;
 				sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 				clearTimeout(debounce);
 				debounce = setTimeout(async () => {
@@ -71,7 +76,7 @@ async function main () {
 			}
 		});
 
-		document.body.onkeyup = (e) => {
+		window.onkeyup = (e) => {
 			switch (e.code) {
 				case 'Escape':
 						exitFullscreen();
@@ -105,7 +110,7 @@ async function main () {
 	}
 
 	window.onbeforeunload = () => {
-		scrollPosition[sessionStorage.setItem('currentPath')] = document.getElementById('files-container').scrollTop;
+		scrollPosition[sessionStorage.getItem('currentPath')] = get('files-container').scrollTop;
 		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 	}
 }

@@ -7,10 +7,10 @@
 	flex-direction: row;
 	flex-flow: wrap;
 	width: 100vw;
-	height: 100vh;
 	align-items: flex-start;
 	align-content: flex-start;
 	overflow: hidden;
+	margin-top: var(--bar-height);
 }
 
 #files-container {
@@ -20,9 +20,10 @@
 	grid-template-rows: var(--thumbnail-size);
 	grid-gap: 0;
 	width: 100%;
-	max-height: calc(100vh - var(--bar-height));
 	justify-content: space-around;
-	overflow-x: hidden;
-	overflow-y: auto;
 	user-select: none;
+}
+
+body {
+	overflow-y: auto;
 }

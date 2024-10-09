@@ -42,12 +42,6 @@ export function fileList (props) {
 			id: 'files',
 		},
 		[
-			topBar({
-				currentPath: props.currentPath,
-				onChdir: props.onChdir,
-				imgCount: props.files.filter(x => isImage(x.name)).length,
-				thumbnailSize: props.thumbnailSize,
-			}),
 			fileListContainer({
 				...props,
 				updater: (percent) => {
@@ -59,6 +53,12 @@ export function fileList (props) {
 					}
 					progressBar.style.width = `${percent}%`;
 				}
+			}),
+			topBar({
+				currentPath: props.currentPath,
+				onChdir: props.onChdir,
+				imgCount: props.files.filter(x => isImage(x.name)).length,
+				thumbnailSize: props.thumbnailSize,
 			}),
 			progressBar
 		]
