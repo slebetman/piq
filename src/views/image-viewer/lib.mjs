@@ -96,6 +96,7 @@ export async function openViewerWindow (imgPath, files, index) {
 	});
 	win.hide();
 	win.setMenuBarVisibility(false);
+	win.autoHideMenuBar = true;
 	win.loadFile(import.meta.dirname + '/index.html');
 	wrapWindowAroundImage(win, meta.width, meta.height, true);
 
