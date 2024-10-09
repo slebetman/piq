@@ -1,4 +1,4 @@
-import { dialog, ipcMain } from "electron";
+import { dialog, ipcMain } from 'electron';
 
 export async function showOpenDialog () {
 	return await dialog.showOpenDialog({

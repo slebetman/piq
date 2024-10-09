@@ -1,9 +1,9 @@
-import { make, render } from "../lib/dom-utils.mjs";
-import { checkboxInput, numberInput, textInput } from "./lib/input.mjs";
+import { make, render } from '../lib/dom-utils.mjs';
+import { checkboxInput, numberInput, textInput } from './lib/input.mjs';
 
 /**
  * @typedef {Object} PreferencesProps
- * @property {import("../../services/config.mjs").Config} config
+ * @property {import('../../services/config.mjs').Config} config
  */
 
 /**
@@ -117,7 +117,7 @@ export function generalPrefs (props) {
 }
 
 /**
- * @param {import("../../services/config.mjs").EditorSpec[]} editors
+ * @param {import('../../services/config.mjs').EditorSpec[]} editors
  * @param {Function} onDelete
  * @returns Div array
  */

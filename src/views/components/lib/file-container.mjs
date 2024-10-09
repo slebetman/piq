@@ -1,5 +1,5 @@
-import { cssVar, make } from "../../lib/dom-utils.mjs";
-import { isImage } from "../../lib/image-files.mjs";
+import { cssVar, make } from '../../lib/dom-utils.mjs';
+import { isImage } from '../../lib/image-files.mjs';
 
 /** @type {Record<string,HTMLElement>} */
 export let imgCache = {};

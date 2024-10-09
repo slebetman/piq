@@ -1,7 +1,7 @@
-import { make } from "../lib/dom-utils.mjs";
-import { isImage } from "../lib/image-files.mjs";
-import { fileListContainer } from "./lib/file-list-container.mjs";
-import { BAR_HEIGHT, topBar } from "./lib/top-bar.mjs";
+import { make } from '../lib/dom-utils.mjs';
+import { isImage } from '../lib/image-files.mjs';
+import { fileListContainer } from './lib/file-list-container.mjs';
+import { BAR_HEIGHT, topBar } from './lib/top-bar.mjs';
 
 /**
  * @typedef {Object} Dirent

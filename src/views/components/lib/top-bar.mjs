@@ -1,5 +1,5 @@
-import { cssVar, make } from "../../lib/dom-utils.mjs";
-import { slider } from "./slider.mjs";
+import { cssVar, make } from '../../lib/dom-utils.mjs';
+import { slider } from './slider.mjs';
 
 export const BAR_HEIGHT = '24px';
 let size = 150;

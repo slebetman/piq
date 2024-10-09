@@ -1,5 +1,5 @@
-import { make } from "../../lib/dom-utils.mjs";
-import { fileContainer } from "./file-container.mjs";
+import { make } from '../../lib/dom-utils.mjs';
+import { fileContainer } from './file-container.mjs';
 
 /**
  * @typedef {Object} Dirent

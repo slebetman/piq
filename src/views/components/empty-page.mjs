@@ -1,4 +1,4 @@
-import { make } from "../lib/dom-utils.mjs";
+import { make } from '../lib/dom-utils.mjs';
 
 /**
  * @typedef {Object} EmptyPageProps

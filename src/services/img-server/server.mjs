@@ -1,4 +1,4 @@
-import { thumbnailBuffer } from "../lib/image-util.mjs";
+import { thumbnailBuffer } from '../lib/image-util.mjs';
 
 /**
  * @typedef {Object} RequestMessage

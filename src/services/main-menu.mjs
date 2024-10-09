@@ -1,9 +1,9 @@
-import { app, BrowserWindow, dialog, Menu, nativeImage } from "electron";
+import { app, BrowserWindow, dialog, Menu, nativeImage } from 'electron';
 import path from 'path';
-import { showOpenDialog } from "./open-dialog.mjs";
-import { mainWindows, openMainWindow } from "../views/main/lib.mjs";
-import { config, readHistory, setConfig } from "./config.mjs";
-import { openConfigWindow } from "../views/preferences/lib.mjs";
+import { showOpenDialog } from './open-dialog.mjs';
+import { mainWindows, openMainWindow } from '../views/main/lib.mjs';
+import { config, readHistory, setConfig } from './config.mjs';
+import { openConfigWindow } from '../views/preferences/lib.mjs';
 
 const isMac = process.platform === 'darwin'
 

@@ -1,5 +1,5 @@
-import { make } from "../lib/dom-utils.mjs";
-import { safePath } from "../lib/safe-path.mjs";
+import { make } from '../lib/dom-utils.mjs';
+import { safePath } from '../lib/safe-path.mjs';
 
 export function imgViewer ({ stat }) {
 	return make.img({
