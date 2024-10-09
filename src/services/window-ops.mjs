@@ -1,5 +1,4 @@
 import { BrowserWindow, ipcMain } from 'electron';
-import { openViewerWindow, wrapWindowAroundImage } from '../views/image-viewer/lib.mjs';
 
 export async function init () {
 	ipcMain.handle('close-window', (e) => {
