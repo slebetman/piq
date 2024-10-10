@@ -90,14 +90,15 @@ export async function openViewerWindow (imgPath, files, index) {
 	const win = new BrowserWindow({
 		webPreferences: {
 			preload: import.meta.dirname + '/preload.js',
-		},
-		x: display.bounds.x + ((display.bounds.width - meta.width) / 2),
-		y: display.bounds.y + ((display.bounds.height - meta.height) / 2),
+		},	
+		x: Math.round(display.bounds.x + (Math.max(display.bounds.width - meta.width) / 2, 0)),
+		y: Math.round(display.bounds.y + (Math.max(display.bounds.height - meta.height) / 2, 0)),
 	});
 	win.hide();
 	win.setMenuBarVisibility(false);
 	win.autoHideMenuBar = true;
 	win.loadFile(import.meta.dirname + '/index.html');
+
 	wrapWindowAroundImage(win, meta.width, meta.height, true);
 
 	win.webContents.once('did-finish-load', () => {
