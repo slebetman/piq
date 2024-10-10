@@ -103,7 +103,7 @@ export function generalPrefs (props) {
 				onclick: async () => {
 					const ok = await api.dialog({
 						message: 'Delete thumbnail cache?',
-						type: 'question',
+						type: 'warning',
 						buttons:[ 'Cancel', 'Delete' ]
 					});
 					if (ok.response === 1) {
@@ -130,7 +130,7 @@ export function generalPrefs (props) {
 				onclick: async () => {
 					const ok = await api.dialog({
 						message: 'Delete recently opened folder history?',
-						type: 'question',
+						type: 'warning',
 						buttons:[ 'Cancel', 'Delete' ]
 					});
 					if (ok.response === 1) {
