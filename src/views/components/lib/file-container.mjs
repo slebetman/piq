@@ -63,6 +63,11 @@ export function fileContainer (props) {
 			},
 		},[]);
 
+		imgDiv.dataset.path = imgPath;
+		imgDiv.dataset.rotate = 0;
+		imgDiv.dataset.flipX = false;
+		imgDiv.dataset.flipY = false;
+
 		props.registerRenderer(async () => {
 			const done = new Promise((ok) => {
 				icon.onload = ok;

@@ -108,6 +108,41 @@ export async function init () {
 				}
 			},
 			{ type: 'separator'},
+			{
+				label: 'Rotate thumbnail',
+				submenu: [
+					{
+						label: 'Clockwise',
+						click: () => {
+							sender.send('thumbnail-transform', filePath, 'rotateRight');
+						}
+					},
+					{
+						label: 'Anti-clockwise',
+						click: () => {
+							sender.send('thumbnail-transform', filePath, 'rotateLeft');
+						}
+					},
+				],
+			},
+			{
+				label: 'Flip thumbnail',
+				submenu: [
+					{
+						label: 'Horizontally',
+						click: () => {
+							sender.send('thumbnail-transform', filePath, 'flipX');
+						}
+					},
+					{
+						label: 'Vertically',
+						click: () => {
+							sender.send('thumbnail-transform', filePath, 'flipY');
+						}
+					},
+				],
+			},
+			{ type: 'separator'},
 			... (thumbnailSize ? [
 				setAsDefaultMenu(win, thumbnailSize),
 				{

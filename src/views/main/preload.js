@@ -47,6 +47,11 @@ contextBridge.exposeInMainWorld('api', {
 			callback(imgPath);
 		})
 	},
+	thumbnailTransformListener: (callback) => {
+		ipcRenderer.on('thumbnail-transform', (e, imgPath, transform) => {
+			callback(imgPath, transform); // flipX, flipY, rotateLeft, rotateRight
+		})
+	},
 	updateCurrentPath: (path) => {
 		ipcRenderer.send('current-path', path);
 	},
