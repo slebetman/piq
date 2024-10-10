@@ -4,7 +4,9 @@ import path from 'path';import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { sleep } from '../lib/sleep.mjs';
 import { config } from '../config.mjs';
-    
+import fs from 'fs/promises';
+import { CACHE_DIR } from '../lib/config-paths.mjs';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const threads = config.threads;
 
@@ -116,6 +118,19 @@ export async function init () {
 		}
 
 		return imgCache[imgPath];
+	})
+
+	ipcMain.handle('clear-thumbnail-file-cache', async () => {
+		for (const k of Object.keys(imgCache)) {
+			delete imgCache[k];
+		}
+
+		const thumbnails = await fs.readdir(CACHE_DIR);
+
+		while (thumbnails.length) {
+			const batch = thumbnails.splice(0, 100);
+			await batch.map(f => fs.unlink(path.join(CACHE_DIR,f)));
+		}
 	})
 }
 

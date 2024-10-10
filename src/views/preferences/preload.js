@@ -15,5 +15,11 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	clearHistory: () => {
 		return ipcRenderer.invoke('clear-history');
-	}
+	},
+	clearCache: () => {
+		return ipcRenderer.invoke('clear-thumbnail-file-cache');
+	},
+	dialog: (props) => {
+		return ipcRenderer.invoke('dialog', props);
+	},
 });

@@ -93,6 +93,25 @@ export function generalPrefs (props) {
 		make.div({ className: 'input-description '},
 			'use "cpu_cores" to create the same number as cpu cores'
 		),
+		make.div({
+			style: {
+				marginTop: '10px',
+				marginLeft: '20px',
+			}
+		},[
+			make.button({
+				onclick: async () => {
+					const ok = await api.dialog({
+						message: 'Delete thumbnail cache?',
+						type: 'question',
+						buttons:[ 'Cancel', 'Delete' ]
+					});
+					if (ok.response === 1) {
+						await api.clearCache();
+					}
+				}
+			}, 'Clear file cache')
+		]),
 		make.div({ className: 'input-heading' }, 'Open Recent'),
 		numberInput({
 			label: 'History size',
@@ -103,13 +122,20 @@ export function generalPrefs (props) {
 		}),
 		make.div({
 			style: {
-				marginTop: '20px',
+				marginTop: '10px',
 				marginLeft: '20px',
 			}
 		},[
 			make.button({
-				onclick: () => {
-					api.clearHistory();
+				onclick: async () => {
+					const ok = await api.dialog({
+						message: 'Delete recently opened folder history?',
+						type: 'question',
+						buttons:[ 'Cancel', 'Delete' ]
+					});
+					if (ok.response === 1) {
+						api.clearHistory();
+					}
 				}
 			}, 'Clear history')
 		]),
