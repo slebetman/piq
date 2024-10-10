@@ -17,3 +17,15 @@ body {
 button {
   padding: 3px 5px;
 }
+
+.viewer-image {
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	object-position: bottom;
+}
+
+:fullscreen .viewer-image {
+	object-fit: scale-down;
+	object-position: center;
+}
