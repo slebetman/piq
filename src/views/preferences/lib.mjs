@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import { setMainMenu } from '../../services/main-menu.mjs';
 
 let alreadyOpened = false;
 

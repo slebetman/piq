@@ -21,10 +21,14 @@ cssVar('--bar-height', BAR_HEIGHT);
  * @returns Div
  */
 export function topBar (props) {
-	if (props.thumbnailSize) {
-		size = props.thumbnailSize;
-		cssVar('--thumbnail-size', `${size}px`);
+	const savedSize = sessionStorage.getItem('thumbnailSize');
+	if (savedSize) {
+		size = savedSize;
 	}
+	else if (props.thumbnailSize) {
+		size = props.thumbnailSize;
+	}
+	cssVar('--thumbnail-size', `${size}px`);
 
 	return make.div({
 		style: {
@@ -85,6 +89,7 @@ export function topBar (props) {
 			},
 			oninput: (e) => {
 				size = e.currentTarget.value;
+				sessionStorage.setItem('thumbnailSize', size);
 				cssVar('--thumbnail-size', `${size}px`);
 			}
 		})
