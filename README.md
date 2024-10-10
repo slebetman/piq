@@ -8,8 +8,9 @@ Simple cross-platform image browser
 - Very fast thumbnail generator (thanks to [sharp#](https://sharp.pixelplumbing.com/)).
 - Supports common image files: **jpeg**, **png**, **webp**, **svg**, **gif**, **avif**
 
-# Download
+## Download
 
 Packages are available for Mac OS and Linux:
 
 [![installer](icons/install.png) Latest Release](releases/latest)
+
