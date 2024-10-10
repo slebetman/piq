@@ -3,7 +3,7 @@
   "version": "1.1.6",
   "description": "Simple cross-platform image browser.",
   "homepage": "https://github.com/slebetman/piq",
-  "main": "index.mjs",
+  "main": "src/index.mjs",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -57,7 +57,7 @@
       ]
     },
     "dmg": {
-      "background": "bg.tiff"
+      "background": "icons/bg.tiff"
     }
   },
   "devDependencies": {

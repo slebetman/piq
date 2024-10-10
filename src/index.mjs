@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import path from 'path';
-import { mainWindows, openMainWindow } from './src/views/main/lib.mjs';
-import { setMainMenu } from './src/services/main-menu.mjs';
+import { openMainWindow } from './views/main/lib.mjs';
+import { setMainMenu } from './services/main-menu.mjs';
 
 const services = [
 	'config.mjs',
@@ -28,7 +28,7 @@ async function main (argument0) {
 
 	for (const service of services) {
 		await (await import(
-			path.join(import.meta.dirname, 'src/services', service)
+			path.join(import.meta.dirname, 'services', service)
 		)).init();
 	}
 
