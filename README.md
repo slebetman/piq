@@ -12,5 +12,5 @@ Simple cross-platform image browser
 
 Packages are available for Mac OS and Linux:
 
-[![installer](icons/install.png) Latest Release](releases/latest)
+[![installer](icons/install.png) Latest Release](https://github.com/slebetman/piq/releases/latest)
 
