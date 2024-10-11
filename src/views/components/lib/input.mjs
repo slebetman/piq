@@ -75,7 +75,7 @@ export function numberInput (props) {
 					props.onChange(val);
 				}
 				catch (err) {
-					console.log(err);
+					console.error(err);
 				}
 			},
 			style: props.inputStyle,

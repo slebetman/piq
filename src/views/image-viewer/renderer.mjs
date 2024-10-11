@@ -62,7 +62,7 @@ async function main () {
 						exitFullscreen();
 					break;
 				default:
-					console.log(e.code);
+					console.error(e.code);
 			}
 		}
 	});

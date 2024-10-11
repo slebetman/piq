@@ -85,7 +85,7 @@ export function generalPrefs (props) {
 						config.threads = t;
 					}
 					catch (err) {
-						console.log('invalid value for threads');
+						console.error('invalid value for threads');
 					}
 				}
 			},

@@ -167,7 +167,7 @@ async function main () {
 					chdir(`${currentPath}/..`);
 					break;
 				default:
-					console.log(e.code);
+					console.error(e.code);
 			}
 		}
 	}
