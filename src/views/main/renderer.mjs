@@ -108,7 +108,7 @@ async function main () {
 
 	async function chdir (path) {
 		const oldPath = sessionStorage.getItem('currentPath');
-		scrollPosition[oldPath] = get('files-container').scrollTop;
+		scrollPosition[oldPath] = document.documentElement.scrollTop;
 		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 	
 		const normalPath = await api.normalizePath(path);
@@ -135,10 +135,10 @@ async function main () {
 		const filesContainer = get('files-container');
 
 		if (scrollPosition[currentPath]) {
-			filesContainer.scrollTop = scrollPosition[currentPath];
+			document.documentElement.scrollTop = scrollPosition[currentPath];
 		}
 		else {
-			filesContainer.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
 		}
 
 		let debounce;
@@ -149,7 +149,7 @@ async function main () {
 
 		api.watch(currentPath).then(async (x) => {
 			if (x) {
-				scrollPosition[currentPath] = get('files-container').scrollTop;
+				scrollPosition[currentPath] = document.documentElement.scrollTop;
 				sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 				clearTimeout(debounce);
 				debounce = setTimeout(async () => {
@@ -189,7 +189,7 @@ async function main () {
 	}
 
 	window.onbeforeunload = () => {
-		scrollPosition[sessionStorage.getItem('currentPath')] = get('files-container').scrollTop;
+		scrollPosition[sessionStorage.getItem('currentPath')] = document.documentElement.scrollTop;
 		sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 	}
 }
