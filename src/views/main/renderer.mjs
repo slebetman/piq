@@ -1,7 +1,7 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
 import { imgCache } from '../components/lib/file-container.mjs';
-import { get, render } from '../lib/dom-utils.mjs'
+import { render } from '../lib/dom-utils.mjs'
 import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
 
 const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
@@ -131,8 +131,6 @@ async function main () {
 			},
 			thumbnailSize: config.defaultThumbnailSize,
 		}));
-
-		const filesContainer = get('files-container');
 
 		if (scrollPosition[currentPath]) {
 			document.documentElement.scrollTop = scrollPosition[currentPath];
