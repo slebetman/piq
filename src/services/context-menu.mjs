@@ -157,7 +157,10 @@ export async function init () {
 				click: () => {
 					trash(filePath,{
 						glob: false
-					})
+					});
+					if (!thumbnailSize) {
+						win.close();
+					}
 				}
 			},
 		];
