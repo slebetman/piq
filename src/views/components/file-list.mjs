@@ -41,7 +41,6 @@ export function fileList (props) {
 		{
 			id: 'files',
 			onauxclick: (e) => {
-				console.log('CLICKED');
 				if (e.button === 2) {
 					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
 					api.contextMenuEmpty(props.currentPath, thumbnailSize);

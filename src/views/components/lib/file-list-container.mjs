@@ -23,8 +23,6 @@ const renderers = [];
 async function runRenderers (updater) {
 	const config = await api.getConfig();
 
-	console.log(config);
-
 	let count = 0;
 	let total = renderers.length;
 	while (renderers.length) {

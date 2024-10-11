@@ -91,8 +91,8 @@ export async function openViewerWindow (imgPath, files, index) {
 		webPreferences: {
 			preload: import.meta.dirname + '/preload.js',
 		},	
-		x: Math.round(display.bounds.x + (Math.max(display.bounds.width - meta.width) / 2, 0)),
-		y: Math.round(display.bounds.y + (Math.max(display.bounds.height - meta.height) / 2, 0)),
+		x: display.bounds.x,
+		y: display.bounds.y,
 	});
 	win.hide();
 	win.setMenuBarVisibility(false);
