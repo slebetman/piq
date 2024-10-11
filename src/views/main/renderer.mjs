@@ -1,7 +1,7 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
 import { imgCache } from '../components/lib/file-container.mjs';
-import { render } from '../lib/dom-utils.mjs'
+import { getData, render, setData } from '../lib/dom-utils.mjs'
 import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
 
 const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
@@ -11,9 +11,9 @@ const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
  * @param {HTMLElement} img 
  */
 function applyTransforms (img) {
-	const angle = JSON.parse(img.dataset.rotate ?? 0);
-	const scaleX = JSON.parse(img.dataset.flipX ?? false) ? -1 : 1;
-	const scaleY = JSON.parse(img.dataset.flipY ?? false) ? -1 : 1;
+	const angle = getData(img, 'rotate', { default: 0 });
+	const scaleX = getData(img, 'flipX', { default: false }) ? -1 : 1;
+	const scaleY = getData(img, 'flipY', { default: false }) ? -1 : 1;
 	img.style.transform = `rotate(${angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`
 }
 
@@ -26,11 +26,11 @@ function rotateRight (imgPath) {
 	const img = getImgDiv(imgPath);
 
 	if (img) {
-		let angle = JSON.parse(img.dataset.rotate ?? 0) + 90;
+		let angle = getData(img, 'rotate', { default: 0 }) + 90;
 		if (angle >= 360) {
 			angle = 0;
 		}
-		img.dataset.rotate = angle;
+		setData(img, 'rotate', angle);
 
 		applyTransforms(img);
 	}
@@ -41,11 +41,11 @@ function rotateLeft (imgPath) {
 	const img = getImgDiv(imgPath);
 
 	if (img) {
-		let angle = JSON.parse(img.dataset.rotate ?? 0) - 90;
+		let angle = getData(img, 'rotate', { default: 0 }) - 90;
 		if (angle < 0) {
 			angle = 270;
 		}
-		img.dataset.rotate = angle;
+		setData(img, 'rotate', angle);
 
 		applyTransforms(img);
 	}
@@ -56,9 +56,8 @@ function flipX (imgPath) {
 	const img = getImgDiv(imgPath);
 
 	if (img) {
-		let flip = JSON.parse(img.dataset.flipX ?? false);
-		flip = !flip;
-		img.dataset.flipX = flip;
+		let flip = getData(img, 'flipX', { default: false });
+		setData(img, 'flipX', !flip);
 
 		applyTransforms(img);
 	}
@@ -69,9 +68,8 @@ function flipY (imgPath) {
 	const img = getImgDiv(imgPath);
 
 	if (img) {
-		let flip = JSON.parse(img.dataset.flipY ?? false);
-		flip = !flip;
-		img.dataset.flipY = flip;
+		let flip = getData(img, 'flipY', { default: false });
+		setData(img, 'flipY', !flip);
 
 		applyTransforms(img);
 	}
@@ -99,10 +97,18 @@ async function main () {
 
 	api.thumbnailTransformListener((imgPath, transform) => {
 		switch (transform) {
-			case 'flipX': flipX(imgPath); break;
-			case 'flipY': flipY(imgPath); break;
-			case 'rotateLeft': rotateLeft(imgPath); break;
-			case 'rotateRight': rotateRight(imgPath); break;
+			case 'flipX':
+				flipX(imgPath);
+				break;
+			case 'flipY':
+				flipY(imgPath);
+				break;
+			case 'rotateLeft':
+				rotateLeft(imgPath);
+				break;
+			case 'rotateRight':
+				rotateRight(imgPath);
+				break;
 		}
 	});
 
@@ -161,7 +167,7 @@ async function main () {
 		window.onkeyup = (e) => {
 			switch (e.code) {
 				case 'Escape':
-						exitFullscreen();
+					exitFullscreen();
 					break;
 				case 'Backspace':
 					chdir(`${currentPath}/..`);

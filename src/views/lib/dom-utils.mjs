@@ -98,6 +98,29 @@ export function get (id) {
 }
 
 /**
+ * @typedef {Object} GetDataOptions
+ * @property {any} default
+ */
+
+/**
+ * @param {HTMLElement} el 
+ * @param {string} name Data name
+ * @param {GetDataOptions} options Options
+ */
+export function getData (el, name, options) {
+	return JSON.parse(el.dataset[name] ?? options.default);
+}
+
+/**
+ * @param {HTMLElement} el 
+ * @param {string} name Data name
+ * @param {any} value Default value
+ */
+export function setData (el, name, value) {
+	el.dataset[name] = JSON.stringify(value);
+}
+
+/**
  * Gets and sets CSS variables
  * 
  * @param {string} name 
