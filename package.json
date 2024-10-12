@@ -1,6 +1,6 @@
 {
   "name": "piq",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Simple cross-platform image browser.",
   "homepage": "https://github.com/slebetman/piq",
   "main": "src/index.mjs",
