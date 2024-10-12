@@ -29,9 +29,10 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	fullScreenToggleListener: (callback) => {
 		ipcRenderer.on('toggle-fullscreen', callback);
-	}
-})
-
-ipcRenderer.on('resize', (e, divisor) => {
-	ipcRenderer.send('resize', divisor);
+	},
+	resizeListener: (callback) => {
+		ipcRenderer.on('resize', async (e, divisor) => {
+			ipcRenderer.send('resize', await callback(divisor));
+		})
+	},
 })

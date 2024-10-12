@@ -45,6 +45,8 @@ async function displayImg (stat, wrap = false) {
 }
 
 async function main () {
+	let currentImageStat;
+
 	api.infoListener(() => {
 		let showInfo = JSON.parse(sessionStorage.getItem('showInfo') ?? 'false');
 		showInfo = !showInfo;
@@ -56,15 +58,27 @@ async function main () {
 		await toggleFullScreen();
 	});
 
+	api.resizeListener(async (divisor) => {
+		const imgPath = `${currentImageStat.parentPath}/${currentImageStat.name}`;
+		const {width, height} = await api.imgInfo(imgPath);
+
+		return {
+			width,
+			height,
+			divisor,
+		}
+	})
+
 	api.imgListener((files, index) => {
 		let idx = index;
-		
-		displayImg(files[idx]);
+		currentImageStat = files[idx];
+
+		displayImg(currentImageStat);
 
 		document.onfullscreenchange = () => {
 			if (!document.fullscreenElement) {
 				// Exit full screen
-				displayImg(files[idx], true);
+				displayImg(currentImageStat, true);
 			}
 		}
 
@@ -76,7 +90,8 @@ async function main () {
 						i++;
 						if (isImage(files[i].name)) {
 							idx = i;
-							displayImg(files[idx], true);
+							currentImageStat = files[idx];
+							displayImg(currentImageStat, true);
 							break;
 						}
 					}
@@ -88,7 +103,8 @@ async function main () {
 						i--;
 						if (isImage(files[i].name)) {
 							idx = i;
-							displayImg(files[idx], true);
+							currentImageStat = files[idx];
+							displayImg(currentImageStat, true);
 							break;
 						}
 					}

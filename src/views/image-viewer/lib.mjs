@@ -110,11 +110,11 @@ export async function openViewerWindow (imgPath, files, index) {
 		img = currentPath;
 	});
 
-	win.webContents.ipc.on('resize', (e, divisor) => {
+	win.webContents.ipc.on('resize', (e, {width, height, divisor}) => {
 		wrapWindowAroundImage(
 			win,
-			Math.round(meta.width/divisor),
-			Math.round(meta.height/divisor),
+			Math.round(width/divisor),
+			Math.round(height/divisor),
 			true
 		);
 	});
