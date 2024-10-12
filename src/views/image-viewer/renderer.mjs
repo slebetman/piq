@@ -45,10 +45,6 @@ async function displayImg (stat, wrap = false) {
 }
 
 async function main () {
-	api.fullScreenToggleListener(() => {
-		toggleFullScreen();
-	});
-
 	api.infoListener(() => {
 		let showInfo = JSON.parse(sessionStorage.getItem('showInfo') ?? 'false');
 		showInfo = !showInfo;
@@ -56,10 +52,21 @@ async function main () {
 		get('info').style.display = showInfo ? 'block' : 'none';
 	});
 
+	api.fullScreenToggleListener(async () => {
+		await toggleFullScreen();
+	});
+
 	api.imgListener((files, index) => {
 		let idx = index;
 		
 		displayImg(files[idx]);
+
+		document.onfullscreenchange = () => {
+			if (!document.fullscreenElement) {
+				// Exit full screen
+				displayImg(files[idx], true);
+			}
+		}
 
 		window.onkeyup = (e) => {
 			switch (e.code) {
@@ -87,11 +94,8 @@ async function main () {
 					}
 					break;
 				}
-				case 'Escape':
-						exitFullscreen();
-					break;
 				default:
-					console.error(e.code);
+					console.log(e.code);
 			}
 		}
 	});
