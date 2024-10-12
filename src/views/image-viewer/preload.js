@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld('api', {
 			callback(files, index);
 		})
 	},
+	infoListener: (callback) => {
+		ipcRenderer.on('toggle-info', () => callback());
+	},
 	contextMenuImg: async (filePath) => {
 		await ipcRenderer.invoke('context-menu-img', filePath);
 	},
@@ -14,6 +17,9 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	imgInfo: async (path) => {
 		return await ipcRenderer.invoke('img-info', path);
+	},
+	fileStat: async (path) => {
+		return await ipcRenderer.invoke('file-stat', path);
 	},
 	wrapWindow: async (width, height) => {
 		return await ipcRenderer.invoke('wrap-window', width, height);

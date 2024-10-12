@@ -2,6 +2,7 @@ import { ipcMain } from 'electron'
 import fs from 'fs/promises'
 import path from 'path'
 import { imageInfo } from './lib/image-util.mjs';
+import { readable } from './lib/readable-number.mjs';
 
 /** @type {Record<string,AbortController>} */
 let watchAbort = {};
@@ -26,6 +27,15 @@ export async function init () {
 
 	ipcMain.handle('img-info', async (e, imgPath) => {
 		return await imageInfo(imgPath);
+	});
+
+	ipcMain.handle('file-stat', async (e, imgPath) => {
+		const info = await fs.stat(imgPath);
+
+		return {
+			size: readable(info.size),
+			dateModified: info.mtime.toDateString(),
+		}
 	});
 
 	ipcMain.handle('watch', async (e, dirPath) => {

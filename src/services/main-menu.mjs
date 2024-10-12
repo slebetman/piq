@@ -42,7 +42,7 @@ function macMenu () {
 	return [];
 }
 
-async function fileMenu () {
+async function fileMenu (isViewer = false) {
 	const history = await readHistory();
 
 	return [
@@ -77,6 +77,14 @@ async function fileMenu () {
 				}
 			})
 		},
+		...(isViewer ? [{
+			label: 'Info',
+			accelerator: 'CommandOrControl+I',
+			click: () => {
+				const win = BrowserWindow.getFocusedWindow();
+				win.webContents.send('toggle-info');
+			}
+		}] : []),
 		...(isMac ? [] :[
 			{
 				label: 'Settings',
@@ -228,7 +236,7 @@ export async function setViewerMenu () {
 		...macMenu(),
 		{
 			label: 'File',
-			submenu: await fileMenu(),
+			submenu: await fileMenu(true),
 		},
 		{
 			role: 'window',

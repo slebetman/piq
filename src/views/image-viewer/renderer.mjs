@@ -1,7 +1,28 @@
 import { imgViewer } from '../components/img-viewer.mjs';
-import { render } from '../lib/dom-utils.mjs'
+import { get, make, render } from '../lib/dom-utils.mjs'
 import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
 import { isImage } from '../lib/image-files.mjs';
+
+async function getInfo (imgPath) {
+	const [ imgInfo, imgStat ] = await Promise.all([
+		api.imgInfo(imgPath),
+		api.fileStat(imgPath),
+	]);
+
+	const statTxt = make.div({
+		style: {
+			textAlign: 'center',
+		}
+	},`
+		${imgInfo.width} x ${imgInfo.height} pixels
+		&nbsp;&nbsp;&nbsp;
+		${imgStat.size}B
+		&nbsp;&nbsp;&nbsp;
+		Last&nbsp;modified: ${imgStat.dateModified}
+	`);
+
+	render(get('info'), statTxt);
+}
 
 async function displayImg (stat, wrap = false) {
 	document.title = stat.name;
@@ -9,11 +30,12 @@ async function displayImg (stat, wrap = false) {
 
 	api.updateCurrentPath(imgPath);
 
-	const img = imgViewer({
-		stat: {
-			image: imgPath,
-		}
-	});
+	let imgStat = {
+		image: imgPath,
+	}; 
+
+	const img = imgViewer({ stat: imgStat });
+	getInfo(imgPath);
 	render(document.body, img);
 
 	if (wrap) {
@@ -25,6 +47,13 @@ async function displayImg (stat, wrap = false) {
 async function main () {
 	api.fullScreenToggleListener(() => {
 		toggleFullScreen();
+	});
+
+	api.infoListener(() => {
+		let showInfo = JSON.parse(sessionStorage.getItem('showInfo') ?? 'false');
+		showInfo = !showInfo;
+		sessionStorage.setItem('showInfo',JSON.stringify(showInfo));
+		get('info').style.display = showInfo ? 'block' : 'none';
 	});
 
 	api.imgListener((files, index) => {
