@@ -1,6 +1,6 @@
 import { imgViewer } from '../components/img-viewer.mjs';
 import { get, make, render } from '../lib/dom-utils.mjs'
-import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
+import { toggleFullScreen } from '../lib/full-screen.mjs';
 import { isImage } from '../lib/image-files.mjs';
 
 async function getInfo (imgPath) {
