@@ -127,7 +127,6 @@ async function main () {
 	window.onresize = () => {
 		clearTimeout(resizeTimeout);
 		resizeTimeout = setTimeout(() => {
-			console.log('RESIZE', window.outerWidth, screen.availWidth);
 			if (window.outerWidth === screen.availWidth) {
 				document.body.classList.add('maximized');
 			}
