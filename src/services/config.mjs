@@ -102,9 +102,8 @@ export async function addHistory (path) {
 	}
 	else {
 		history.unshift(path);
+		app.addRecentDocument(path);
 	}
-
-	app.addRecentDocument(path);
 
 	return await writeHistory(history);
 }

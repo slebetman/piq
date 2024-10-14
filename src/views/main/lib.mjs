@@ -26,18 +26,6 @@ export async function openMainWindow (dirPath) {
 	let dir = dirPath;
 
 	if (dir) {
-		for (const w of mainWindows) {
-			if (!w.currentPath) {
-				w.window.webContents.send('dir', dir);
-				return;
-			}
-			if (w.currentPath === dir) {
-				w.window.show();
-				w.window.focus();
-				return;
-			}
-		}
-
 		const stat = await fs.stat(dir);
 
 		if (!stat.isDirectory()) {
@@ -52,6 +40,20 @@ export async function openMainWindow (dirPath) {
 
 			if (getMainWindowFromDirPath(dir)) {
 				return; // don't open duplicate window.
+			}
+		}
+
+		await addHistory(dir);
+
+		for (const w of mainWindows) {
+			if (!w.currentPath) {
+				w.window.webContents.send('dir', dir);
+				return;
+			}
+			if (w.currentPath === dir) {
+				w.window.show();
+				w.window.focus();
+				return;
 			}
 		}
 	}
@@ -82,7 +84,6 @@ export async function openMainWindow (dirPath) {
 
 	win.webContents.ipc.on('current-path', async (e, currentPath) => {
 		dir = currentPath;
-		await addHistory(currentPath);
 		await setMainMenu();
 	})
 

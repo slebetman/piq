@@ -66,5 +66,8 @@ contextBridge.exposeInMainWorld('api', {
 	},
 	fullScreenToggleListener: (callback) => {
 		ipcRenderer.on('toggle-fullscreen', callback);
-	}
+	},
+	addHistory: (path) => {
+		return ipcRenderer.invoke('add-history', path);
+	},
 })

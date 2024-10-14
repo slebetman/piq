@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import fs from 'fs/promises'
 import path from 'path'
 import { imageInfo } from './lib/image-util.mjs';
@@ -18,7 +18,6 @@ export async function dirList (dirPath) {
 			isDirectory: x.isDirectory(),
 			parentPath: x.parentPath,
 		})).sort((a,b) => {
-			console.log(a,b);
 			return a.name.localeCompare(b.name, {
 				sensitivity : 'base',
 				numeric: true,
@@ -48,6 +47,13 @@ export async function init () {
 			dateModified: info.mtime.toDateString(),
 		}
 	});
+
+	ipcMain.on('current-path', async (e, path) => {
+		const sender = e.sender;
+		const win = BrowserWindow.fromWebContents(sender);
+
+		win.webContents.send(path);
+	})
 
 	ipcMain.handle('watch', async (e, dirPath) => {
 		const controller = new AbortController();

@@ -186,7 +186,11 @@ async function main () {
 	}
 	else {
 		const page = emptyPage({
-			onOpen: handleOpenDir
+			onOpen: async (result) => {
+				await api.addHistory(result.path);
+				await api.updateCurrentPath(result.path);
+				handleOpenDir(result);
+			}
 		});
 
 		render(document.body, page);
