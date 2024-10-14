@@ -78,7 +78,7 @@ async function fileMenu (isViewer = false) {
 			})
 		},
 		...(isViewer ? [{
-			label: 'Info',
+			label: 'Toggle Info',
 			accelerator: 'CommandOrControl+I',
 			click: () => {
 				const win = BrowserWindow.getFocusedWindow();

@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+	getConfig: () => {
+		return ipcRenderer.invoke('config');
+	},
 	imgListener: (callback) => {
 		ipcRenderer.on('image', (e, files, index) => {
 			callback(files, index);

@@ -47,6 +47,13 @@ async function displayImg (stat, wrap = false) {
 async function main () {
 	let currentImageStat;
 
+	/** @type {import('../../services/config.mjs').Config} */
+	const config = await api.getConfig();
+
+	if (config.showInfo) {
+		sessionStorage.setItem('showInfo', 'true');
+	}
+
 	api.infoListener(() => {
 		let showInfo = JSON.parse(sessionStorage.getItem('showInfo') ?? 'false');
 		showInfo = !showInfo;

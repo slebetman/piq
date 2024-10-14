@@ -25,6 +25,7 @@ import { setMainMenu } from './main-menu.mjs';
  * @property {number} defaultBrowserHeight
  * @property {number} defaultThumbnailSize
  * @property {number} recentFolderHistory
+ * @property {boolean} showInfo
  */
 
 /**
@@ -46,6 +47,7 @@ export const config = {
 	defaultBrowserHeight: 600,
 	defaultThumbnailSize: 150,
 	recentFolderHistory: 10,
+	showInfo: false,
 };
 
 /**
@@ -120,6 +122,7 @@ export function savedConfig () {
 		defaultBrowserHeight: config.defaultBrowserHeight,
 		defaultThumbnailSize: config.defaultThumbnailSize,
 		recentFolderHistory: config.recentFolderHistory,
+		showInfo: config.showInfo,
 	}
 }
 
@@ -177,6 +180,7 @@ export async function init () {
 				case 'defaultBrowserHeight':
 				case 'defaultThumbnailSize':
 				case 'recentFolderHistory':
+				case 'showInfo':
 				case 'debug':
 					setConfig(key, val);
 					break;

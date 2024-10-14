@@ -14,7 +14,7 @@ export function appearencePrefs (props) {
 	const { config } = props;
 
 	return make('div',{
-		id: 'preferences-panel',
+		id: 'appearence-panel',
 		style: {
 			padding: '10px',
 		}
@@ -47,6 +47,12 @@ export function appearencePrefs (props) {
 			value: config.defaultThumbnailSize,
 			onChange: (x) => config.defaultThumbnailSize = x,
 		}),
+		make.div({ className: 'input-heading' }, 'Image Viewer'),
+		checkboxInput({
+			label: 'Show info',
+			value: config.showInfo ?? false,
+			onChange: (x) => config.showInfo = x,
+		}),
 	]);
 }
 
@@ -58,7 +64,7 @@ export function generalPrefs (props) {
 	const { config } = props;
 
 	return make('div',{
-		id: 'history-panel',
+		id: 'general-panel',
 		style: {
 			padding: '10px',
 		}
