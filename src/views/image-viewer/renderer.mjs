@@ -122,6 +122,20 @@ async function main () {
 			}
 		}
 	});
+
+	let resizeTimeout;
+	window.onresize = () => {
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(() => {
+			console.log('RESIZE', window.outerWidth, screen.availWidth);
+			if (window.outerWidth === screen.availWidth) {
+				document.body.classList.add('maximized');
+			}
+			else {
+				document.body.classList.remove('maximized');
+			}
+		}, 100);
+	}
 }
 
 main();

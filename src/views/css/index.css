@@ -29,3 +29,8 @@ button {
 	object-fit: scale-down;
 	object-position: center;
 }
+
+body.maximized img.viewer-image {
+  object-fit: contain;
+	object-position: center;
+}
