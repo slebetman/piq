@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { openViewerWindow } from '../image-viewer/lib.mjs';
 import { setMainMenu } from '../../services/main-menu.mjs';
+import { dirList } from '../../services/file-ops.mjs';
 
 /**
  * @typedef {Object} MainWindowObject
@@ -43,13 +44,7 @@ export async function openMainWindow (dirPath) {
 			const image  = path.basename(dirPath);
 			dir = path.dirname(dirPath);
 
-			const files = (await fs.readdir(dir,{
-				withFileTypes: true
-			})).map(x => ({
-				name: x.name,
-				isDirectory: x.isDirectory(),
-				parentPath: x.parentPath,
-			}));
+			const files = await dirList(dir);
 
 			const index = files.findIndex(x => x.name === image);
 

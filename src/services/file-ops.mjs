@@ -7,18 +7,29 @@ import { readable } from './lib/readable-number.mjs';
 /** @type {Record<string,AbortController>} */
 let watchAbort = {};
 
-export async function init () {
-	// sync code here:
-	ipcMain.handle('dir-list', async (e, dirPath) => {
-		const files = await fs.readdir(path.normalize(dirPath), {
-			withFileTypes: true
-		});
+export async function dirList (dirPath) {
+	const files = await fs.readdir(path.normalize(dirPath), {
+		withFileTypes: true
+	});
 
-		return files.map(x => ({
+	return files
+		.map(x => ({
 			name: x.name,
 			isDirectory: x.isDirectory(),
 			parentPath: x.parentPath,
-		}))
+		})).sort((a,b) => {
+			console.log(a,b);
+			return a.name.localeCompare(b.name, {
+				sensitivity : 'base',
+				numeric: true,
+			})
+		})
+}
+
+export async function init () {
+	// sync code here:
+	ipcMain.handle('dir-list', async (e, dirPath) => {
+		return await dirList(dirPath);
 	});
 
 	ipcMain.handle('path-normalize', async (e, dirPath) => {
