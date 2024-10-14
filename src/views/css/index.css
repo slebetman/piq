@@ -25,12 +25,11 @@ button {
 	object-position: bottom;
 }
 
-:fullscreen .viewer-image {
-	object-fit: scale-down;
-	object-position: center;
-}
-
 body.maximized img.viewer-image {
   object-fit: contain;
 	object-position: center;
+}
+
+:fullscreen body.maximized img.viewer-image {
+	object-fit: scale-down;
 }
