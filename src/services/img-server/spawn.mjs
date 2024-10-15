@@ -11,20 +11,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const threads = config.threads;
 
 /**
- * @typedef {Object} RequestMessage
- * @property {string} imgPath
- */
-
-/**
- * @typedef {Object} ResponseMessage
- * @property {string} imgPath
- * @property {string} cachePath
- */
-
-/**
  * @typedef {Object} ImgServer
  * @property {ChildProcess} process
- * @property {Record<string,ResponseMessage>} buffer
+ * @property {Record<string,import('./server.mjs').ResponseMessage>} buffer
  */
 
 /** @type {ImgServer[]} */
@@ -32,6 +21,10 @@ const servers = [];
 
 const imgCache = {};
 
+/**
+ * @param {import('./server.mjs').RequestMessage} data 
+ * @returns Key to server buffer record
+ */
 function bufKey (data) {
 	return [data.imgPath, data.op].join(':');
 }
@@ -47,7 +40,7 @@ function spawnServer () {
 	};
 
 	/**
-	 * @param {ResponseMessage} data 
+	 * @param {import('./server.mjs').ResponseMessage} data 
 	 */
 	function handler (data) {
 		serv.buffer[bufKey(data)] = data;
@@ -78,61 +71,48 @@ function nextServer () {
 	return turn;
 }
 
-async function genThumbnail (imgPath, regenerate) {
+async function callServer (data) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
+	serv.process.send(data);
+
+	while (retries--) {
+		const reply = serv.buffer[bufKey(data)];
+		if (reply) {
+			delete serv.buffer[bufKey(data)];
+			return reply;
+		}
+
+		await sleep(1);
+	}
+
+	// Should not get here!
+	serv.process.kill('SIGKILL');
+
+	await sleep(100);
+
+	// Keep retrying
+	return await callServer(data);
+}
+
+async function genThumbnail (imgPath, regenerate) {
 	/** @type {import('./server.mjs').OpType} */
 	const op = config.useFileCache ? 'thumbnail-file' : 'thumbnail-buffer';
 
+	/** @type {import('./server.mjs').RequestMessage} */
 	const data = { imgPath, regenerate, op };
 
-	serv.process.send(data);
-
-	while (retries--) {
-		const reply = serv.buffer[bufKey(data)];
-		if (reply) {
-			delete serv.buffer[bufKey(data)];
-			return reply.cachePath;
-		}
-
-		await sleep(1);
-	}
-
-	// Should not get here!
-	serv.process.kill('SIGKILL');
-
-	await sleep(100);
-
-	// Keep retrying
-	return await genThumbnail(imgPath);
+	const reply = await callServer(data)
+	return reply.cachePath;
 }
 
 export async function getImageInfo (imgPath) {
-	const serv = servers[nextServer()];
-	let retries = 1500;
-
+	/** @type {import('./server.mjs').RequestMessage} */
 	const data = { imgPath, op: 'info' };
 
-	serv.process.send(data);
-
-	while (retries--) {
-		const reply = serv.buffer[bufKey(data)];
-		if (reply) {
-			delete serv.buffer[bufKey(data)];
-			return reply.info;
-		}
-
-		await sleep(1);
-	}
-
-	// Should not get here!
-	serv.process.kill('SIGKILL');
-
-	await sleep(100);
-
-	// Keep retrying
-	return await getImageInfo(imgPath);
+	const reply = await callServer(data);
+	return reply.info;
 }
 
 export async function init () {

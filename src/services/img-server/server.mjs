@@ -8,14 +8,15 @@ import fs from 'fs/promises';
 /**
  * @typedef {Object} RequestMessage
  * @property {string} imgPath
- * @property {boolean} regenerate
+ * @property {boolean} [regenerate]
  * @property {OpType} op
  */
 
 /**
  * @typedef {Object} ResponseMessage
  * @property {string} imgPath
- * @property {string} cachePath
+ * @property {string} [cachePath]
+ * @property {import('sharp').Metadata} [info]
  * @property {OpType} op
  */
 
