@@ -1,6 +1,6 @@
 import { BrowserWindow, screen } from 'electron';
-import { imageInfo } from '../../services/lib/image-util.mjs';
 import { setViewerMenu } from '../../services/main-menu.mjs';
+import { getImageInfo } from '../../services/img-server/spawn.mjs';
 
 /**
  * @typedef {Object} ViewWindowObject
@@ -84,7 +84,7 @@ export async function openViewerWindow (imgPath, files, index) {
 		return;  // don't open duplicate window.
 	}
 
-	const meta = await imageInfo(img);
+	const meta = await getImageInfo(img);
 	const display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 
 	const win = new BrowserWindow({

@@ -1,7 +1,6 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import fs from 'fs/promises'
 import path from 'path'
-import { imageInfo } from './lib/image-util.mjs';
 import { readable } from './lib/readable-number.mjs';
 
 /** @type {Record<string,AbortController>} */
@@ -33,10 +32,6 @@ export async function init () {
 
 	ipcMain.handle('path-normalize', async (e, dirPath) => {
 		return path.normalize(dirPath);
-	});
-
-	ipcMain.handle('img-info', async (e, imgPath) => {
-		return await imageInfo(imgPath);
 	});
 
 	ipcMain.handle('file-stat', async (e, imgPath) => {

@@ -32,6 +32,10 @@ const servers = [];
 
 const imgCache = {};
 
+function bufKey (data) {
+	return [data.imgPath, data.op].join(':');
+}
+
 function spawnServer () {
 	const process = fork(path.join(__dirname, 'server.mjs'),{
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
@@ -46,7 +50,7 @@ function spawnServer () {
 	 * @param {ResponseMessage} data 
 	 */
 	function handler (data) {
-		serv.buffer[data.imgPath] = data;
+		serv.buffer[bufKey(data)] = data;
 	}
 
 	servers.push(serv);
@@ -81,12 +85,14 @@ async function genThumbnail (imgPath, regenerate) {
 	/** @type {import('./server.mjs').OpType} */
 	const op = config.useFileCache ? 'thumbnail-file' : 'thumbnail-buffer';
 
-	serv.process.send({ imgPath, regenerate, op });
+	const data = { imgPath, regenerate, op };
+
+	serv.process.send(data);
 
 	while (retries--) {
-		const reply = serv.buffer[imgPath];
+		const reply = serv.buffer[bufKey(data)];
 		if (reply) {
-			delete serv.buffer[imgPath];
+			delete serv.buffer[bufKey(data)];
 			return reply.cachePath;
 		}
 
@@ -100,6 +106,33 @@ async function genThumbnail (imgPath, regenerate) {
 
 	// Keep retrying
 	return await genThumbnail(imgPath);
+}
+
+export async function getImageInfo (imgPath) {
+	const serv = servers[nextServer()];
+	let retries = 1500;
+
+	const data = { imgPath, op: 'info' };
+
+	serv.process.send(data);
+
+	while (retries--) {
+		const reply = serv.buffer[bufKey(data)];
+		if (reply) {
+			delete serv.buffer[bufKey(data)];
+			return reply.info;
+		}
+
+		await sleep(1);
+	}
+
+	// Should not get here!
+	serv.process.kill('SIGKILL');
+
+	await sleep(100);
+
+	// Keep retrying
+	return await getImageInfo(imgPath);
 }
 
 export async function init () {
@@ -118,6 +151,10 @@ export async function init () {
 
 		return imgCache[imgPath];
 	})
+
+	ipcMain.handle('img-info', async (e, imgPath) => {
+		return await getImageInfo(imgPath);
+	});
 
 	ipcMain.handle('clear-thumbnail-file-cache', async () => {
 		for (const k of Object.keys(imgCache)) {

@@ -1,8 +1,8 @@
-import { thumbnailBuffer, thumbnailFile } from '../lib/image-util.mjs';
+import { imageInfo, thumbnailBuffer, thumbnailFile } from '../lib/image-util.mjs';
 import fs from 'fs/promises';
 
 /**
- * @typedef {'thumbnail-buffer' | 'thumbnail-file'} OpType
+ * @typedef {'thumbnail-buffer' | 'thumbnail-file' | 'info'} OpType
  */
 
 /**
@@ -16,6 +16,7 @@ import fs from 'fs/promises';
  * @typedef {Object} ResponseMessage
  * @property {string} imgPath
  * @property {string} cachePath
+ * @property {OpType} op
  */
 
 /**
@@ -37,6 +38,7 @@ async function fileThumbnailer (data) {
 	const response = {
 		imgPath: data.imgPath,
 		cachePath: buf,
+		op: data.op,
 	}
 
 	process.send(response);
@@ -52,6 +54,19 @@ async function bufferThumbnailer (data) {
 	const response = {
 		imgPath: data.imgPath,
 		cachePath: 'data:image/webp;base64,' + buf.toString('base64'),
+		op: data.op,
+	}
+
+	process.send(response);
+}
+
+async function info (data) {
+	const imgInfo = await imageInfo(data.imgPath);
+
+	const response = {
+		imgPath: data.imgPath,
+		info: imgInfo,
+		op: data.op,
 	}
 
 	process.send(response);
@@ -63,6 +78,7 @@ process.on('message', (data) => {
 	switch (op) {
 		case 'thumbnail-file': return fileThumbnailer(data);
 		case 'thumbnail-buffer': return bufferThumbnailer(data);
+		case 'info': return info(data);
 		default:
 			console.error('Unsupported op', data.op);
 	}

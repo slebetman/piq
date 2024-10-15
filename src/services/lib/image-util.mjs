@@ -4,6 +4,13 @@ import fs from 'fs/promises';
 import { hash } from './hash.mjs';
 import { CACHE_DIR } from './config-paths.mjs';
 
+/********************************************************************
+ * WARNING: Only call these functions inside img-server/server.mjs. *
+ *          Sharp is sometimes unstable on Linux.                   *
+ *          Using this in an external thread allows us to avoid     *
+ *          crashing the main thread.                               *
+ ********************************************************************/
+
 export async function imageInfo (imgPath) {
 	return await sharp(imgPath).metadata();
 }
