@@ -1,0 +1,15 @@
+.viewer-image {
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	object-position: bottom;
+}
+
+body.maximized img.viewer-image {
+  object-fit: contain;
+	object-position: center;
+}
+
+:fullscreen body.maximized img.viewer-image {
+	object-fit: scale-down;
+}

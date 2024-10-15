@@ -15,21 +15,11 @@ body {
 }
 
 button {
-  padding: 3px 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #000;
 }
 
-.viewer-image {
-	width: 100vw;
-	height: 100vh;
-	object-fit: cover;
-	object-position: bottom;
-}
-
-body.maximized img.viewer-image {
-  object-fit: contain;
-	object-position: center;
-}
-
-:fullscreen body.maximized img.viewer-image {
-	object-fit: scale-down;
+button:active {
+  background-color: #aaa;
 }
