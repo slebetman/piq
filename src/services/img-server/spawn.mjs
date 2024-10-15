@@ -82,7 +82,7 @@ async function genThumbnail (imgPath, regenerate) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
-	serv.process.send({imgPath, regenerate});
+	serv.process.send({imgPath, regenerate, op: 'thumbnail'});
 
 	while (retries--) {
 		const reply = serv.buffer[imgPath];

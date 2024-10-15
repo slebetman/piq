@@ -14,10 +14,10 @@ import { thumbnailBuffer } from '../lib/image-util.mjs';
 /**
  * @param {RequestMessage} data 
  */
-async function handler (data) {
+async function thumbnailer (data) {
 	const buf = await thumbnailBuffer(data.imgPath);
 	
-	/** @type {ResponseMessage} */
+/** @type {ResponseMessage} */
 	const response = {
 		imgPath: data.imgPath,
 		cachePath: 'data:image/webp;base64,' + buf.toString('base64'),
@@ -26,4 +26,11 @@ async function handler (data) {
 	process.send(response);
 }
 
-process.on('message', handler);
+process.on('message', (data) => {
+	switch (data.op) {
+		case 'thumbnail': return thumbnailer(data);
+		default:
+			console.error('Unsupported op', data.op);
+	}
+});
+

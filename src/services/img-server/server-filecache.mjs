@@ -16,7 +16,7 @@ import fs from 'fs/promises';
 /**
  * @param {RequestMessage} data 
  */
-async function handler (data) {
+async function thumbnailer (data) {
 	let buf;
 	let retries = 10;
 
@@ -37,4 +37,10 @@ async function handler (data) {
 	process.send(response);
 }
 
-process.on('message', handler);
+process.on('message', (data) => {
+	switch (data.op) {
+		case 'thumbnail': return thumbnailer(data);
+		default:
+			console.error('Unsupported op', data.op);
+	}
+});
