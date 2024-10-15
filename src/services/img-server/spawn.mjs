@@ -33,11 +33,7 @@ const servers = [];
 const imgCache = {};
 
 function spawnServer () {
-	const process = fork(path.join(__dirname,
-		config.useFileCache ?
-			'server-filecache.mjs' :
-			'server.mjs'
-	),{
+	const process = fork(path.join(__dirname, 'server.mjs'),{
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc']
 	});
 
@@ -82,7 +78,10 @@ async function genThumbnail (imgPath, regenerate) {
 	const serv = servers[nextServer()];
 	let retries = 1500;
 
-	serv.process.send({imgPath, regenerate, op: 'thumbnail'});
+	/** @type {import('./server.mjs').OpType} */
+	const op = config.useFileCache ? 'thumbnail-file' : 'thumbnail-buffer';
+
+	serv.process.send({ imgPath, regenerate, op });
 
 	while (retries--) {
 		const reply = serv.buffer[imgPath];
