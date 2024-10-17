@@ -1,20 +1,17 @@
-export function parallelMap (list, limit, executor) {
+export async function parallelMap (list, limit, executor) {
 	let results = [];
 	let tracker = 0;
 
-	function iterator () {
+	async function iterator () {
 		const index = tracker;
 		tracker++;
 		const count = list.length;
 		const item = list.shift();
 		
 		if (count > 0) {
-			return executor(item).then((val) => {
-				results[index] = val;
-				return iterator();
-			});
+			results[index] = await executor(item);
+			return await iterator();
 		}
-		return;
 	}
 
 	let promises = [];	
@@ -22,18 +19,20 @@ export function parallelMap (list, limit, executor) {
 		promises.push(iterator());
 	}
 	
-	return Promise.all(promises).then(() => results);
+	await Promise.all(promises);
+
+	return results;
 }
 
-export function parallelRun (list, limit, executor) {
-	function iterator () {
+export async function parallelRun (list, limit, executor) {
+	async function iterator () {
 		const count = list.length;
 		const item = list.shift();
 		
 		if (count > 0) {
-			return executor(item).then((val) => iterator());
+			await executor(item);
+			await iterator();
 		}
-		return;
 	}
 
 	let promises = [];	
@@ -41,5 +40,5 @@ export function parallelRun (list, limit, executor) {
 		promises.push(iterator());
 	}
 	
-	return Promise.all(promises);
+	await Promise.all(promises);
 }
