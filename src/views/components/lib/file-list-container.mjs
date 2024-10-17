@@ -1,3 +1,4 @@
+import { parallelRun } from '../../../services/lib/parallel.mjs';
 import { make } from '../../lib/dom-utils.mjs';
 import { fileContainer } from './file-container.mjs';
 
@@ -25,12 +26,10 @@ async function runRenderers (updater) {
 
 	let count = 0;
 	let total = renderers.length;
-	while (renderers.length) {
-		const batch = renderers.splice(0, config.threads * 4);
-		count += batch.length;
-		updater?.(100*count/total);
-		await Promise.all(batch.map(r => r()));
-	}
+	await parallelRun(renderers, config.threads * 4, async (r) => {
+		await r();
+		updater?.(100*(count++)/total);
+	});
 	updater?.(0);
 }
 
