@@ -5,10 +5,9 @@ export async function parallelMap (list, limit, executor) {
 	async function iterator () {
 		const index = tracker;
 		tracker++;
-		const count = list.length;
-		const item = list.shift();
 		
-		if (count > 0) {
+		if (list.length) {
+			const item = list.shift();
 			results[index] = await executor(item);
 			return await iterator();
 		}
@@ -26,10 +25,8 @@ export async function parallelMap (list, limit, executor) {
 
 export async function parallelRun (list, limit, executor) {
 	async function iterator () {
-		const count = list.length;
-		const item = list.shift();
-		
-		if (count > 0) {
+		if (list.length) {
+			const item = list.shift();
 			await executor(item);
 			await iterator();
 		}
