@@ -6,6 +6,20 @@ import { readable } from './lib/readable-number.mjs';
 /** @type {Record<string,AbortController>} */
 let watchAbort = {};
 
+/** @type {Record<string,{ count: number, timeout?: any }>} */
+let watchTimeout = {};
+
+/**
+ * @param {string} dirPath 
+ */
+function unwatch (dirPath) {
+	const controller = watchAbort[dirPath];
+	if (controller) {
+		controller.abort();
+		delete watchAbort[dirPath];
+	}
+}
+
 export async function dirList (dirPath) {
 	const files = await fs.readdir(path.normalize(dirPath), {
 		withFileTypes: true
@@ -62,7 +76,7 @@ export async function init () {
 		const result = fs.watch(dirPath, watchOptions);
 		try {
 			for await (const e of result) {
-				delete watchAbort[dirPath];
+				unwatch(dirPath);
 				return e;
 			}
 		}
@@ -72,9 +86,6 @@ export async function init () {
 	});
 
 	ipcMain.handle('unwatch', async (e, dirPath) => {
-		const controller = watchAbort[dirPath];
-		if (controller) {
-			controller.abort();
-		}
+		unwatch(dirPath);
 	});
 }

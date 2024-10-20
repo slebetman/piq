@@ -157,9 +157,12 @@ async function main () {
 				sessionStorage.setItem('scroll', JSON.stringify(scrollPosition));
 				clearTimeout(debounce);
 				debounce = setTimeout(async () => {
-					const normalPath = await api.normalizePath(currentPath);
-					const newFiles = await api.listDir(currentPath);
-					handleOpenDir({ files: newFiles, path: normalPath });
+					const sessionPath = sessionStorage.getItem('currentPath');
+					if (sessionPath === currentPath) {
+						const normalPath = await api.normalizePath(currentPath);
+						const newFiles = await api.listDir(currentPath);
+						handleOpenDir({ files: newFiles, path: normalPath });
+					}
 				}, 500);
 			}
 		});
