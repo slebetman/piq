@@ -6,9 +6,6 @@ import { readable } from './lib/readable-number.mjs';
 /** @type {Record<string,AbortController>} */
 let watchAbort = {};
 
-/** @type {Record<string,{ count: number, timeout?: any }>} */
-let watchTimeout = {};
-
 /**
  * @param {string} dirPath 
  */

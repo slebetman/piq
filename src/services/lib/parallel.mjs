@@ -1,4 +1,11 @@
-export async function parallelMap (list, limit, executor) {
+/**
+ * @template T
+ * @param {T[]} items 
+ * @param {number} limit 
+ * @param {(item: T) => Promise<any>} executor 
+ * @returns Promise of results
+ */
+export async function parallelMap (items, limit, executor) {
 	let results = [];
 	let tracker = 0;
 
@@ -6,8 +13,8 @@ export async function parallelMap (list, limit, executor) {
 		const index = tracker;
 		tracker++;
 		
-		if (list.length) {
-			const item = list.shift();
+		if (items.length) {
+			const item = items.shift();
 			results[index] = await executor(item);
 			return await iterator();
 		}
@@ -23,10 +30,17 @@ export async function parallelMap (list, limit, executor) {
 	return results;
 }
 
-export async function parallelRun (list, limit, executor) {
+/**
+ * @template T
+ * @param {T[]} items 
+ * @param {number} limit 
+ * @param {(item: T) => Promise<void>} executor 
+ * @returns Promise
+ */
+export async function parallelRun (items, limit, executor) {
 	async function iterator () {
-		if (list.length) {
-			const item = list.shift();
+		if (items.length) {
+			const item = items.shift();
 			await executor(item);
 			await iterator();
 		}
