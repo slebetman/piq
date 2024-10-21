@@ -2,7 +2,6 @@ import { BrowserWindow, clipboard, ipcMain, Menu, nativeImage, shell } from 'ele
 import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
-import trash from 'trash';
 import { config, updateConfigFile } from './config.mjs';
 
 const fileManager = process.platform === 'darwin' ? 'Finder'
@@ -155,9 +154,7 @@ export async function init () {
 			{
 				label: 'Move to Trash',
 				click: () => {
-					trash(filePath,{
-						glob: false
-					});
+					shell.trashItem(filePath);
 					if (!thumbnailSize) {
 						win.close();
 					}
@@ -191,7 +188,7 @@ export async function init () {
 			{
 				label: 'Move to Trash',
 				click: () => {
-					trash(filePath,{
+					shell.trashItem(filePath,{
 						glob: false
 					})
 				}

@@ -67,7 +67,6 @@
   "dependencies": {
     "open": "^10.1.0",
     "sharp": "^0.33.5",
-    "trash": "^9.0.0",
     "xdg-portable": "^10.6.0"
   }
 }
