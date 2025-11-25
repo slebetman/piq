@@ -4,6 +4,7 @@ import path from 'path';
 import sharp from 'sharp';
 import { config, updateConfigFile } from './config.mjs';
 import { addToCollection, getCollections } from './collections.mjs';
+import prompt from 'electron-prompt';
 
 const fileManager = process.platform === 'darwin' ? 'Finder'
 	: process.platform === 'win32' ? 'File Explorer'
@@ -104,7 +105,18 @@ export async function init () {
 				label: 'Add to collection',
 				submenu: [
 					{
-						label: 'New collection...'
+						label: 'New collection...',
+						click: async () => {
+							const col = await prompt({
+								title: 'New Collection',
+								label: 'Collection:',
+								type: 'input',
+							},win);
+
+							if (col) {
+								addToCollection(col, filePath);
+							}
+						}
 					},
 					{ type: 'separator'},
 					... await getCollectionsMenu(filePath),

@@ -34,7 +34,7 @@ async function writeCollections () {
  * @param {string} image Image path
  */
 async function add (col, image) {
-	const collection = collections[col];
+	let collection = collections[col];
 
 	if (!collection) {
 		collection = [];

@@ -4,6 +4,7 @@ import { showOpenDialog } from './open-dialog.mjs';
 import { mainWindows, openMainWindow } from '../views/main/lib.mjs';
 import { config, readHistory, setConfig } from './config.mjs';
 import { openConfigWindow } from '../views/preferences/lib.mjs';
+import { getCollections } from './collections.mjs';
 
 const isMac = process.platform === 'darwin'
 
@@ -100,6 +101,14 @@ async function fileMenu (isViewer = false) {
 	];
 }
 
+async function collectionsMenu () {
+	const cols = await getCollections();
+
+	return cols.map(x => ({
+		label: x
+	}));
+}
+
 function debugMenu () {
 	if (app.isPackaged) return [];
 
@@ -124,7 +133,7 @@ function debugMenu () {
  * @param {"main" | "viewer"} type 
  * @returns 
  */
-function windowMenu (type = 'main') {
+async function windowMenu (type = 'main') {
 	const menu = [
 		{ role: 'minimize' },
 		{
@@ -133,12 +142,12 @@ function windowMenu (type = 'main') {
 			click: () => {
 				BrowserWindow.getFocusedWindow().webContents.send('toggle-fullscreen');
 			}
-		}
+		},
+		{ type: 'separator' }
 	];
 
 	if (type === 'viewer') {
 		menu.push(
-			{ type: 'separator' },
 			{
 				label: 'Full Size',
 				accelerator: 'CommandOrControl+1',
@@ -181,6 +190,12 @@ function windowMenu (type = 'main') {
 			}
 		)
 	}
+	else {
+		menu.push({
+			label: 'Collections',
+			submenu: await collectionsMenu(),
+		})
+	}
 
 	return menu;
 }
@@ -222,7 +237,7 @@ export async function setMainMenu () {
 		},
 		{
 			role: 'window',
-			submenu: windowMenu('main'),
+			submenu: await windowMenu('main'),
 		},
 		...debugMenu(),
 		...aboutMenu(),
@@ -240,7 +255,7 @@ export async function setViewerMenu () {
 		},
 		{
 			role: 'window',
-			submenu: windowMenu('viewer'),
+			submenu: await windowMenu('viewer'),
 		},
 		...debugMenu(),
 		...aboutMenu(),
