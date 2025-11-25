@@ -5,6 +5,7 @@ import { setMainMenu } from './services/main-menu.mjs';
 
 const services = [
 	'config.mjs',
+	'collections.mjs',
 	'open-dialog.mjs',
 	'file-ops.mjs',
 	'open-viewer.mjs',

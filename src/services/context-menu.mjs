@@ -3,6 +3,7 @@ import open from 'open';
 import path from 'path';
 import sharp from 'sharp';
 import { config, updateConfigFile } from './config.mjs';
+import { addToCollection, getCollections } from './collections.mjs';
 
 const fileManager = process.platform === 'darwin' ? 'Finder'
 	: process.platform === 'win32' ? 'File Explorer'
@@ -40,6 +41,20 @@ function getOpenWithMenu (filePath) {
 			}
 		]
 	}
+}
+
+/**
+ * @param {string} filePath 
+ */
+async function getCollectionsMenu (filePath) {
+	const cols = await getCollections();
+
+	return cols.map(x => ({
+		label: x,
+		click: () => {
+			addToCollection(x, filePath);
+		}
+	}));
 }
 
 /**
@@ -85,6 +100,16 @@ export async function init () {
 				}
 			},
 			...getOpenWithMenu(filePath),
+			{
+				label: 'Add to collection',
+				submenu: [
+					{
+						label: 'New collection...'
+					},
+					{ type: 'separator'},
+					... await getCollectionsMenu(filePath),
+				]
+			},
 			{ type: 'separator'},
 			{
 				label: 'Copy file path',
