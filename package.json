@@ -61,12 +61,12 @@
     }
   },
   "devDependencies": {
-    "electron": "^32.1.0",
-    "electron-builder": "^25.0.5"
+    "electron": "^39.2.3",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
-    "open": "^10.1.0",
-    "sharp": "^0.33.5",
+    "open": "^11.0.0",
+    "sharp": "^0.34.5",
     "xdg-portable": "^10.6.0"
   }
 }
