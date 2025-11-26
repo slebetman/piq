@@ -5,6 +5,7 @@ import { mainWindows, openMainWindow } from '../views/main/lib.mjs';
 import { config, readHistory, setConfig } from './config.mjs';
 import { openConfigWindow } from '../views/preferences/lib.mjs';
 import { getCollections } from './collections.mjs';
+import { openCollection } from '../views/collection/lib.mjs';
 
 const isMac = process.platform === 'darwin'
 
@@ -105,7 +106,10 @@ async function collectionsMenu () {
 	const cols = await getCollections();
 
 	return cols.map(x => ({
-		label: x
+		label: x,
+		click: async () => {
+			await openCollection(x);
+		}
 	}));
 }
 
@@ -130,7 +134,7 @@ function debugMenu () {
 }
 
 /**
- * @param {"main" | "viewer"} type 
+ * @param {"main" | "viewer" | "collection"} type 
  * @returns 
  */
 async function windowMenu (type = 'main') {
@@ -190,7 +194,7 @@ async function windowMenu (type = 'main') {
 			}
 		)
 	}
-	else {
+	else if (type === 'main') {
 		menu.push({
 			label: 'Collections',
 			submenu: await collectionsMenu(),
@@ -256,6 +260,24 @@ export async function setViewerMenu () {
 		{
 			role: 'window',
 			submenu: await windowMenu('viewer'),
+		},
+		...debugMenu(),
+		...aboutMenu(),
+	]);
+
+	Menu.setApplicationMenu(mainMenu);
+}
+
+export async function setCollectionMenu () {
+	const mainMenu = Menu.buildFromTemplate([
+		...macMenu(),
+		{
+			label: 'File',
+			submenu: await fileMenu(),
+		},
+		{
+			role: 'window',
+			submenu: await windowMenu('collection'),
 		},
 		...debugMenu(),
 		...aboutMenu(),

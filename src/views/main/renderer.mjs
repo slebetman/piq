@@ -1,79 +1,11 @@
 import { emptyPage } from '../components/empty-page.mjs';
 import { fileList } from '../components/file-list.mjs';
 import { imgCache } from '../components/lib/file-container.mjs';
-import { getData, render, setData } from '../lib/dom-utils.mjs'
+import { render } from '../lib/dom-utils.mjs'
 import { exitFullscreen, toggleFullScreen } from '../lib/full-screen.mjs';
+import { flipX, flipY, rotateLeft, rotateRight } from '../lib/image-transforms.mjs';
 
 const scrollPosition = JSON.parse(sessionStorage.getItem('scroll') ?? '{}');
-
-
-/**
- * @param {HTMLElement} img 
- */
-function applyTransforms (img) {
-	const angle = getData(img, 'rotate', { default: 0 });
-	const scaleX = getData(img, 'flipX', { default: false }) ? -1 : 1;
-	const scaleY = getData(img, 'flipY', { default: false }) ? -1 : 1;
-	img.style.transform = `rotate(${angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`
-}
-
-function getImgDiv (imgPath) {
-	return document.querySelector(`div[data-path="${imgPath}"]`);
-}
-
-function rotateRight (imgPath) {
-	/** @type {HTMLElement} */
-	const img = getImgDiv(imgPath);
-
-	if (img) {
-		let angle = getData(img, 'rotate', { default: 0 }) + 90;
-		if (angle >= 360) {
-			angle = 0;
-		}
-		setData(img, 'rotate', angle);
-
-		applyTransforms(img);
-	}
-}
-
-function rotateLeft (imgPath) {
-	/** @type {HTMLElement} */
-	const img = getImgDiv(imgPath);
-
-	if (img) {
-		let angle = getData(img, 'rotate', { default: 0 }) - 90;
-		if (angle < 0) {
-			angle = 270;
-		}
-		setData(img, 'rotate', angle);
-
-		applyTransforms(img);
-	}
-}
-
-function flipX (imgPath) {
-	/** @type {HTMLElement} */
-	const img = getImgDiv(imgPath);
-
-	if (img) {
-		let flip = getData(img, 'flipX', { default: false });
-		setData(img, 'flipX', !flip);
-
-		applyTransforms(img);
-	}
-}
-
-function flipY (imgPath) {
-	/** @type {HTMLElement} */
-	const img = getImgDiv(imgPath);
-
-	if (img) {
-		let flip = getData(img, 'flipY', { default: false });
-		setData(img, 'flipY', !flip);
-
-		applyTransforms(img);
-	}
-}
 
 async function main () {
 	const config = await api.getConfig();
