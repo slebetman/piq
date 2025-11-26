@@ -7,9 +7,27 @@ export async function showOpenDialog () {
 	})
 }
 
+/**
+ * @param {string} title
+ * @param {string} message 
+ * @param {string[]} buttons
+ */
+export async function showConfirmDialog (title, message, buttons) {
+	return await dialog.showMessageBox({
+		type: 'question',
+		title,
+		message,
+		buttons,
+	})
+}
+
 export async function init () {
 	// sync code here:
-	ipcMain.handle('open',async () => {
+	ipcMain.handle('open', async () => {
 		return await showOpenDialog();
 	});
+
+	ipcMain.handle('show-confirm', async (e, title, message, buttons) => {
+		return await showConfirmDialog(title, message, buttons);
+	})
 }

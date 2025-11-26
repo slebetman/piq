@@ -19,6 +19,19 @@ export async function updateCollection (col) {
 /**
  * @param {string | undefined} col 
  */
+export async function closeCollection (col) {
+	if (col) {
+		for (const w of mainWindows) {
+			if (w.currentPath === col) {
+				w.window.close();
+			}
+		}
+	}
+}
+
+/**
+ * @param {string | undefined} col 
+ */
 export async function openCollection (col) {
 	if (col) {
 		for (const w of mainWindows) {

@@ -13,6 +13,7 @@ cssVar('--bar-height', BAR_HEIGHT);
  * @property {number} [imgCount]
  * @property {Function} [onSizeChange]
  * @property {Function} [onChdir]
+ * @property {Function} [onDelete]
  * @property {number} [thumbnailSize]
  */
 
@@ -29,6 +30,23 @@ export function topBar (props) {
 		size = props.thumbnailSize;
 	}
 	cssVar('--thumbnail-size', `${size}px`);
+
+	const thumbnailSlider = slider({
+		id: 'size-slider',
+		type: 'range',
+		min: 100,
+		max: 550,
+		step: 10,
+		value: size,
+		style: {
+			marginRight: BAR_HEIGHT
+		},
+		oninput: (e) => {
+			size = e.currentTarget.value;
+			sessionStorage.setItem('thumbnailSize', size);
+			cssVar('--thumbnail-size', `${size}px`);
+		}
+	});
 
 	const barItems = [];
 
@@ -67,23 +85,30 @@ export function topBar (props) {
 				pointerEvents: 'none',
 			}
 		}, props.imgCount ? `(${props.imgCount} images)` : ''),
-	]),
-	slider({
-		id: 'size-slider',
-		type: 'range',
-		min: 100,
-		max: 550,
-		step: 10,
-		value: size,
-		style: {
-			marginRight: BAR_HEIGHT
-		},
-		oninput: (e) => {
-			size = e.currentTarget.value;
-			sessionStorage.setItem('thumbnailSize', size);
-			cssVar('--thumbnail-size', `${size}px`);
-		}
-	}));
+	]));
+
+	if (props.onDelete) {
+		barItems.push(make.div({
+			style: {
+				display: 'flex',
+				flexDirection: 'row',
+			}
+		},[
+			thumbnailSlider,
+			make.img({
+				src: '../components/icons/trash.svg',
+				style: {
+					height: `calc(${BAR_HEIGHT} - 2px)`,
+					padding: '2px',
+				},
+				onclick: () => props.onDelete(props.currentPath),
+			})
+		]));
+	}
+	else {
+		barItems.push(thumbnailSlider);
+	}
+
 	return make.div({
 		style: {
 			width: '100vw',

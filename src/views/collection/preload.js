@@ -55,4 +55,17 @@ contextBridge.exposeInMainWorld('api', {
 	fullScreenToggleListener: (callback) => {
 		ipcRenderer.on('toggle-fullscreen', callback);
 	},
+	deleteCollection: async (col) => {
+		await ipcRenderer.invoke('delete-collection', col);
+		ipcRenderer.invoke('close-window');
+	},
+	confirm: async (col) => {
+		const response = await ipcRenderer.invoke('show-confirm',
+			'Delete collection',
+			`Are you sure you want to delete "${col}"?`,
+			['Delete', 'Cancel']
+		);
+
+		return response.response === 0;
+	}
 })

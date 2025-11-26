@@ -46,6 +46,11 @@ async function main () {
 		render(document.body, fileList({
 			files,
 			currentPath: col,
+			onDelete: async () => {
+				if(await api.confirm(col)) {
+					api.deleteCollection(col);
+				}
+			},
 			onOpen: async (path, index) => {
 				await api.viewImage(path, files, index);
 			},

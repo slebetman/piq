@@ -15,6 +15,7 @@ import { BAR_HEIGHT, topBar } from './lib/top-bar.mjs';
  * @property {Dirent[]} [files] - File list
  * @property {string} [currentPath]
  * @property {Function} [onOpen]
+ * @property {Function} [onDelete]
  * @property {Function} [onChdir]
  * @property {number} [thumbnailSize]
  */
@@ -63,6 +64,7 @@ export function fileList (props) {
 			topBar({
 				currentPath: props.currentPath,
 				onChdir: props.onChdir,
+				onDelete: props.onDelete,
 				imgCount: props.files.filter(x => isImage(x.name)).length,
 				thumbnailSize: props.thumbnailSize,
 			}),
