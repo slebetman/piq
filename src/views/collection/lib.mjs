@@ -6,18 +6,30 @@ import { setCollectionMenu } from '../../services/main-menu.mjs';
 /**
  * @param {string | undefined} col 
  */
+export async function updateCollection (col) {
+	if (col) {
+		for (const w of mainWindows) {
+			if (w.currentPath === col) {
+				w.window.webContents.send('collection', col);
+			}
+		}
+	}
+}
+
+/**
+ * @param {string | undefined} col 
+ */
 export async function openCollection (col) {
 	if (col) {
 		for (const w of mainWindows) {
 			if (w.currentPath === col) {
 				w.window.show();
 				w.window.focus();
+				w.window.webContents.send('collection', col);
 				return;
 			}
 		}
 	}
-
-	console.log('DIRNAME', import.meta.dirname);
 
 	const win = new BrowserWindow({
 		width: config.defaultBrowserWidth,

@@ -10,25 +10,15 @@ function dirname (x) {
 	return p.join('/');
 }
 
+let currentCollection = '';
+
 contextBridge.exposeInMainWorld('api', {
 	getConfig: () => {
 		return ipcRenderer.invoke('config');
 	},
-	openDir: async () => {
-		const dir = await ipcRenderer.invoke('open');
-
-		if (!dir.canceled) {
-			const path = dir.filePaths[0];
-
-			const files = await ipcRenderer.invoke('dir-list', path);
-			return { files, path };
-		}
-
-		return null;
-	},
 	collectionListener: (callback) => {
 		ipcRenderer.on('collection', async (e, col) => {
-			console.log('HERE');
+			currentCollection = col;
 			const files = await ipcRenderer.invoke('get-collection', col);
 			callback(files.map(x => ({
 				name: basename(x),
@@ -47,10 +37,7 @@ contextBridge.exposeInMainWorld('api', {
 		return await ipcRenderer.invoke('viewer', path, files, index);
 	},
 	contextMenuImg: async (filePath, thumbnailSize) => {
-		await ipcRenderer.invoke('context-menu-img', filePath, thumbnailSize);
-	},
-	contextMenuDir: async (filePath, thumbnailSize) => {
-		await ipcRenderer.invoke('context-menu-dir', filePath, thumbnailSize);
+		await ipcRenderer.invoke('context-menu-col', currentCollection, filePath, thumbnailSize);
 	},
 	thumbnailListener: (callback) => {
 		ipcRenderer.on('thumbnail-regenerate', (e, imgPath) => {
