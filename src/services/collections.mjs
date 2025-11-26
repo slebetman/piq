@@ -67,6 +67,13 @@ function del (col, image) {
 	collections[col] = collection;
 }
 
+/**
+ * @param {string} col 
+ */
+function rmCol (col) {
+	delete collections[col];
+}
+
 export async function getCollections () {
 	await readCollections();
 	return Object.keys(collections);
@@ -100,6 +107,15 @@ export async function deleteFromCollection (col, image) {
 	await writeCollections();
 }
 
+/**
+ * @param {string} col 
+ */
+export async function deleteCollection (col) {
+	await readCollections();
+	rmCol(col);
+	await writeCollections();
+}
+
 export async function init () {
 	// sync code here:
 	ipcMain.handle('collections', () => getCollections());
@@ -109,4 +125,6 @@ export async function init () {
 	ipcMain.handle('add-to-collection', async (e, col, image) => addToCollection(col, image));
 
 	ipcMain.handle('delete-from-collection', async (e, col, image) => deleteFromCollection(col, image));
+
+	ipcMain.handle('delete-collection', async (e, col) => deleteCollection(col));
 }
