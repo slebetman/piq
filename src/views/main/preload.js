@@ -31,6 +31,9 @@ contextBridge.exposeInMainWorld('api', {
 	contextMenuImg: async (filePath, thumbnailSize) => {
 		await ipcRenderer.invoke('context-menu-img', filePath, thumbnailSize);
 	},
+	contextMenuAddToCol: async (filePath) => {
+		await ipcRenderer.invoke('context-menu-add-to-col', filePath);
+	},
 	contextMenuDir: async (filePath, thumbnailSize) => {
 		await ipcRenderer.invoke('context-menu-dir', filePath, thumbnailSize);
 	},

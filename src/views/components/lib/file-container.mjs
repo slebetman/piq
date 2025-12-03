@@ -54,8 +54,13 @@ export function fileContainer (props) {
 			ondblclick: props.onOpen,
 			onauxclick: (e) => {
 				if (e.button === 2) {
-					const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
-					api.contextMenuImg(imgPath, thumbnailSize);
+					if (e.shiftKey) {
+						api.contextMenuAddToCol(imgPath);
+					}
+					else {
+						const thumbnailSize = parseInt(cssVar('--thumbnail-size'), 10);
+						api.contextMenuImg(imgPath, thumbnailSize);
+					}
 				}
 				e.stopPropagation();
 			},

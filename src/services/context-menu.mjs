@@ -302,6 +302,23 @@ export async function init () {
 		menu.popup();
 	});
 
+	ipcMain.handle('context-menu-add-to-col', async (e, filePath) => {
+		const sender = e.sender;
+		const win = BrowserWindow.fromWebContents(sender);
+
+		const template = [
+			{
+				label: 'Add to collection ..',
+				enabled: false,
+			},
+			{ type: 'separator' },
+			... await getCollectionsMenu(filePath),
+		];
+
+		const menu = Menu.buildFromTemplate(template);
+		menu.popup();
+	});
+
 	ipcMain.handle('context-menu-dir', async (e, filePath, thumbnailSize) => {
 		const sender = e.sender;
 		const win = BrowserWindow.fromWebContents(sender);

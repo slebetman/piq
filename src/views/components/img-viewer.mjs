@@ -13,8 +13,14 @@ export function imgViewer ({ stat }) {
 			className: 'viewer-image',
 			onauxclick: (e) => {
 				if (e.button === 2) {
-					api.contextMenuImg(stat.image);
+					if (e.shiftKey) {
+						api.contextMenuAddToCol(stat.image);
+					}
+					else {
+						api.contextMenuImg(stat.image);
+					}
 				}
+				e.stopPropagation();
 			}
 		}),
 		make.div({

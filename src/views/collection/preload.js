@@ -39,6 +39,7 @@ contextBridge.exposeInMainWorld('api', {
 	contextMenuImg: async (filePath, thumbnailSize) => {
 		await ipcRenderer.invoke('context-menu-col', currentCollection, filePath, thumbnailSize);
 	},
+	contextMenuAddToCol: async () => {},
 	thumbnailListener: (callback) => {
 		ipcRenderer.on('thumbnail-regenerate', (e, imgPath) => {
 			callback(imgPath);
