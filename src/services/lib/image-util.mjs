@@ -27,15 +27,24 @@ function thumbnailer (imgPath) {
 		});
 }
 
+async function cachePathFrom (normalPath) {
+	const hashPath = hash(normalPath);
+	const [ __, subdir, filename ] = hashPath.match(/^(.)(.*)$/);
+
+	await fs.mkdir(path.join(CACHE_DIR, `f${subdir}`), { recursive: true });
+	
+	const cachePath = path.join(CACHE_DIR, `f${subdir}/${filename}.webp`);
+
+	return cachePath;
+}
+
 export async function thumbnailBuffer (imgPath) {
 	return await thumbnailer(imgPath).toBuffer();
 }
 
 export async function thumbnailFile (imgPath, regenerate = false) {
 	const normalPath = path.normalize(imgPath);
-	const hashPath = hash(normalPath);
-
-	const cachePath = path.join(CACHE_DIR, `${hashPath}.webp`);
+	const cachePath = await cachePathFrom(normalPath);
 	
 	if (regenerate) {
 		console.error('regenerate', imgPath);
