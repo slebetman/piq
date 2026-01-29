@@ -31,11 +31,25 @@ async function cachePathFrom (normalPath) {
 	const hashPath = hash(normalPath);
 	const [ __, subdir, filename ] = hashPath.match(/^(.)(.*)$/);
 
-	await fs.mkdir(path.join(CACHE_DIR, `f${subdir}`), { recursive: true });
-	
+	const dirPath = path.join(CACHE_DIR, `f${subdir}`);
 	const cachePath = path.join(CACHE_DIR, `f${subdir}/${filename}.webp`);
 
-	return cachePath;
+	return {
+		cachePath,
+		dirPath
+	};
+}
+
+async function generateThumbnailFile (normalPath, cachePath, dirPath) {
+	try {
+		await thumbnailer(normalPath)
+			.toFile(cachePath);
+	}
+	catch (err) {
+		await fs.mkdir(dirPath, { recursive: true });
+		await thumbnailer(normalPath)
+			.toFile(cachePath);
+	}
 }
 
 export async function thumbnailBuffer (imgPath) {
@@ -44,12 +58,10 @@ export async function thumbnailBuffer (imgPath) {
 
 export async function thumbnailFile (imgPath, regenerate = false) {
 	const normalPath = path.normalize(imgPath);
-	const cachePath = await cachePathFrom(normalPath);
+	const { cachePath, dirPath } = await cachePathFrom(normalPath);
 	
 	if (regenerate) {
-		console.error('regenerate', imgPath);
-		await thumbnailer(imgPath)
-			.toFile(cachePath);
+		await generateThumbnailFile(normalPath, cachePath, dirPath);
 	}
 	else {
 		try {
@@ -58,8 +70,7 @@ export async function thumbnailFile (imgPath, regenerate = false) {
 			await fs.utimes(cachePath, now, now);
 		}
 		catch (err) {
-			await thumbnailer(imgPath)
-				.toFile(cachePath);
+			await generateThumbnailFile(normalPath, cachePath, dirPath);
 		}
 	}
 
