@@ -28,7 +28,7 @@ export async function dirList (dirPath) {
 			isDirectory: x.isDirectory(),
 			parentPath: x.parentPath,
 		})).sort((a,b) => {
-			return a.name.localeCompare(b.name, {
+			return a.name.localeCompare(b.name, 'en', {
 				sensitivity : 'base',
 				numeric: true,
 			})
